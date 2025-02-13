@@ -6,27 +6,29 @@ import "./Header.scss";
 const Header: React.FC = () => {
   return (
     <header className="header">
-      <div className="logo">GameNet</div>
+      <div className="left-section">
+        <div className="logo">GameNet</div>
+        <div className="search-box">
+          <input type="text" placeholder="Пошук ігор..." />
+          <button>
+            <FaSearch />
+          </button>
+        </div>
+      </div>
       <nav className="nav">
         <Link to="/" className="nav-item">
-          <FaHome />Головна
-        </Link>
-        <Link to="/categories" className="nav-item">
-          <FaGamepad /> Категорії ігор
+          <FaHome /> Головна
         </Link>
         <Link to="/favorites" className="nav-item">
           <FaStar /> Обране
+        </Link>
+        <Link to="/categories" className="nav-item">
+          <FaGamepad /> Категорії ігор
         </Link>
         <Link to="/profile" className="nav-item">
           <FaUser /> Профіль
         </Link>
       </nav>
-      <div className="search-box">
-        <input type="text" placeholder="Пошук ігор..." />
-        <button>
-          <FaSearch />
-        </button>
-      </div>
     </header>
   );
 };
