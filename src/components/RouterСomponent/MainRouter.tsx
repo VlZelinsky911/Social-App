@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "../HeaderСomponents/Header/Header";
 import Footer from "../FooterComponents/Footer/Footer";
 
-import Home from "../HeaderСomponents/Home/Home";
-import Categories from "../HeaderСomponents/Categories/Categories";
-import Favorites from "../HeaderСomponents/Favorites/Favorites";
-import Profile from "../HeaderСomponents/Profile/Profile";
+import Home from "../PageСomponents/Home/Home";
+import Categories from "../PageСomponents/Categories/Categories";
+import Favorites from "../PageСomponents/Favorites/Favorites";
+import Profile from "../PageСomponents/Profile/Profile";
 import PrivacyPolicy from "../FooterComponents/Footer/Docs/PrivacyPolicy";
 import TermsOfService from "../FooterComponents/Footer/Docs/TermsOfService";
 
