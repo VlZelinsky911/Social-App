@@ -2,29 +2,32 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "../HeaderСomponents/Header/Header";
 import Footer from "../FooterComponents/Footer/Footer";
 
-import Home from "../PageСomponents/Home/Home";
-import Categories from "../PageСomponents/Categories/Categories";
-import Favorites from "../PageСomponents/Favorites/Favorites";
-import Profile from "../PageСomponents/Profile/Profile";
-import PrivacyPolicy from "../FooterComponents/Footer/Docs/PrivacyPolicy";
-import TermsOfService from "../FooterComponents/Footer/Docs/TermsOfService";
+import Home from "../../pages/Home/Home";
+import Categories from "../../pages/Categories/Categories";
+import Favorites from "../../pages/Favorites/Favorites";
+import Profile from "../../pages/Profile/Profile";
+import PrivacyPolicy from "../../policies/PrivacyPolicy";
+import TermsOfService from "../../policies/TermsOfService";
+import Main from "../MainComponents/Main";
 
 function MainRouter() {
   return (
-    <>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-        </Routes>
-				<Footer/>
-      </Router>
-    </>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Main />}>
+          <Route index element={<Home />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="favorites" element={<Favorites />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="terms-of-service" element={<TermsOfService />} />
+        </Route>
+      </Routes>
+      <Footer />
+    </Router>
   );
 }
+
 export default MainRouter;
+
