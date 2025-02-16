@@ -2,107 +2,109 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #141e30, #243b55);
-  color: #fff;
-  padding: 12px 24px;
-	width: 100%;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f1f5f9;
+  padding: 16px 28px;
+  width: 100%;
   z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  height: 60px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  height: 68px;
+  border-bottom: 4px solid #334155;
 }
 
 .left-section {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
 }
 
 .logo {
-  font-size: 1.8rem;
+  font-size: 2.4rem;
   font-weight: bold;
-  color: #00c3ff;
+  color: #3b82f6;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 .search-box {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  padding: 5px 10px;
-  height: 40px;
-  width: 220px;
-  transition: width 0.3s ease-in-out;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  padding: 8px 16px;
+  height: 46px;
+  width: 260px;
+  transition: all 0.3s ease-in-out;
 
   input {
     background: transparent;
     border: none;
-    padding: 8px;
     outline: none;
     font-size: 1rem;
-    color: #fff;
-		width: 100%;
+    color: #f8fafc;
+    width: 100%;
   }
 
   button {
     background: transparent;
     border: none;
-    color: #00c3ff;
+    color: #3b82f6;
     cursor: pointer;
-    font-size: 1.2rem;
-		padding:0px;
+    font-size: 1.5rem;
+    transition: transform 0.2s;
+		padding: 0;
+    &:hover {
+      transform: rotate(-10deg) scale(1.2);
+    }
   }
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 
   .nav-item {
-    display: flex;
+		display: flex;
     align-items: center;
     gap: 8px;
-    color: #fff;
+    color: #f1f5f9;
     text-decoration: none;
     font-size: 1rem;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: all 0.3s ease-in-out;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 12px;
+    transition: background-color 0.3s, transform 0.2s;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #00c3ff;
+      background: rgba(255, 255, 255, 0.15);
+      color: #60a5fa;
+      transform: scale(1.08);
     }
   }
 }
 
-/* Адаптивність */
 @media (max-width: 1024px) {
   .search-box {
-    width: 150px; // Менший пошук
+    width: 180px;
   }
 
-  .nav {
-    gap: 10px;
-
-    .nav-item {
-      font-size: 0.9rem;
-      padding: 6px 8px;
-    }
+  .nav .nav-item {
+    font-size: 0.9rem;
+    padding: 7px 10px;
   }
 }
 
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
-    height: auto;
-    padding: 10px;
+    padding: 12px;
+    border-bottom: 2px solid #334155;
   }
 
   .left-section {
     flex-direction: column;
-    gap: 10px;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .nav {

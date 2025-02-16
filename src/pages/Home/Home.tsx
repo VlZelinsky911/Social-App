@@ -55,8 +55,8 @@ const Home: React.FC = () => {
         <div className="content">
           <div className="news-feed">
             <h2>Нові</h2>
-            {news.map((article) => (
-              <div key={article.url} className="news-item">
+            {news.map((article, index) => (
+              <div key={index} className="news-item">
                 {article.urlToImage && <img src={article.urlToImage} alt={article.title} />}
                 <div className="news-details">
                   <span className="author-name">@{article.author ?? "Невідомий"}</span>
