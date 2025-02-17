@@ -1,9 +1,10 @@
 export interface NewsArticle {
+  author: string | null;
   title: string;
   description: string;
-  author?: string;
-  likes?: number;
-  comments?: number;
   url: string;
-  urlToImage: string;
+  urlToImage: string | null;
+	publishedAt: string;
+  likes: number;
+  comments: number;
 }
