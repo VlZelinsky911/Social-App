@@ -4,6 +4,7 @@ import { NewsArticle } from "../../../app/interfaces/interfaces";
 import { FaThumbsUp, FaComment } from "react-icons/fa";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
 import PostTitle from "./FeedComponents/PostTitle/PostTitle";
+import Spinner from "./FeedComponents/Spinner/Spinner";
 
 const API_KEY = "5806e82f2ce74de69e27e82e7e69bdf0";
 
@@ -11,7 +12,7 @@ const Home: React.FC = () => {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("all");
-  const [activeCategory, setActiveCategory] = useState<string>("Стрічка"); // Стейт для активної категорії
+  const [activeCategory, setActiveCategory] = useState<string>("Стрічка");
   const pageRef = useRef<number>(1);
   const canLoadMore = useRef<boolean>(true);
 
@@ -117,7 +118,7 @@ const Home: React.FC = () => {
                 </div>
               </div>
             ))}
-            {loading && <p>Завантаження...</p>}
+            {loading && <Spinner/>}
           </div>
         </div>
       </div>
