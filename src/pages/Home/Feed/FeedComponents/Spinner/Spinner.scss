@@ -1,0 +1,24 @@
+$spinner-size: 60px;
+$spinner-border-width: 6px;
+$spinner-primary-color: rgba(30, 58, 138, 0.25);
+$spinner-active-color: rgba(37, 99, 235, 0.8);
+$spinner-speed: 1s;
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $spinner-size;
+  height: $spinner-size;
+  border: $spinner-border-width solid $spinner-primary-color;
+  border-top-color: $spinner-active-color;
+  border-radius: 50%;
+  animation: spin $spinner-speed linear infinite;
+  margin: 30px auto;
+  filter: drop-shadow(0px 0px 10px rgba(37, 99, 235, 0.5));
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

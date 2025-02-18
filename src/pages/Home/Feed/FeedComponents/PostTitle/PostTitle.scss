@@ -20,3 +20,14 @@
     margin-left: auto;
   }
 }
+
+@media (max-width: 767px) {
+	.news-meta {
+		.author-name{
+			font-size: 1.2rem;
+		}
+		.news-date{
+			font-size: 0.85rem;
+		}
+	}
+}

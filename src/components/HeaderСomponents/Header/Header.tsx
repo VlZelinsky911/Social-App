@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaSearch, FaUser, FaGamepad, FaHome, FaStar, FaBars, FaTimes } from "react-icons/fa";
+import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import "./Header.scss";
+import InputMobile from "./Mobile/InputMobile/InputMobile";
+import Navigation from "./Mobile/NavigationMobile/NavigationMobile";
 
 const Header: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
     setSearchTerm(event.target.value);
   };
 
@@ -16,41 +18,38 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="header">
-      <div className="left-section">
-        <div className="logo">GN</div>
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Пошук ігор..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <button>
-            <FaSearch />
-          </button>
+    <>
+      <header className="header">
+        <div className="left-section">
+          <div className="logo">GN</div>
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="Пошук ігор..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <button>
+              <FaSearch />
+            </button>
+          </div>
         </div>
-      </div>
-
-      <button className={`burger-menu ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}>
-        {isMenuOpen ? <FaTimes /> : <FaBars />}
-      </button>
-
-      <nav className={`nav ${isMenuOpen ? "active" : ""}`}>
-        <Link to="/" className="nav-item" onClick={() => setIsMenuOpen(false)}>
-          <FaHome /> Головна
-        </Link>
-        <Link to="/favorites" className="nav-item" onClick={() => setIsMenuOpen(false)}>
-          <FaStar /> Обране
-        </Link>
-        <Link to="/categories" className="nav-item" onClick={() => setIsMenuOpen(false)}>
-          <FaGamepad /> Категорії ігор
-        </Link>
-        <Link to="/profile" className="nav-item" onClick={() => setIsMenuOpen(false)}>
-          <FaUser /> Профіль
-        </Link>
-      </nav>
-    </header>
+        <InputMobile searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+        <nav className={`nav`}>
+          <Navigation setIsMenuOpen={setIsMenuOpen} />
+        </nav>
+        <button className={`burger-menu ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}>
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+        <nav
+          className={`navMobile ${isMenuOpen ? "active" : ""}`}
+          style={{ display: isMenuOpen ? "flex" : "none" }}
+        >
+          <Navigation setIsMenuOpen={setIsMenuOpen} />
+        </nav>
+      </header>
+      <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}></div>
+    </>
   );
 };
 
