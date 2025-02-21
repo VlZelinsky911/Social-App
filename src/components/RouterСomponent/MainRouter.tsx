@@ -10,7 +10,7 @@ import Profile from "../../pages/Profile/Profile";
 
 import PrivacyPolicy from "../../policies/PrivacyPolicy";
 import TermsOfService from "../../policies/TermsOfService";
-
+import UserProfile from "../../pages/Home/UserProfile/UserProfile";
 
 function MainRouter() {
   return (
@@ -24,6 +24,7 @@ function MainRouter() {
           <Route path="profile" element={<Profile />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-service" element={<TermsOfService />} />
+          <Route path="/profile/:username" element={<UserProfile />} />
         </Route>
       </Routes>
       <Footer />
@@ -32,4 +33,3 @@ function MainRouter() {
 }
 
 export default MainRouter;
-

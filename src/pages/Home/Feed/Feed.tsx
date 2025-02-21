@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Feed.scss";
-import { NewsArticle } from "../../../app/interfaces/interfaces";
+import { NewsArticle } from "./FeedInterface/interfaces";
 import { FaThumbsUp, FaComment } from "react-icons/fa";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
 import PostTitle from "./FeedComponents/PostTitle/PostTitle";
 import Spinner from "./FeedComponents/Spinner/Spinner";
+import PostCreator from "./FeedComponents/PostCreator/PostCreator";
 
 const API_KEY = "5806e82f2ce74de69e27e82e7e69bdf0";
 
@@ -83,6 +84,7 @@ const Home: React.FC = () => {
               setActiveCategory={setActiveCategory}
 							activeCategory={activeCategory}
             />
+						{activeCategory === "Стрічка" && <PostCreator/>}
             {filteredNews.map((article, index) => (
               <div key={index} className="news-item">
                 {article.urlToImage && (

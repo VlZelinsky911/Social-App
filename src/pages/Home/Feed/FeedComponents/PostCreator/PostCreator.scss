@@ -1,0 +1,94 @@
+.create-post {
+  .post-header {
+    textarea {
+      width: 100%;
+      min-height: 30px;
+      padding: 22px;
+      border: 1px solid #ccc;
+      background: #f8f9fa;
+      color: #555;
+      border-radius: 20px;
+      font-size: 16px;
+      outline: none;
+      resize: none;
+
+      &::-webkit-scrollbar {
+				display: none;
+      }
+    }
+  }
+
+  .char-counter {
+    font-size: 14px;
+    color: #555;
+    text-align: right;
+    margin: 5px 0;
+  }
+
+  .post-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid #2563eb;
+    }
+  }
+
+  .post-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 12px;
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #555;
+      transition: background 0.3s;
+
+      &:hover {
+        background: rgba(0, 132, 255, 0.1);
+        color: #2563eb;
+      }
+    }
+  }
+
+  .post-btn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    margin-bottom: 25px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    box-shadow: 0 3px 6px rgba(133, 137, 141, 0.3);
+
+    &:hover {
+      background: #2563eb;
+      box-shadow: 0 4px 8px rgba(0, 132, 255, 0.4);
+    }
+  }
+}
