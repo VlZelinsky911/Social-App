@@ -13,6 +13,11 @@
     margin: 0 auto;
     padding: 0 20px;
 
+		button {
+			outline: none;
+		}
+		
+
     @media (max-width: 1023px) {
       flex-direction: column;
       gap: 20px;

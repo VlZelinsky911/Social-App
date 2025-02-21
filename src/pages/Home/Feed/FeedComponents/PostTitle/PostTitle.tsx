@@ -1,5 +1,6 @@
 import React from "react";
 import "./PostTitle.scss";
+import { Link } from "react-router-dom";
 
 interface PostTitleProps {
   author: string | null;
@@ -9,7 +10,9 @@ interface PostTitleProps {
 const PostTitle: React.FC<PostTitleProps> = ({ author, publishedAt }) => (
   <div className="news-meta">
     <span className="author-name">
-      @{author ?? "Невідомий"}
+			<Link to={`/profile/${author ?? "unknown"}`} className="author-link">
+        @{author ?? "Невідомий"}
+      </Link>
     </span>
     <span className="news-date">
       	{new Date(publishedAt).toLocaleDateString("uk-UA", {
