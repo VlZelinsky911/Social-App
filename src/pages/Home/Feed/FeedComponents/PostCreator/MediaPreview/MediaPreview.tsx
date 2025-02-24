@@ -15,7 +15,6 @@ const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
     const urls = files.map((file) => URL.createObjectURL(file));
     setPreviewUrls(urls);
 
-    // Генерація прев'ю для відео
     files.forEach((file, index) => {
       if (file.type.startsWith("video/")) {
         generateVideoThumbnail(file, index);
@@ -30,7 +29,7 @@ const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
   const generateVideoThumbnail = (file: File, index: number) => {
     const video = document.createElement("video");
     video.src = URL.createObjectURL(file);
-    video.currentTime = 0.5; // Беремо кадр через 0.5 секунди
+    video.currentTime = 0.5; 
     video.crossOrigin = "anonymous";
 
     video.onloadeddata = () => {
