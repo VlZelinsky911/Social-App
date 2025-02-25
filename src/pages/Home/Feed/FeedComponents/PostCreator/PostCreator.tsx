@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import {
+  FaEllipsisH,
+  FaMapMarkerAlt,
   FaPhotoVideo,
   FaUserTag,
-  FaMapMarkerAlt,
-  FaEllipsisH,
 } from "react-icons/fa";
-import { createClient } from "@supabase/supabase-js";
+import { supabase} from "../../../../../services/supabaseClient";
 import PreviewFiles from "./MediaPreview/MediaPreview";
 import "./PostCreator.scss";
-
-const supabaseUrl = "https://tvcikevghrhzdnbqieto.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2Y2lrZXZnaHJoemRuYnFpZXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAzMzgyMDEsImV4cCI6MjA1NTkxNDIwMX0.NqNJ9aSVR4cDJHLm7qbJSJ9xthowtnqClaD8wIrBm3s";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { uploadFiles } from "../../../../../services/fileUploadService/fileUploadService";
 
 const CreatePost = () => {
   const [postText, setPostText] = useState("");
@@ -22,46 +18,27 @@ const CreatePost = () => {
   const maxChars = 280;
 
   const handlePost = async () => {
-    if (postText.trim().length < 3) {
-      alert("Будь ласка, введіть хоча б 3 символи тексту.");
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     try {
-      let mediaUrls: string[] = [];
+      const mediaUrls = await uploadFiles(selectedFiles);
+      console.log("📤 Завантажені файли:", mediaUrls);
 
-      // Завантаження файлів у Supabase Storage
-      if (selectedFiles.length > 0) {
-        const uploadPromises = selectedFiles.map(async (file) => {
-          const fileName = `${Date.now()}-${file.name}`;
-          const { data, error } = await supabase.storage
-            .from("post_media") // Назва бакету у Supabase
-            .upload(fileName, file);
-
-          if (error) throw error;
-          return `${supabaseUrl}/storage/v1/object/public/post_media/${fileName}`;
-        });
-
-        mediaUrls = await Promise.all(uploadPromises);
-      }
-
-      // Збереження поста в базі даних
       const { error } = await supabase.from("posts").insert([
         {
-          text: postText,
+          text: postText || null,
           mediaurls: mediaUrls.length > 0 ? mediaUrls : null,
         },
       ]);
 
       if (error) throw error;
 
-      alert("Пост успішно створено!");
+      alert("✅ Пост створено!");
       setPostText("");
       setSelectedFiles([]);
     } catch (err: any) {
+      console.error("❌ Помилка створення поста:", err);
       setError(err.message || "Помилка під час створення поста.");
     } finally {
       setIsLoading(false);
@@ -71,7 +48,10 @@ const CreatePost = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    setSelectedFiles((prevFiles) => [...prevFiles, ...Array.from(files)]);
+
+    const fileArray = Array.from(files);
+
+    setSelectedFiles((prevFiles) => [...prevFiles, ...fileArray]);
   };
 
   const canPost = postText.trim().length >= 3 && !isLoading;
@@ -98,9 +78,10 @@ const CreatePost = () => {
       <div className="char-counter">
         {postText.length} / {maxChars}
       </div>
+
       <div className="post-actions">
         <label className={`action-btn ${isLoading ? "disabled" : ""}`}>
-          <FaPhotoVideo /> Фото/відео
+          <FaPhotoVideo /> Додати медіа
           <input
             type="file"
             accept="image/*,video/*"
