@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Feed.scss";
 import { NewsArticle } from "./FeedInterface/interfaces";
-import { FaThumbsUp, FaComment } from "react-icons/fa";
+import { FaComment, FaHeart, FaThumbsUp } from "react-icons/fa";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
 import PostTitle from "./FeedComponents/PostTitle/PostTitle";
 import Spinner from "./FeedComponents/Spinner/Spinner";
 import PostCreator from "./FeedComponents/PostCreator/PostCreator";
+import LikeButton from "./FeedComponents/LikeButton/LikeButton";
 
-const API_KEY = "5806e82f2ce74de69e27e82e7e69bdf0";
+const API_KEY = "58bc583456894a919ca976c5a6f6cb7a";
 
 const Home: React.FC = () => {
   const [news, setNews] = useState<NewsArticle[]>([]);
@@ -82,9 +83,9 @@ const Home: React.FC = () => {
             <NewsCategories
               setFilter={setFilter}
               setActiveCategory={setActiveCategory}
-							activeCategory={activeCategory}
+              activeCategory={activeCategory}
             />
-						{activeCategory === "Стрічка" && <PostCreator/>}
+            {activeCategory === "Стрічка" && <PostCreator />}
             {filteredNews.map((article, index) => (
               <div key={index} className="news-item">
                 {article.urlToImage && (
@@ -109,9 +110,7 @@ const Home: React.FC = () => {
                       Детальніше
                     </a>
                     <div className="likes-comments">
-                      <button>
-                        <FaThumbsUp /> {article.likes}
-                      </button>
+                      <LikeButton/>
                       <button>
                         <FaComment /> {article.comments}
                       </button>
@@ -120,7 +119,7 @@ const Home: React.FC = () => {
                 </div>
               </div>
             ))}
-            {loading && <Spinner/>}
+            {loading && <Spinner />}
           </div>
         </div>
       </div>
