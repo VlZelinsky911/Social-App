@@ -11,13 +11,22 @@ import Profile from "../../pages/Profile/Profile";
 import PrivacyPolicy from "../../policies/PrivacyPolicy";
 import TermsOfService from "../../policies/TermsOfService";
 import UserProfile from "../../pages/Home/UserProfile/UserProfile";
+import UserRegistration from "../../pages/UserRegistration/UserRegistration";
+
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store/store";
 
 function MainRouter() {
+	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
   return (
     <Router>
-      <Header />
+      {isAuthenticated &&<Header />}
       <Routes>
-        <Route path="/" element={<Main />}>
+				{!isAuthenticated ? (
+          <Route path="*" element={<UserRegistration />} />
+        ) :
+				(<Route path="/" element={<Main />}>
           <Route index element={<Home />} />
           <Route path="categories" element={<Categories />} />
           <Route path="favorites" element={<Favorites />} />
@@ -25,9 +34,9 @@ function MainRouter() {
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms-of-service" element={<TermsOfService />} />
           <Route path="/profile/:username" element={<UserProfile />} />
-        </Route>
+        </Route>)}
       </Routes>
-      <Footer />
+      {isAuthenticated && <Footer />}
     </Router>
   );
 }
