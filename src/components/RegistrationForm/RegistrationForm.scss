@@ -41,31 +41,51 @@
   flex-direction: column;
   gap: 16px;
 
-  .input-group {
-    position: relative;
-
-    input, select {
-      box-sizing: border-box;
-      width: 100%;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      color: #ffffff;
-      outline: none;
-      transition: all 0.3s ease-in-out;
-
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      &:focus {
-        background: rgba(255, 255, 255, 0.3);
-        box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-      }
-    }
-  }
+	.input-group {
+		position: relative;
+	
+		input {
+			box-sizing: border-box;
+			width: 100%;
+			padding: 14px;
+			padding-right: 40px; // Додаємо простір для кнопки
+			background: rgba(255, 255, 255, 0.2);
+			border: none;
+			border-radius: 8px;
+			font-size: 16px;
+			color: #ffffff;
+			outline: none;
+			transition: all 0.3s ease-in-out;
+	
+			&::placeholder {
+				color: rgba(255, 255, 255, 0.7);
+			}
+	
+			&:focus {
+				background: rgba(255, 255, 255, 0.3);
+				box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+			}
+		}
+	
+		.toggle-password {
+			position: absolute;
+			right: 0px;
+			top: 44%;
+			transform: translateY(-50%);
+			background: none;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			color: #ffffff;
+			font-size: 15px;
+			transition: all 0.3s ease-in-out;
+	
+			&:hover {
+				color: #cccccc;
+			}
+		}
+	}
+	
 
   select {
     appearance: none;
@@ -150,4 +170,7 @@
   font-size: 14px;
   padding-top: 5px;
   text-align: left;
+}
+.success {
+	padding-bottom: 15px;
 }
