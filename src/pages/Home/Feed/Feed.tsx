@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Feed.scss";
 import { NewsArticle } from "./FeedInterface/interfaces";
-import { FaComment, FaHeart, FaThumbsUp } from "react-icons/fa";
+import { FaComment} from "react-icons/fa";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
 import PostTitle from "./FeedComponents/PostTitle/PostTitle";
 import Spinner from "./FeedComponents/Spinner/Spinner";

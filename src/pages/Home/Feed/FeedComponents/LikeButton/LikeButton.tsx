@@ -6,7 +6,7 @@ const LikeButton: React.FC = () => {
   const [liked, setLiked] = useState<boolean>(() => localStorage.getItem("liked") === "true");
 	const [likesCount, setLikesCount] = useState<number>(() => {
 		const storedLikes = localStorage.getItem("likesCount");
-		return storedLikes ? parseInt(storedLikes, 10) : 100;
+		return storedLikes ? parseInt(storedLikes, 10) : 10;
 	});
 
   const toggleLike = () => {

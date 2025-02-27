@@ -16,7 +16,6 @@
 		transition: color 0.3s ease-in-out;
 	
 		&::after {
-			content: "";
 			position: absolute;
 			left: 0;
 			bottom: -2px;
@@ -29,10 +28,6 @@
 			transition: transform 0.3s ease-in-out;
 		}
 	
-		&:hover {
-			color: #ddd;
-		}
-	
 		&:hover::after {
 			transform: scaleX(1);
 		}
@@ -41,6 +36,10 @@
 			font-size: 1.4rem;
 			color: #222;
 			text-decoration: none;
+			transition: color 0.3s ease-in-out;
+			&:hover{
+				color: #0073e6;
+			}
 		}
 	}
 	
