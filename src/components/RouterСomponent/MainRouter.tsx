@@ -24,7 +24,9 @@ function MainRouter() {
       {isAuthenticated &&<Header />}
       <Routes>
 				{!isAuthenticated ? (
+				<>
           <Route path="*" element={<UserRegistration />} />
+				</>	
         ) :
 				(<Route path="/" element={<Main />}>
           <Route index element={<Home />} />
