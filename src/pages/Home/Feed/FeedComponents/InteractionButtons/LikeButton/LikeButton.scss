@@ -1,0 +1,45 @@
+.like-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: none;
+	
+	outline: none;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3sease-in-out;
+
+  &:hover {
+    outline: none;
+    transform: scale(1.05);
+  }
+
+  .icon {
+    display: inline-block;
+    transition: transform 0.2s ease, color 0.3s ease;
+  }
+
+  &.liked {
+    .icon {
+      animation: softJump 0.3s ease-in-out;
+    }
+  }
+}
+
+@keyframes softJump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2) translateY(-3px);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

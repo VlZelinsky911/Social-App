@@ -1,23 +1,49 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Feed.scss";
 import { NewsArticle } from "./FeedInterface/interfaces";
-import { FaComment } from "react-icons/fa";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
 import PostTitle from "./FeedComponents/PostTitle/PostTitle";
 import Spinner from "./FeedComponents/Spinner/Spinner";
 import PostCreator from "./FeedComponents/PostCreator/PostCreator";
-import LikeButton from "./FeedComponents/LikeButton/LikeButton";
 import { supabase } from "../../../services/supabaseClient";
+import InteractionButtons from "./FeedComponents/InteractionButtons/InteractionButtons";
 
 const API_KEY = "58bc583456894a919ca976c5a6f6cb7a";
 
+interface Post {
+  id: number;
+  text: string;
+  mediaurls?: string[]; // Для зображень/відео
+  created_at: string;
+}
+
 const Home: React.FC = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("all");
   const [activeCategory, setActiveCategory] = useState<string>("Стрічка");
   const pageRef = useRef<number>(1);
   const canLoadMore = useRef<boolean>(true);
+
+  // 📌 Функція для завантаження постів із Supabase
+  const fetchPosts = async () => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("*")
+      .order("created_at", { ascending: false }); // Останні зверху
+
+    if (error) {
+      console.error("Помилка завантаження постів:", error);
+    } else {
+      setPosts(data || []);
+    }
+  };
+
+  // Викликаємо завантаження постів при монтуванні
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const fetchNews = useCallback(async () => {
     if (loading || !canLoadMore.current) return;
@@ -39,7 +65,7 @@ const Home: React.FC = () => {
         canLoadMore.current = false;
       }
     } catch (error) {
-      console.error("Помилка завантаження постів:", error);
+      console.error("Помилка завантаження новин:", error);
     } finally {
       setLoading(false);
     }
@@ -63,19 +89,6 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNews, loading]);
 
-  let filteredNews = news.slice();
-
-  if (filter === "new") {
-    filteredNews.sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
-  } else if (filter === "popular") {
-    filteredNews = filteredNews.filter((article) => article.likes >= 50);
-  } else if (filter === "recommended") {
-    filteredNews = filteredNews.filter((article) => article.comments >= 20);
-  }
-
   return (
     <div className="home">
       <div className="container">
@@ -87,7 +100,30 @@ const Home: React.FC = () => {
               activeCategory={activeCategory}
             />
             {activeCategory === "Стрічка" && <PostCreator />}
-            {filteredNews.map((article, index) => (
+
+            {posts.map((post) => (
+              <div key={post.id} className="news-item">
+                <div className="news-details">
+                  <PostTitle
+                    author="Користувач"
+                    publishedAt={post.created_at}
+                  />
+                  <div className="article__border">
+                    <p>{post.text}</p>
+                  </div>
+                  {post.mediaurls && post.mediaurls.length > 0 && (
+                    <img src={post.mediaurls[0]} alt="Медіа" />
+                  )}
+                  <div className="news-actions">
+                    <div className="likes-comments">
+                      <InteractionButtons />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {news.map((article, index) => (
               <div key={index} className="news-item">
                 <div className="news-details">
                   <PostTitle
@@ -97,29 +133,18 @@ const Home: React.FC = () => {
                   <div className="article__border">
                     <p>{article.description}</p>
                   </div>
-									
                   {article.urlToImage && (
                     <img src={article.urlToImage} alt={article.title} />
                   )}
                   <div className="news-actions">
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="detail-link"
-                    >
-                      Детальніше
-                    </a>
                     <div className="likes-comments">
-                      <LikeButton />
-                      <button>
-                        <FaComment /> {article.comments}
-                      </button>
+                      <InteractionButtons />
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+
             {loading && <Spinner />}
           </div>
         </div>
