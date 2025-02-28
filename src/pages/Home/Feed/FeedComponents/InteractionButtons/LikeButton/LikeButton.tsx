@@ -24,8 +24,11 @@ const LikeButton = ({ openModal }: { openModal: () => void }) => {
 
   return (
     <div className="interaction-buttons">
-      <button onClick={toggleLike} style={{ color: liked ? "red" : "#fff" }}>
-        <FaHeart />
+      <button
+        onClick={toggleLike}
+        className={liked ? "liked" : ""}
+      >
+        <FaHeart className="icon" />
       </button>
       <span className="count" onClick={openModal}>
         {likesCount}

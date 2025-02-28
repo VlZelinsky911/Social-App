@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Header from "../HeaderСomponents/Header/Header";
 import Footer from "../FooterComponents/Footer/Footer";
 import Main from "../MainComponents/Main";
@@ -15,28 +15,34 @@ import UserRegistration from "../../pages/UserRegistration/UserRegistration";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store/store";
+import UserLogin from "../../pages/UserLogin/UserLogin";
 
 function MainRouter() {
-	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   return (
     <Router>
-      {isAuthenticated &&<Header />}
+      {isAuthenticated && <Header />}
       <Routes>
-				{!isAuthenticated ? (
-				<>
-          <Route path="*" element={<UserRegistration />} />
-				</>	
-        ) :
-				(<Route path="/" element={<Main />}>
-          <Route index element={<Home />} />
-          <Route path="categories" element={<Categories />} />
-          <Route path="favorites" element={<Favorites />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="terms-of-service" element={<TermsOfService />} />
-          <Route path="/profile/:username" element={<UserProfile />} />
-        </Route>)}
+        {!isAuthenticated ? (
+          <>
+            <Route path="/register" element={<UserRegistration />} />
+            <Route path="/login" element={<UserLogin />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </>
+        ) : (
+          <Route path="/" element={<Main />}>
+            <Route index element={<Home />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="favorites" element={<Favorites />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="terms-of-service" element={<TermsOfService />} />
+            <Route path="/profile/:username" element={<UserProfile />} />
+          </Route>
+        )}
       </Routes>
       {isAuthenticated && <Footer />}
     </Router>

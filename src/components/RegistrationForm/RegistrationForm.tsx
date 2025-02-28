@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../features/auth/authSlice";
 import "./RegistrationForm.scss";
 import { supabase } from "../../services/supabaseClient";
-
+import bcrypt from "bcryptjs";
 
 const registrationSchema = z
   .object({
@@ -57,6 +57,8 @@ const UserRegistration = () => {
     setMessage(null);
 		setIsLoading(true);
     try {
+			const hashedPassword = await bcrypt.hash(data.password, 10);
+
       const { data: signUpData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -71,15 +73,14 @@ const UserRegistration = () => {
         id: signUpData.user.id,
         full_name: data.firstName,
         email: data.email,
+				password_hash: hashedPassword,
       }]);
 
     if (profileError) throw profileError;
 
-
 			setMessage("Реєстрація успішна! Перевірте пошту для підтвердження.");
 
-
-      const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+			const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
