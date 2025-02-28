@@ -40,6 +40,7 @@ const UserRegistration = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -54,6 +55,7 @@ const UserRegistration = () => {
 
   const onSubmit = async (data: FormData) => {
     setMessage(null);
+		setIsLoading(true);
     try {
       const { data: signUpData, error } = await supabase.auth.signUp({
         email: data.email,
@@ -89,7 +91,9 @@ const UserRegistration = () => {
 
     } catch (error: any) {
       setMessage(error.message);
-    }
+    } finally {
+			setIsLoading(false);
+		}
   };
 
   return (
@@ -97,7 +101,7 @@ const UserRegistration = () => {
       <h1 className="site-title">GN</h1>
       <div className="registration-box">
         <h2 className="title">Реєстрація</h2>
-        {message && <p className="message">{message}</p>}
+        {message && <p className="success">{message}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className="registration-form">
           <div className="input-group">
             <input type="text" placeholder="Ім'я" {...register("firstName")} />
@@ -133,7 +137,7 @@ const UserRegistration = () => {
             <p className="error">{errors.confirmPassword?.message}</p>
           </div>
 
-          <button type="submit" className="submit-btn">Зареєструватися</button>
+          <button type="submit" className="submit-btn"> {isLoading ? "Завантаження..." : "Зареєструватися"}</button>
         </form>
       </div>
     </div>

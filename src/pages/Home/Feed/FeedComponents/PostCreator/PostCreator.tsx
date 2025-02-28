@@ -101,7 +101,7 @@ const CreatePost = () => {
         </button>
       </div>
 
-      {selectedFiles.length > 0 && <PreviewFiles files={selectedFiles} />}
+      {selectedFiles.length > 0 && <PreviewFiles files={selectedFiles} setFiles={setSelectedFiles} />}
 
       <button
         className={`post-btn ${isLoading ? "loading" : ""}`}
