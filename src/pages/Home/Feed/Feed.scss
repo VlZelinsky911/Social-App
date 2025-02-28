@@ -13,10 +13,9 @@
     margin: 0 auto;
     padding: 0 20px;
 
-		button {
-			outline: none;
-		}
-		
+    button {
+      outline: none;
+    }
 
     @media (max-width: 1023px) {
       flex-direction: column;
@@ -56,7 +55,7 @@
       img {
         width: 100%;
         height: auto;
-        border-radius: 10px;
+        border-radius: 25px;
         margin-bottom: 15px;
       }
 
@@ -90,8 +89,9 @@
         .article__border {
           border: #ddd solid 1px;
           border-radius: 5px;
-          padding: 25px;
+          padding: 15px;
           margin-top: 10px;
+          margin-bottom: 15px;
         }
 
         .news-actions {
@@ -123,7 +123,7 @@
           .likes-comments {
             display: flex;
             gap: 8px;
-
+						
             button {
               display: flex;
               align-items: center;

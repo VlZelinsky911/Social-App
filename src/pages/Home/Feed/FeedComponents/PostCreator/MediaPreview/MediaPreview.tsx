@@ -3,9 +3,10 @@ import "./MediaPreview.scss";
 
 interface PreviewFilesProps {
   files: File[];
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>; // Додаємо setFiles у пропси
 }
 
-const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
+const PreviewFiles: React.FC<PreviewFilesProps> = ({ files, setFiles }) => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [videoThumbnails, setVideoThumbnails] = useState<{ [key: number]: string }>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -29,7 +30,7 @@ const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
   const generateVideoThumbnail = (file: File, index: number) => {
     const video = document.createElement("video");
     video.src = URL.createObjectURL(file);
-    video.currentTime = 0.5; 
+    video.currentTime = 0.5;
     video.crossOrigin = "anonymous";
 
     video.onloadeddata = () => {
@@ -52,6 +53,11 @@ const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
   };
 
   const closeLightbox = () => setLightboxIndex(null);
+
+  const removeFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    closeLightbox(); // Закриваємо модальне вікно після видалення
+  };
 
   const nextMedia = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -84,8 +90,8 @@ const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
               <img src={url} alt="Preview" className="preview-image" />
             ) : (
               <div className="video-preview-container">
-                <img src={videoThumbnails[index] || "../../../public/videoLogo.jpg"} 
-                     className="video-preview" 
+                <img src={videoThumbnails[index] || "../../../public/videoLogo.jpg"}
+                     className="video-preview"
                      alt="Video preview" />
                 <button className="video-play-button">▶</button>
               </div>
@@ -100,6 +106,9 @@ const PreviewFiles: React.FC<PreviewFilesProps> = ({ files }) => {
             <button className="lightbox-close" onClick={closeLightbox}>✖</button>
             <button className="lightbox-prev" onClick={prevMedia}>←</button>
             <button className="lightbox-next" onClick={nextMedia}>→</button>
+
+            <button className="lightbox-delete" onClick={() => removeFile(lightboxIndex)}>🗑 Видалити</button>
+
             {files[lightboxIndex].type.startsWith("image/") ? (
               <img src={previewUrls[lightboxIndex]} alt="Fullscreen Preview" className="lightbox-image" />
             ) : (

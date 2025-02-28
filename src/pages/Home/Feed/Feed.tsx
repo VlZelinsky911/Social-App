@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Feed.scss";
 import { NewsArticle } from "./FeedInterface/interfaces";
-import { FaComment} from "react-icons/fa";
+import { FaComment } from "react-icons/fa";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
 import PostTitle from "./FeedComponents/PostTitle/PostTitle";
 import Spinner from "./FeedComponents/Spinner/Spinner";
 import PostCreator from "./FeedComponents/PostCreator/PostCreator";
 import LikeButton from "./FeedComponents/LikeButton/LikeButton";
+import { supabase } from "../../../services/supabaseClient";
 
 const API_KEY = "58bc583456894a919ca976c5a6f6cb7a";
 
@@ -88,18 +89,18 @@ const Home: React.FC = () => {
             {activeCategory === "Стрічка" && <PostCreator />}
             {filteredNews.map((article, index) => (
               <div key={index} className="news-item">
-                {article.urlToImage && (
-                  <img src={article.urlToImage} alt={article.title} />
-                )}
                 <div className="news-details">
                   <PostTitle
                     author={article.author}
                     publishedAt={article.publishedAt}
                   />
                   <div className="article__border">
-                    <h3>{article.title}</h3>
                     <p>{article.description}</p>
                   </div>
+									
+                  {article.urlToImage && (
+                    <img src={article.urlToImage} alt={article.title} />
+                  )}
                   <div className="news-actions">
                     <a
                       href={article.url}
@@ -110,7 +111,7 @@ const Home: React.FC = () => {
                       Детальніше
                     </a>
                     <div className="likes-comments">
-                      <LikeButton/>
+                      <LikeButton />
                       <button>
                         <FaComment /> {article.comments}
                       </button>
