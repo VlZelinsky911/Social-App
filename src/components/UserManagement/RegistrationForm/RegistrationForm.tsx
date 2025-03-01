@@ -4,9 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../features/auth/authSlice";
+import { login } from "../../../features/auth/authSlice";
 import "./RegistrationForm.scss";
-import { supabase } from "../../services/supabaseClient";
+import { supabase } from "../../../services/supabaseClient";
 import bcrypt from "bcryptjs";
 
 const registrationSchema = z
@@ -32,22 +32,26 @@ type FormData = z.infer<typeof registrationSchema>;
 const UserRegistration = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(registrationSchema),
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
       if (data?.session) {
         dispatch(login());
-        navigate("/"); 
+        navigate("/");
       }
     };
     checkUser();
@@ -55,9 +59,9 @@ const UserRegistration = () => {
 
   const onSubmit = async (data: FormData) => {
     setMessage(null);
-		setIsLoading(true);
+    setIsLoading(true);
     try {
-			const hashedPassword = await bcrypt.hash(data.password, 10);
+      const hashedPassword = await bcrypt.hash(data.password, 10);
 
       const { data: signUpData, error } = await supabase.auth.signUp({
         email: data.email,
@@ -67,34 +71,34 @@ const UserRegistration = () => {
       if (error) throw error;
       if (!signUpData.user) throw new Error("Не вдалося створити користувача");
 
-			const { error: profileError } = await supabase
-      .from("profiles")
-      .insert([{ 
-        id: signUpData.user.id,
-        full_name: data.firstName,
-        email: data.email,
-				password_hash: hashedPassword,
-      }]);
+      const { error: profileError } = await supabase.from("profiles").insert([
+        {
+          id: signUpData.user.id,
+          full_name: data.firstName,
+          email: data.email,
+          password_hash: hashedPassword,
+        },
+      ]);
 
-    if (profileError) throw profileError;
+      if (profileError) throw profileError;
 
-			setMessage("Реєстрація успішна! Перевірте пошту для підтвердження.");
+      setMessage("Реєстрація успішна! Перевірте пошту для підтвердження.");
 
-			const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
+      const { data: loginData, error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email: data.email,
+          password: data.password,
+        });
 
       if (loginError) throw loginError;
 
       dispatch(login());
       navigate("/");
-
     } catch (error: any) {
       setMessage(error.message);
     } finally {
-			setIsLoading(false);
-		}
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -110,7 +114,11 @@ const UserRegistration = () => {
           </div>
 
           <div className="input-group">
-            <input type="text" placeholder="Електронна пошта" {...register("email")} />
+            <input
+              type="text"
+              placeholder="Електронна пошта"
+              {...register("email")}
+            />
             <p className="error">{errors.email?.message}</p>
           </div>
 
@@ -120,7 +128,11 @@ const UserRegistration = () => {
               placeholder="Новий пароль"
               {...register("password")}
             />
-            <button type="button" className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+            >
               {showPassword ? "🔒" : "👁"}
             </button>
             <p className="error">{errors.password?.message}</p>
@@ -132,13 +144,20 @@ const UserRegistration = () => {
               placeholder="Підтвердьте пароль"
               {...register("confirmPassword")}
             />
-            <button type="button" className="toggle-password" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
               {showConfirmPassword ? "🔒" : "👁"}
             </button>
             <p className="error">{errors.confirmPassword?.message}</p>
           </div>
 
-          <button type="submit" className="submit-btn"> {isLoading ? "Завантаження..." : "Зареєструватися"}</button>
+          <button type="submit" className="submit-btn">
+            {" "}
+            {isLoading ? "Завантаження..." : "Зареєструватися"}
+          </button>
         </form>
       </div>
     </div>

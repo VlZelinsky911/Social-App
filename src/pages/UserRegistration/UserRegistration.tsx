@@ -1,4 +1,4 @@
-import RegistrationForm from "../../components/RegistrationForm/RegistrationForm";
+import RegistrationForm from "../../components/UserManagement/RegistrationForm/RegistrationForm";
 import "./UserRegistration.scss";
 
 const UserRegistration = () => {
