@@ -1,4 +1,8 @@
 .interaction-buttons {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	margin-right: 10px;
   button {
     background: none;
     border: none;

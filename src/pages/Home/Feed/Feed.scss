@@ -122,7 +122,8 @@
 
           .likes-comments {
             display: flex;
-            gap: 8px;
+						align-items: center;
+						gap: 10px;
 						
             button {
               display: flex;

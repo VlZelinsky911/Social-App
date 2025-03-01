@@ -7,6 +7,9 @@ import Spinner from "./FeedComponents/Spinner/Spinner";
 import PostCreator from "./FeedComponents/PostCreator/PostCreator";
 import { supabase } from "../../../services/supabaseClient";
 import InteractionButtons from "./FeedComponents/InteractionButtons/InteractionButtons";
+import LikeButton from "./FeedComponents/InteractionButtons/LikeButton/LikeButton";
+import CommentButton from "./FeedComponents/InteractionButtons/CommentButton/CommentButtton";
+import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
 
 interface Post {
   id: number;
@@ -21,11 +24,19 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("all");
   const [activeCategory, setActiveCategory] = useState<string>("Стрічка");
+  const [user, setUser] = useState<any>(null);
   const pageRef = useRef<number>(1);
   const canLoadMore = useRef<boolean>(true);
 
-
-    const fetchPosts = async () => {
+	useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
+	
+  const fetchPosts = async () => {
     const { data, error } = await supabase
       .from("posts")
       .select("*")
@@ -38,7 +49,7 @@ const Home: React.FC = () => {
     }
   };
 
-	useEffect(() => {
+  useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -86,6 +97,8 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNews, loading]);
 
+	console.log("user", user);
+
   return (
     <div className="home">
       <div className="container">
@@ -113,7 +126,9 @@ const Home: React.FC = () => {
                   )}
                   <div className="news-actions">
                     <div className="likes-comments">
-                      <InteractionButtons/>
+                      {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
+                      <CommentButton />
+                      <ShareButton />
                     </div>
                   </div>
                 </div>
@@ -135,7 +150,9 @@ const Home: React.FC = () => {
                   )}
                   <div className="news-actions">
                     <div className="likes-comments">
-                      <InteractionButtons/>
+                      {user && <LikeButton contentId={article.title} type="news" userId={user.id} />}
+                      <CommentButton />
+                      <ShareButton />
                     </div>
                   </div>
                 </div>

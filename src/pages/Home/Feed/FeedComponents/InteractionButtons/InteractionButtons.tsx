@@ -11,9 +11,9 @@ const IntegrationButtons = () => {
 
   return (
     <div className="interaction-buttons">
-      <LikeButton openModal={() => setModalType("likes")} />
-      <CommentButton openModal={() => setModalType("comments")} />
-      <ShareButton openModal={() => setModalType("shares")} />
+      <LikeButton/>
+      <CommentButton/>
+      <ShareButton/>
 
       {modalType && <Modal type={modalType} closeModal={() => setModalType(null)} />}
     </div>
