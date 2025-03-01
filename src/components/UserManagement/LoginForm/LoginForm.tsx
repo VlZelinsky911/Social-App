@@ -4,17 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../features/auth/authSlice";
-import { supabase } from "../../services/supabaseClient";
+import { login } from "../../../features/auth/authSlice";
+import { supabase } from "../../../services/supabaseClient";
 import "./LoginForm.scss";
-import bcrypt from "bcryptjs";
 
 const loginSchema = z.object({
-	email: z.string().email("Невірний формат email"),
-	password: z.string().min(6, "Пароль має бути мінімум 6 символів"),
+  email: z.string().email("Невірний формат email"),
+  password: z.string().min(6, "Пароль має бути мінімум 6 символів"),
 });
 
-type FormData = z.infer<typeof  loginSchema>;
+type FormData = z.infer<typeof loginSchema>;
 
 const UserRegistration = () => {
   const navigate = useNavigate();
@@ -32,52 +31,42 @@ const UserRegistration = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data?.session) {
-        dispatch(login());
-        navigate("/");
-      }
-    };
-    checkUser();
-  }, [dispatch, navigate]);
-
   const onSubmit = async (data: FormData) => {
     setMessage(null);
     setIsLoading(true);
     try {
-      const { data: userData, error: userError } = await supabase
-        .from("profiles")
-        .select("id, password_hash")
-        .eq("email", data.email)
-        .single();
+      const { data: loginData, error } = await supabase.auth.signInWithPassword(
+        {
+          email: data.email,
+          password: data.password,
+        }
+      );
 
-      if (userError || !userData) {
-        throw new Error("Користувача з таким email не знайдено");
-      }
+      if (error) throw error;
+      if (!loginData.session) throw new Error("Помилка отримання токену");
 
-      const isValidPassword = await bcrypt.compare(data.password, userData.password_hash);
-      if (!isValidPassword) {
-        throw new Error("Невірний пароль");
-      }
-
-      const { error: loginError } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (loginError) throw loginError;
+      localStorage.setItem("access_token", loginData.session.access_token);
+      localStorage.setItem("refresh_token", loginData.session.refresh_token);
 
       dispatch(login());
       navigate("/");
-
     } catch (error: any) {
       setMessage(error.message);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        dispatch(login());
+        navigate("/");
+      }
+    };
+    checkUser();
+  }, [dispatch, navigate]);
 
   return (
     <div className="registration-page">
@@ -118,13 +107,18 @@ const UserRegistration = () => {
               </button>
               <p className="error">{errors.password?.message}</p>
             </div>
-            <p className="register-link">
-              У вас немає аккаунту? <Link to="/register">Зареєструватися</Link>
+
+            <p className="forgot-password">
+              <Link to="/forgot-password">Забули пароль?</Link>
             </p>
 
             <button type="submit" className="submit-btn" disabled={isLoading}>
               {isLoading ? "Завантаження..." : "Увійти"}
             </button>
+
+            <p className="register-link">
+              У вас немає аккаунту? <Link to="/register">Зареєструватися</Link>
+            </p>
           </form>
         </div>
       </div>

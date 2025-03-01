@@ -136,25 +136,6 @@
     }
   }
 
-	.register-link {
-		font-size: 16px;
-		color: rgba(255, 255, 255, 0.8);
-		text-align: center;
-		margin-top: 5px;
-	}
-	
-	.register-link a {
-		color: #007bff;
-		font-weight: bold;
-		transition: color 0.3s ease-in-out;
-	}
-	
-	.register-link a:hover {
-		color: #0056b3;
-		text-decoration: underline;
-	}
-	
-
   .submit-btn {
     background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
@@ -162,6 +143,7 @@
     font-size: 18px;
     font-weight: bold;
     border: none;
+		outline: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s;

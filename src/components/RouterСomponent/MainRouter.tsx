@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Header from "../HeaderСomponents/Header/Header";
 import Footer from "../FooterComponents/Footer/Footer";
 import Main from "../MainComponents/Main";
@@ -16,6 +21,8 @@ import UserRegistration from "../../pages/UserRegistration/UserRegistration";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store/store";
 import UserLogin from "../../pages/UserLogin/UserLogin";
+import ForgotPassword from "../UserManagement/ForgotPasswordForm/ForgotPasswordForm";
+import ResetPassword from "../UserManagement/ResetPasswordForm/ResetPassword";
 
 function MainRouter() {
   const isAuthenticated = useSelector(
@@ -28,6 +35,8 @@ function MainRouter() {
       <Routes>
         {!isAuthenticated ? (
           <>
+						<Route path="/reset-password" element={<ResetPassword/>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/register" element={<UserRegistration />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="*" element={<Navigate to="/login" />} />

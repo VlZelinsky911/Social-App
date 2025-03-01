@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { FaHeart } from "react-icons/fa";
-import "./LikeButton.scss";
+import { useState } from "react";
+import { FaHeart, FaThumbsUp } from "react-icons/fa";
 
 const LikeButton = ({ openModal }: { openModal: () => void }) => {
   const [liked, setLiked] = useState<boolean>(
@@ -28,7 +27,7 @@ const LikeButton = ({ openModal }: { openModal: () => void }) => {
         onClick={toggleLike}
         className={liked ? "liked" : ""}
       >
-        <FaHeart className="icon" />
+			{liked ? <FaHeart className="icon" /> : <FaThumbsUp className="icon" />}	
       </button>
       <span className="count" onClick={openModal}>
         {likesCount}

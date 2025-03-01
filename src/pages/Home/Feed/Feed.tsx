@@ -8,12 +8,10 @@ import PostCreator from "./FeedComponents/PostCreator/PostCreator";
 import { supabase } from "../../../services/supabaseClient";
 import InteractionButtons from "./FeedComponents/InteractionButtons/InteractionButtons";
 
-const API_KEY = "58bc583456894a919ca976c5a6f6cb7a";
-
 interface Post {
   id: number;
   text: string;
-  mediaurls?: string[]; // Для зображень/відео
+  mediaurls?: string[];
   created_at: string;
 }
 
@@ -26,12 +24,12 @@ const Home: React.FC = () => {
   const pageRef = useRef<number>(1);
   const canLoadMore = useRef<boolean>(true);
 
-  // 📌 Функція для завантаження постів із Supabase
-  const fetchPosts = async () => {
+
+    const fetchPosts = async () => {
     const { data, error } = await supabase
       .from("posts")
       .select("*")
-      .order("created_at", { ascending: false }); // Останні зверху
+      .order("created_at", { ascending: false });
 
     if (error) {
       console.error("Помилка завантаження постів:", error);
@@ -40,8 +38,7 @@ const Home: React.FC = () => {
     }
   };
 
-  // Викликаємо завантаження постів при монтуванні
-  useEffect(() => {
+	useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -50,7 +47,7 @@ const Home: React.FC = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=gaming&language=en&pageSize=5&page=${pageRef.current}&apiKey=${API_KEY}`
+        `https://newsapi.org/v2/everything?q=gaming&language=en&pageSize=5&page=${pageRef.current}&apiKey=${import.meta.env.VITE_API_KEY}`
       );
       const data = await response.json();
       if (data.articles?.length) {
@@ -116,7 +113,7 @@ const Home: React.FC = () => {
                   )}
                   <div className="news-actions">
                     <div className="likes-comments">
-                      <InteractionButtons />
+                      <InteractionButtons/>
                     </div>
                   </div>
                 </div>
@@ -138,7 +135,7 @@ const Home: React.FC = () => {
                   )}
                   <div className="news-actions">
                     <div className="likes-comments">
-                      <InteractionButtons />
+                      <InteractionButtons/>
                     </div>
                   </div>
                 </div>
