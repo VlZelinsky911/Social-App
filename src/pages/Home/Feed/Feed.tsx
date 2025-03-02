@@ -97,7 +97,6 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNews, loading]);
 
-	console.log("user", user);
 
   return (
     <div className="home">

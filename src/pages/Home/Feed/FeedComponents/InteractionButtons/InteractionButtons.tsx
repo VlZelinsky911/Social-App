@@ -4,7 +4,7 @@ import "./InteractionButtons.scss";
 import LikeButton from "./LikeButton/LikeButton";
 import CommentButton from "./CommentButton/CommentButtton";
 import ShareButton from "./SendButton/ShareButton";
-import Modal from "./Modal/Modal";
+import Modal from "./LikesModal/LikesModal";
 
 const IntegrationButtons = () => {
   const [modalType, setModalType] = useState<"likes" | "comments" | "shares" | null>(null);

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { FaHeart, FaThumbsUp } from "react-icons/fa";
-import { createClient } from "@supabase/supabase-js";
 import { supabase } from "../../../../../../services/supabaseClient";
 import "./LikeButton.scss";
 
@@ -10,49 +9,108 @@ interface LikeButtonProps {
   userId: string;
 }
 
+interface Like {
+  profiles?: {
+    full_name: string;
+  };
+}
+
+
 const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
-		
+  const [likedUsers, setLikedUsers] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     const fetchLikes = async () => {
       const { data, error } = await supabase
         .from("likes")
-        .select("*")
+        .select("user_id, profiles(full_name)") // Забираємо innerJoin()
         .eq("content_id", contentId)
         .eq("type", type);
 
       if (!error) {
         setLikesCount(data.length);
-        setLiked(data.some(like => like.user_id === userId));
+        setLiked(data.some((like) => like.user_id === userId));
+      } else {
+        console.error("Помилка отримання лайків:", error);
       }
     };
+
     fetchLikes();
   }, [contentId, type, userId]);
 
   const toggleLike = async () => {
     if (liked) {
-      await supabase
+      // Якщо вже лайкнуто – видаляємо лайк
+      const { error } = await supabase
         .from("likes")
         .delete()
-        .match({ content_id: contentId, type, user_id: userId });
-      setLiked(false);
-      setLikesCount(prev => prev - 1);
+        .eq("content_id", contentId)
+        .eq("type", type)
+        .eq("user_id", userId);
+
+      if (!error) {
+        setLiked(false);
+        setLikesCount((prev) => Math.max(prev - 1, 0));
+      } else {
+        console.error("Помилка видалення лайка:", error);
+      }
     } else {
-      await supabase
+      // Якщо ще немає лайка – додаємо
+      const { error } = await supabase
         .from("likes")
         .insert([{ content_id: contentId, type, user_id: userId }]);
-      setLiked(true);
-      setLikesCount(prev => prev + 1);
+
+      if (!error) {
+        setLiked(true);
+        setLikesCount((prev) => prev + 1);
+      } else {
+        console.error("Помилка додавання лайка:", error);
+      }
     }
+  };
+
+  const fetchLikedUsers = async () => {
+    const { data, error } = await supabase
+      .from("likes")
+      .select("profiles(full_name)")
+      .eq("content_id", contentId)
+      .eq("type", type);
+
+    if (error) {
+      console.error("Помилка отримання лайкнувших:", error);
+      return;
+    }
+
+		
+    setLikedUsers((data as unknown as Like[]).map((like) => like.profiles?.full_name || "Анонім"));
+    setIsModalOpen(true);
   };
 
   return (
     <div className="interaction-buttons">
       <button onClick={toggleLike} className={liked ? "liked" : ""}>
-        {liked ? <FaHeart className="icon" /> : <FaThumbsUp className="icon" />}  
+        {liked ? <FaHeart className="icon" /> : <FaThumbsUp className="icon" />}
       </button>
-      <span className="count">{likesCount}</span>
+      <span className="count" onClick={fetchLikedUsers}>
+        {likesCount}
+      </span>
+
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Користувачі, які лайкнули</h3>
+            <ul>
+              {likedUsers.map((username, index) => (
+                <li key={index}>{username}</li>
+              ))}
+            </ul>
+            <button onClick={() => setIsModalOpen(false)}>Закрити</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
