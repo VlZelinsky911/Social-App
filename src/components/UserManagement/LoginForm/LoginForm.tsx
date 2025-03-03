@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../../features/auth/authSlice";
+import { login, setProfileComplete } from "../../../features/auth/authSlice";
 import { supabase } from "../../../services/supabaseClient";
 import "./LoginForm.scss";
 
@@ -31,38 +31,60 @@ const UserRegistration = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (data: FormData) => {
-    setMessage(null);
-    setIsLoading(true);
-    try {
-      const { data: loginData, error } = await supabase.auth.signInWithPassword(
-        {
-          email: data.email,
-          password: data.password,
-        }
-      );
 
-      if (error) throw error;
-      if (!loginData.session) throw new Error("Помилка отримання токену");
-
-      localStorage.setItem("access_token", loginData.session.access_token);
-      localStorage.setItem("refresh_token", loginData.session.refresh_token);
-
-      dispatch(login());
-      navigate("/");
-    } catch (error: any) {
-      setMessage(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+	// Після успішного логіну:
+	const onSubmit = async (data: FormData) => {
+		try {
+			const { data: loginData, error } = await supabase.auth.signInWithPassword({
+				email: data.email,
+				password: data.password,
+			});
+	
+			if (error) throw error;
+			if (!loginData.session) throw new Error("Помилка отримання токену");
+	
+			localStorage.setItem("access_token", loginData.session.access_token);
+			localStorage.setItem("refresh_token", loginData.session.refresh_token);
+	
+			dispatch(login());
+	
+			// Отримуємо дані профілю користувача з Supabase
+			const { data: profile, error: profileError } = await supabase
+				.from("profiles")
+				.select("*")
+				.eq("id", loginData.user.id)
+				.single();
+	
+			if (profileError) throw profileError;
+	
+			// Перевіряємо, чи всі важливі поля заповнені
+			const isProfileComplete =
+				profile.username &&
+				profile.birthdate &&
+				profile.bio &&
+				profile.contact_info &&
+				profile.avatar_url;
+	
+			dispatch(setProfileComplete(!!isProfileComplete));
+	
+			if (isProfileComplete) {
+				navigate("/dashboard");
+			} else {
+				navigate("/complete-profile");
+			}
+		} catch (error: any) {
+			setMessage(error.message);
+		} finally {
+			setIsLoading(false);
+		}
+	};	
 
   useEffect(() => {
     const checkUser = async () => {
       const token = localStorage.getItem("access_token");
       if (token) {
         dispatch(login());
-        navigate("/");
+        navigate("/dashboard");
       }
     };
     checkUser();
@@ -125,4 +147,5 @@ const UserRegistration = () => {
     </div>
   );
 };
+
 export default UserRegistration;
