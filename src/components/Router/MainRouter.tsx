@@ -8,9 +8,8 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store/store";
 
-import Header from "../HeaderСomponents/Header/Header";
-import Footer from "../FooterComponents/Footer/Footer";
-import Main from "../MainComponents/Main";
+import Footer from "../Footer/Footer";
+import Main from "../Main/Main";
 
 import Home from "../../pages/Home/Feed/Feed";
 import Categories from "../../pages/Categories/Categories";
@@ -26,6 +25,8 @@ import UserLogin from "../../pages/UserLogin/UserLogin";
 import ForgotPassword from "../UserManagement/ForgotPasswordForm/ForgotPasswordForm";
 import ResetPassword from "../UserManagement/ResetPasswordForm/ResetPassword";
 import CompleteProfile from "../UserManagement/CompleteProfile/CompleteProfile";
+import EditProfile from "../../pages/Profile/EditProfile/EditProfile";
+import Header from "../Header/Header";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(
@@ -66,6 +67,7 @@ function AppRoutes() {
                   <Route path="categories" element={<Categories />} />
                   <Route path="favorites" element={<Favorites />} />
                   <Route path="profile" element={<Profile />} />
+                  <Route path="/profile/edit" element={<EditProfile />} />
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="terms-of-service" element={<TermsOfService />} />
                   <Route path="/profile/:username" element={<UserProfile />} />
