@@ -10,9 +10,7 @@ interface LikeButtonProps {
 }
 
 interface Like {
-  profiles?: {
-    full_name: string;
-  };
+  profiles?: { full_name?: string };
 }
 
 
@@ -26,7 +24,7 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
     const fetchLikes = async () => {
       const { data, error } = await supabase
         .from("likes")
-        .select("user_id, profiles(full_name)") // Забираємо innerJoin()
+        .select("user_id, profiles(full_name)")
         .eq("content_id", contentId)
         .eq("type", type);
 
@@ -43,7 +41,6 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
 
   const toggleLike = async () => {
     if (liked) {
-      // Якщо вже лайкнуто – видаляємо лайк
       const { error } = await supabase
         .from("likes")
         .delete()
@@ -58,7 +55,6 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
         console.error("Помилка видалення лайка:", error);
       }
     } else {
-      // Якщо ще немає лайка – додаємо
       const { error } = await supabase
         .from("likes")
         .insert([{ content_id: contentId, type, user_id: userId }]);
@@ -85,8 +81,8 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
     }
 
 		
-    setLikedUsers((data as unknown as Like[]).map((like) => like.profiles?.full_name || "Анонім"));
-    setIsModalOpen(true);
+		setLikedUsers((data as Like[]).map((like) => like.profiles?.full_name || "Анонім"));
+		setIsModalOpen(true);
   };
 
   return (

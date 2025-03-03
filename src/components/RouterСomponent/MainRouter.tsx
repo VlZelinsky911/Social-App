@@ -3,7 +3,11 @@ import {
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store/store";
+
 import Header from "../HeaderСomponents/Header/Header";
 import Footer from "../FooterComponents/Footer/Footer";
 import Main from "../MainComponents/Main";
@@ -18,42 +22,71 @@ import TermsOfService from "../../policies/TermsOfService";
 import UserProfile from "../../pages/Home/UserProfile/UserProfile";
 import UserRegistration from "../../pages/UserRegistration/UserRegistration";
 
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store/store";
 import UserLogin from "../../pages/UserLogin/UserLogin";
 import ForgotPassword from "../UserManagement/ForgotPasswordForm/ForgotPasswordForm";
 import ResetPassword from "../UserManagement/ResetPasswordForm/ResetPassword";
+import CompleteProfile from "../UserManagement/CompleteProfile/CompleteProfile";
 
-function MainRouter() {
+function AppRoutes() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
 
+  const isProfileComplete = useSelector(
+    (state: RootState) => state.auth.isProfileComplete
+  );
+
+  const location = useLocation();
+  const isCompleteProfilePage = location.pathname === "/complete-profile";
+
   return (
-    <Router>
-      {isAuthenticated && <Header />}
+    <>
+      {!isCompleteProfilePage && isAuthenticated && <Header />}
+
       <Routes>
         {!isAuthenticated ? (
           <>
-						<Route path="/reset-password" element={<ResetPassword/>} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/register" element={<UserRegistration />} />
             <Route path="/login" element={<UserLogin />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </>
         ) : (
-          <Route path="/" element={<Main />}>
-            <Route index element={<Home />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="favorites" element={<Favorites />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="terms-of-service" element={<TermsOfService />} />
-            <Route path="/profile/:username" element={<UserProfile />} />
-          </Route>
+          <>
+            {!isProfileComplete ? (
+              <>
+                <Route path="/complete-profile" element={<CompleteProfile />} />
+                <Route path="*" element={<Navigate to="/complete-profile" />} />
+              </>
+            ) : (
+              <>
+                <Route path="/" element={<Main />}>
+                  <Route index element={<Home />} />
+                  <Route path="categories" element={<Categories />} />
+                  <Route path="favorites" element={<Favorites />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="terms-of-service" element={<TermsOfService />} />
+                  <Route path="/profile/:username" element={<UserProfile />} />
+                </Route>
+
+                <Route path="/complete-profile" element={<Navigate to="/" />} />
+              </>
+            )}
+          </>
         )}
       </Routes>
-      {isAuthenticated && <Footer />}
+
+      {!isCompleteProfilePage && isAuthenticated && <Footer />}
+    </>
+  );
+}
+
+function MainRouter() {
+  return (
+    <Router>
+      <AppRoutes />
     </Router>
   );
 }
