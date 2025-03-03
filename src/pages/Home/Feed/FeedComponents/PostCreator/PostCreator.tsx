@@ -60,7 +60,7 @@ const CreatePost = () => {
     <div className="create-post">
       <div className="post-header">
         <img
-          src="../../../public/Mark.jpg"
+          src="../../public/Mark.jpg"
           alt="User Avatar"
           className="avatar"
         />

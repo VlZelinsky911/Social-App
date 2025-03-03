@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import "./Header.scss";
-import InputMobile from "./Mobile/InputMobile/InputMobile";
-import Navigation from "./Mobile/NavigationMobile/NavigationMobile";
+import Navigation from "./Modile/NavigationMobile/NavigationMobile";
+import InputMobile from "./Modile/InputMobile/InputMobile";
 
 const Header: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,11 +34,17 @@ const Header: React.FC = () => {
             </button>
           </div>
         </div>
-        <InputMobile searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+        <InputMobile
+          searchTerm={searchTerm}
+          handleSearchChange={handleSearchChange}
+        />
         <nav className={`nav`}>
           <Navigation setIsMenuOpen={setIsMenuOpen} />
         </nav>
-        <button className={`burger-menu ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}>
+        <button
+          className={`burger-menu ${isMenuOpen ? "active" : ""}`}
+          onClick={toggleMenu}
+        >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
         <nav
@@ -48,7 +54,10 @@ const Header: React.FC = () => {
           <Navigation setIsMenuOpen={setIsMenuOpen} />
         </nav>
       </header>
-      <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}></div>
+      <div
+        className={`backdrop ${isMenuOpen ? "active" : ""}`}
+        onClick={toggleMenu}
+      ></div>
     </>
   );
 };

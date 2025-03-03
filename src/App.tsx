@@ -1,5 +1,5 @@
 import "./App.scss";
-import MainRouter from "./components/RouterСomponent/MainRouter";
+import MainRouter from "./components/Router/MainRouter";
 
 function App() {
   return (

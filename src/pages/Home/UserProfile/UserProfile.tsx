@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks/hooks";
 import { useEffect } from "react";
 import { setUser } from "../../../features/user/userSlice";
-import Avatar from "../../../components/AvatarComponents/Avatar";
+import Avatar from "../../../components/Avatar/Avatar";
 
 const UserProfile: React.FC = () => {
   const { username } = useParams<{ username?: string }>();
