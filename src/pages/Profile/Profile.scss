@@ -100,10 +100,16 @@ button {
 }
 .edit-profile-btn {
 	position: relative;
-	left: 75;
 	top: 100%;
-	background-color: #1877f2;
-	color: white;
 	background-color: #e4e6eb;
 	color: black;
+	outline: none !important;
+	border: none !important;
+	cursor: pointer;
+	&:hover{
+		background-color: #ccc;
+	}
+}
+p.error, p.success{
+	padding-bottom: 10px;
 }
