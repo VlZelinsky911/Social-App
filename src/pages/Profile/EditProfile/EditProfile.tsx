@@ -5,6 +5,7 @@ import "./EditProfile.scss";
 import { uploadFiles } from "../uploadFiles";
 
 interface UserProfile {
+  id: string;
   username: string;
   fullname: string;
   birthdate: string;
@@ -16,6 +17,7 @@ interface UserProfile {
 const EditProfile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [formData, setFormData] = useState<UserProfile>({
+    id: "",
     username: "",
     fullname: "",
     birthdate: "",
@@ -25,6 +27,7 @@ const EditProfile = () => {
   });
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,11 +37,12 @@ const EditProfile = () => {
 
       const { data, error } = await supabase
         .from("user_profiles")
-        .select("username, fullname, birthdate, bio, contact_info, avatar_url")
+        .select("id, username, fullname, birthdate, bio, contact_info, avatar_url")
         .eq("id", user.user.id)
         .single();
 
       if (error) {
+        setMessage("❌ Помилка отримання профілю.");
         console.error("❌ Помилка отримання профілю:", error);
       } else {
         setProfile(data);
@@ -62,6 +66,7 @@ const EditProfile = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setMessage("");
 
     let avatarUrl = formData.avatar_url;
 
@@ -72,7 +77,27 @@ const EditProfile = () => {
       if (uploadedUrls.length > 0) {
         avatarUrl = uploadedUrls[0];
       } else {
-        console.error("❌ Помилка: Не вдалося завантажити аватарку.");
+        setMessage("❌ Помилка: Не вдалося завантажити аватарку.");
+        setLoading(false);
+        return;
+      }
+    }
+
+    if (formData.username !== profile?.username) {
+      const { data: existingUser, error: usernameError } = await supabase
+        .from("user_profiles")
+        .select("id")
+        .eq("username", formData.username)
+        .single();
+
+      if (usernameError && usernameError.code !== "PGRST116") {
+        setMessage("❌ Помилка перевірки унікальності імені.");
+        setLoading(false);
+        return;
+      }
+
+      if (existingUser) {
+        setMessage("❌ Ім'я користувача вже використовується.");
         setLoading(false);
         return;
       }
@@ -81,13 +106,14 @@ const EditProfile = () => {
     const { error } = await supabase
       .from("user_profiles")
       .update({ ...formData, avatar_url: avatarUrl })
-      .eq("username", profile?.username);
+      .eq("id", profile?.id);
 
     if (error) {
+      setMessage("❌ Помилка оновлення профілю.");
       console.error("❌ Помилка оновлення профілю:", error);
     } else {
-      console.log("✅ Профіль успішно оновлено!");
-      navigate("/profile");
+      setMessage("✅ Профіль успішно оновлено!");
+      setTimeout(() => navigate("/profile"), 2000);
     }
 
     setLoading(false);
@@ -96,7 +122,9 @@ const EditProfile = () => {
   return (
     <div className="edit-profile-container">
       <h2>Редагувати профіль</h2>
+      {message && <p className={`message ${message.includes('❌') ? 'error' : 'success'}`}>{message}</p>}
       <form onSubmit={handleSubmit}>
+        <input type="text" name="username" value={formData.username} onChange={handleChange} placeholder="Ім'я" />
         <input type="text" name="fullname" value={formData.fullname} onChange={handleChange} placeholder="Повне ім'я" />
         <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Біографія"></textarea>
         <input type="text" name="contact_info" value={formData.contact_info} onChange={handleChange} placeholder="Контактна інформація" />
