@@ -97,13 +97,20 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <h3>Користувачі, які лайкнули</h3>
+            <h3>Уподобання</h3>
             <ul>
-              {likedUsers.map((username, index) => (
-                <li key={index}>{username}</li>
-              ))}
+							{likedUsers.length > 0 ? (
+              likedUsers.map((username, index) => (
+                <li key={index}>
+									<img className="avatar-img" src="/Mark.jpg"/>
+									<li>{username}</li>
+								</li>
+              ))
+						): (
+							<h4>Немає уподобань</h4>
+						)}
             </ul>
-            <button onClick={() => setIsModalOpen(false)}>Закрити</button>
+            <button onClick={() => setIsModalOpen(false)}>❌</button>
           </div>
         </div>
       )}
