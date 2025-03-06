@@ -56,6 +56,9 @@
 }
 
 .modal-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -70,12 +73,11 @@
   }
 
   ul {
+		display: flex;
+		flex-direction: column;
     list-style: none;
     padding: 0;
     margin: 10px 0;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
     text-align: left;
     color: #333;
   }
@@ -87,6 +89,25 @@
     display: flex;
     align-items: center;
     gap: 10px;
+
+		img{
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			object-fit: cover;
+			margin: 0;
+			padding: 0;
+			vertical-align: middle;
+		}
+		.avatar-placeholder {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background-color: #ccc;
+			text-align: center;
+			line-height: 30px;
+			color: #fff;
+			}
   }
 }
 

@@ -124,7 +124,7 @@ const Home: React.FC = () => {
                 <div className="home-news-actions">
                   <div className="home-likes-comments">
                     {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
-                    <CommentButton />
+                    {user && <CommentButton contentId={post.id} userId={user.id} />}
                     <ShareButton />
                   </div>
                 </div>
@@ -148,7 +148,7 @@ const Home: React.FC = () => {
                 <div className="home-news-actions">
                   <div className="home-likes-comments">
                     {user && <LikeButton contentId={article.title} type="news" userId={user.id} />}
-                    <CommentButton />
+                    {user && <CommentButton contentId={article.title} userId={user.id} />}
                     <ShareButton />
                   </div>
                 </div>

@@ -56,7 +56,7 @@
 }
 
 .comment-modal__close {
-	border: none !important;
+  border: none !important;
   background: none !important;
   outline: none;
   cursor: pointer;
@@ -68,23 +68,21 @@
 
   &:hover {
     background-color: #d32f2f;
-		
   }
 }
 
 .comment-modal__input {
-	box-sizing: border-box;
-	width: 100%;
-	min-height: 30px;
-	padding: 22px;
-	border: 1px solid #ccc;
-	background: #f8f9fa;
-	color: #555;
-	border-radius: 20px;
-	font-size: 16px;
-	outline: none;
-	resize: none;
-
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 30px;
+  padding: 22px;
+  border: 1px solid #ccc;
+  background: #f8f9fa;
+  color: #555;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+  resize: none;
 
   &:focus {
     outline: none;
@@ -104,9 +102,9 @@
 }
 
 .comment-modal__submit {
-	box-sizing: border-box;
+  box-sizing: border-box;
   color: white !important;
-	background-color: #2563eb !important;
+  background-color: #2563eb !important;
   border: none !important;
   padding: 10px;
   border-radius: 8px;
@@ -119,17 +117,25 @@
     cursor: not-allowed;
   }
 
-	&:hover {
-		background-color: #2563eb !important;
-		color: #ccc;
-	}
-
+  &:hover {
+    background-color: #2563eb !important;
+    color: #ccc;
+  }
 }
 
 .comment-list {
   max-height: 200px;
   overflow-y: auto;
   padding: 10px 0;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 5px;
+  }
 
   .comment-list__title {
     font-size: 18px;
@@ -143,16 +149,45 @@
     color: #333;
     padding: 8px;
     border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
 
     &:last-child {
       border-bottom: none;
     }
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+			margin: 0;
+			padding: 0;
+			vertical-align: middle;
+    }
+    .avatar-placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+      text-align: center;
+      line-height: 40px;
+      color: #fff;
+    }
+  }
+  .comment-list__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+		margin-bottom: 10px;
   }
 
   .comment-list__empty {
     color: #888;
     font-size: 14px;
     text-align: center;
-		padding-top: 10px;
+    padding-top: 10px;
   }
 }
