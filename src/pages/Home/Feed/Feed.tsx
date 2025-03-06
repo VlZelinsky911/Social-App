@@ -28,14 +28,14 @@ const Home: React.FC = () => {
   const pageRef = useRef<number>(1);
   const canLoadMore = useRef<boolean>(true);
 
-	useEffect(() => {
+  useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
     };
     getUser();
   }, []);
-	
+  
   const fetchPosts = async () => {
     const { data, error } = await supabase
       .from("posts")
@@ -97,69 +97,66 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNews, loading]);
 
-
   return (
-    <div className="home">
-      <div className="container">
-        <div className="content">
-          <div className="news-feed">
-            <NewsCategories
-              setFilter={setFilter}
-              setActiveCategory={setActiveCategory}
-              activeCategory={activeCategory}
-            />
-            {activeCategory === "Стрічка" && <PostCreator />}
+    <div className="home-container">
+      <div className="home-content">
+        <div className="home-news-feed">
+          <NewsCategories
+            setFilter={setFilter}
+            setActiveCategory={setActiveCategory}
+            activeCategory={activeCategory}
+          />
+          {activeCategory === "Стрічка" && <PostCreator />}
 
-            {posts.map((post) => (
-              <div key={post.id} className="news-item">
-                <div className="news-details">
-                  <PostTitle
-                    author="Користувач"
-                    publishedAt={post.created_at}
-                  />
-                  <div className="article__border">
-                    <p>{post.text}</p>
-                  </div>
-                  {post.mediaurls && post.mediaurls.length > 0 && (
-                    <img src={post.mediaurls[0]} alt="Медіа" />
-                  )}
-                  <div className="news-actions">
-                    <div className="likes-comments">
-                      {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
-                      <CommentButton />
-                      <ShareButton />
-                    </div>
+          {posts.map((post) => (
+            <div key={post.id} className="home-news-item">
+              <div className="home-news-details">
+                <PostTitle
+                  author="Користувач"
+                  publishedAt={post.created_at}
+                />
+                <div className="home-article-border">
+                  <p>{post.text}</p>
+                </div>
+                {post.mediaurls && post.mediaurls.length > 0 && (
+                  <img src={post.mediaurls[0]} alt="Медіа" />
+                )}
+                <div className="home-news-actions">
+                  <div className="home-likes-comments">
+                    {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
+                    <CommentButton />
+                    <ShareButton />
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
 
-            {news.map((article, index) => (
-              <div key={index} className="news-item">
-                <div className="news-details">
-                  <PostTitle
-                    author={article.author}
-                    publishedAt={article.publishedAt}
-                  />
-                  <div className="article__border">
-                    <p>{article.description}</p>
-                  </div>
-                  {article.urlToImage && (
-                    <img src={article.urlToImage} alt={article.title} />
-                  )}
-                  <div className="news-actions">
-                    <div className="likes-comments">
-                      {user && <LikeButton contentId={article.title} type="news" userId={user.id} />}
-                      <CommentButton />
-                      <ShareButton />
-                    </div>
+          {news.map((article, index) => (
+            <div key={index} className="home-news-item">
+              <div className="home-news-details">
+                <PostTitle
+                  author={article.author}
+                  publishedAt={article.publishedAt}
+                />
+                <div className="home-article-border">
+                  <p>{article.description}</p>
+                </div>
+                {article.urlToImage && (
+                  <img src={article.urlToImage} alt={article.title} />
+                )}
+                <div className="home-news-actions">
+                  <div className="home-likes-comments">
+                    {user && <LikeButton contentId={article.title} type="news" userId={user.id} />}
+                    <CommentButton />
+                    <ShareButton />
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
 
-            {loading && <Spinner />}
-          </div>
+          {loading && <Spinner />}
         </div>
       </div>
     </div>

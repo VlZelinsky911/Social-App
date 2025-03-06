@@ -102,8 +102,7 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
 							{likedUsers.length > 0 ? (
               likedUsers.map((username, index) => (
                 <li key={index}>
-									<img className="avatar-img" src="/Mark.jpg"/>
-									<li>{username}</li>
+									{username}
 								</li>
               ))
 						): (

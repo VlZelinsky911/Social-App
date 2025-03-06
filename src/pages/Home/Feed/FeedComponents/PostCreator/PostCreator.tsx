@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   FaEllipsisH,
   FaMapMarkerAlt,
@@ -9,13 +9,41 @@ import { supabase} from "../../../../../services/supabaseClient";
 import PreviewFiles from "./MediaPreview/MediaPreview";
 import "./PostCreator.scss";
 import { uploadFiles } from "../../../../../services/fileUploadService/fileUploadService";
+import { setUser } from "../../../../../features/user/userSlice";
+import Avatar from "../../../../../components/Avatar/Avatar";
+
+type UserProfile = {
+	fullname: string | null;
+	avatar_url: string | null | undefined;
+}
 
 const CreatePost = () => {
   const [postText, setPostText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+	const [usersProfile, setUsersProfile] = useState<UserProfile | null>(null);
   const maxChars = 280;
+
+	useEffect(() => {
+		const feachUserProfile = async () => {
+			const {data: user } = await supabase.auth.getUser();
+			if (!user || !user.user) return;
+
+			const {data, error} = await supabase
+			.from("user_profiles")
+			.select("fullname, avatar_url")
+			.eq("id", user.user.id)
+			.single();
+
+			if (error) {
+				console.error("❌ Помилка отримання профілю:", error);
+		}else{
+			setUsersProfile(data);
+		}
+	}
+	feachUserProfile();
+},[]);
 
   const handlePost = async () => {
     setIsLoading(true);
@@ -59,11 +87,7 @@ const CreatePost = () => {
   return (
     <div className="create-post">
       <div className="post-header">
-        <img
-          src="../../public/Mark.jpg"
-          alt="User Avatar"
-          className="avatar"
-        />
+        <Avatar name={usersProfile?.fullname || null} avatarUrl={usersProfile?.avatar_url}/>
         <textarea
           placeholder="Що у вас нового?"
           value={postText}

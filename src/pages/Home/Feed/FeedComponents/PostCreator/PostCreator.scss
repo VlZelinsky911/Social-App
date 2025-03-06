@@ -36,12 +36,26 @@
     gap: 10px;
     margin-bottom: 10px;
 
-    .avatar {
-      width: 42px;
-      height: 42px;
+    img {
+      width: 90px;
+      height: 80px;
       border-radius: 50%;
       border: 2px solid #2563eb;
     }
+		.avatar-placeholder {
+			width: 80px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid #2563eb;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 20px;
+			font-weight: bold;
+			color: white;
+			text-transform: uppercase;
+		}
+		
   }
 
   .post-actions {
