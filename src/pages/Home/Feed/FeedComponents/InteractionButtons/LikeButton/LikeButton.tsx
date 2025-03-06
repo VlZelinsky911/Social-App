@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaHeart, FaThumbsUp } from "react-icons/fa";
 import { supabase } from "../../../../../../services/supabaseClient";
 import "./LikeButton.scss";
+import Avatar from "../../../../../../components/Avatar/Avatar";
 
 interface LikeButtonProps {
   contentId: number | string;
@@ -10,21 +11,23 @@ interface LikeButtonProps {
 }
 
 interface Like {
-  profiles?: { full_name?: string };
+  user_profiles?: {
+    username?: string;
+    avatar_url?: string;
+  };
 }
-
 
 const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
-  const [likedUsers, setLikedUsers] = useState<string[]>([]);
+  const [likedUsers, setLikedUsers] = useState<{ name: string; avatar: string }[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchLikes = async () => {
       const { data, error } = await supabase
         .from("likes")
-        .select("user_id, profiles(full_name)")
+        .select("user_id, user_profiles(fullname, avatar_url)")
         .eq("content_id", contentId)
         .eq("type", type);
 
@@ -71,7 +74,7 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
   const fetchLikedUsers = async () => {
     const { data, error } = await supabase
       .from("likes")
-      .select("profiles(full_name)")
+      .select("user_profiles(username, avatar_url)")
       .eq("content_id", contentId)
       .eq("type", type);
 
@@ -80,9 +83,13 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
       return;
     }
 
-		
-		setLikedUsers((data as Like[]).map((like) => like.profiles?.full_name || "Анонім"));
-		setIsModalOpen(true);
+    setLikedUsers(
+      (data as Like[]).map((like) => ({
+        name: like.user_profiles?.username || "Анонім",
+        avatar: like.user_profiles?.avatar_url || "",
+      }))
+    );
+    setIsModalOpen(true);
   };
 
   return (
@@ -99,15 +106,16 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
           <div className="modal-content">
             <h3>Уподобання</h3>
             <ul>
-							{likedUsers.length > 0 ? (
-              likedUsers.map((username, index) => (
-                <li key={index}>
-									{username}
-								</li>
-              ))
-						): (
-							<h4>Немає уподобань</h4>
-						)}
+              {likedUsers.length > 0 ? (
+                likedUsers.map((user, index) => (
+                  <li key={index} className="liked-user">
+                    <Avatar name={user.name} avatarUrl={user.avatar} />
+                    <span>{user.name}</span>
+                  </li>
+                ))
+              ) : (
+                <h4>Немає уподобань</h4>
+              )}
             </ul>
             <button onClick={() => setIsModalOpen(false)}>❌</button>
           </div>
