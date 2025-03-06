@@ -43,10 +43,12 @@
     }
 
     input[type="file"] {
+			padding: 0;
       border: none;
       background: transparent;
       color: #a1a1a3;
       cursor: pointer;
+			
 
       &::-webkit-file-upload-button {
         background: #007aff;
@@ -76,7 +78,6 @@
 				object-fit: cover;
 			}	
 			button{
-				background: #007aff;
 				color: white;
 				border: none;
 				padding: 8px 16px;
@@ -87,10 +88,6 @@
 					background: #005ecb;
 				}
 			}
-		}
-		
-		.avatar-input {
-			padding: 0;
 		}
 
     button {

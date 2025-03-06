@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import "./Profile.scss";
 import Spinner from "../Home/Feed/FeedComponents/Spinner/Spinner";
-import EditProfileModal from "./EditProfile/EditProfile";
 import { useNavigate } from "react-router-dom";
+import Avatar from "../../components/Avatar/Avatar";
 
 interface UserProfile {
   username: string;
@@ -47,8 +47,8 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <div className="profile-content">
-        <div className="avatar">
-          <img src={profile.avatar_url || "../../../../public/mark.jpg"} alt="Profile Avatar" />
+        <div className="profile-avatar">
+					<Avatar name={profile.fullname}	avatarUrl={profile.avatar_url}/>
         </div>
         <div className="profile-info">
           <p className="username">@{profile.username}</p>

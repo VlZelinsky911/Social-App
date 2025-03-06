@@ -28,7 +28,7 @@ const EditProfile = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string>("");
-  const [deleteAvatar, setDeleteAvatar] = useState(false); // Стейт для відслідковування видалення аватара
+  const [deleteAvatar, setDeleteAvatar] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,13 +61,13 @@ const EditProfile = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setAvatarFile(e.target.files[0]);
-      setDeleteAvatar(false); // Якщо користувач вибирає новий аватар, скидаємо прапорець для видалення
+      setDeleteAvatar(false);
     }
   };
 
   const handleDeleteAvatar = () => {
-    setDeleteAvatar(true); // Встановлюємо прапорець для видалення аватара
-    setAvatarFile(null); // Очищаємо вибраний файл
+    setDeleteAvatar(true);
+    setAvatarFile(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,7 +78,7 @@ const EditProfile = () => {
     let avatarUrl = formData.avatar_url;
 
     if (deleteAvatar) {
-      avatarUrl = ""; // Якщо потрібно видалити аватар, встановлюємо порожнє значення
+      avatarUrl = "";
     } else if (avatarFile) {
       console.log("📤 Завантаження аватарки...");
       const uploadedUrls = await uploadFiles([avatarFile], "avatars");
@@ -138,7 +138,6 @@ const EditProfile = () => {
         <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Біографія"></textarea>
         <input type="text" name="contact_info" value={formData.contact_info} onChange={handleChange} placeholder="Контактна інформація" />
 
-        {/* Виведення аватару */}
         {profile?.avatar_url && !deleteAvatar && (
           <div className="avatar-preview">
             <button type="button" onClick={handleDeleteAvatar}>Видалити аватар</button>
@@ -146,8 +145,7 @@ const EditProfile = () => {
           </div>
         )}
 
-        {/* Завантаження нового аватара */}
-        <input type="file" onChange={handleFileChange} className="avatar-input"/>
+        <input type="file" onChange={handleFileChange}/>
         
         <button type="submit" disabled={loading}>
           {loading ? "Збереження..." : "Зберегти"}

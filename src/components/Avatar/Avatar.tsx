@@ -3,7 +3,7 @@ import "./Avatar.scss";
 
 interface AvatarProps {
   name: string | null;
-  avatarUrl?: string;
+  avatarUrl?: string | null | undefined;
 }
 
 const getInitials = (name: string | null) => (name ? name.charAt(0).toUpperCase() : "?");
