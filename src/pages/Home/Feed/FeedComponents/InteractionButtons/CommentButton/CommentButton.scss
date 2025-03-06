@@ -6,29 +6,6 @@
   color: #333;
 }
 
-.comment-section__button {
-  background-color: transparent;
-  border: none !important;
-  cursor: pointer;
-  font-size: 24px;
-  transition: 0.3s ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
-.comment-section__count {
-  cursor: pointer;
-  font-size: 18px;
-  transition: color 0.3s ease;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-/* Стилі для модального вікна */
 .comment-modal {
   position: fixed;
   top: 0;
@@ -101,6 +78,15 @@
   text-align: center;
 }
 
+.comment-modal__cancel {
+	width: 100%;
+	&:hover {
+		background-color: #2563eb !important;
+		color: #ccc;
+		border: none;
+	}
+}
+
 .comment-modal__submit {
   box-sizing: border-box;
   color: white !important;
@@ -111,6 +97,8 @@
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
+	width: 100%;
+	margin-top: 10px;
 
   &:disabled {
     background-color: #e0e0e0 !important;
@@ -121,6 +109,15 @@
     background-color: #2563eb !important;
     color: #ccc;
   }
+}
+
+.comment-modal__line {
+  width: 90%;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0 auto;
+	position: relative;
+	top: 15px;
 }
 
 .comment-list {
@@ -142,6 +139,7 @@
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
+
   }
 
   .comment-list__item {
