@@ -32,7 +32,7 @@ const UserRegistration = () => {
   const [isLoading, setIsLoading] = useState(false);
 
 
-	// Після успішного логіну:
+
 	const onSubmit = async (data: FormData) => {
 		try {
 			const { data: loginData, error } = await supabase.auth.signInWithPassword({
@@ -48,7 +48,6 @@ const UserRegistration = () => {
 	
 			dispatch(login());
 	
-			// Отримуємо дані профілю користувача з Supabase
 			const { data: profile, error: profileError } = await supabase
 				.from("profiles")
 				.select("*")
@@ -57,7 +56,6 @@ const UserRegistration = () => {
 	
 			if (profileError) throw profileError;
 	
-			// Перевіряємо, чи всі важливі поля заповнені
 			const isProfileComplete =
 				profile.username &&
 				profile.birthdate &&
@@ -93,7 +91,7 @@ const UserRegistration = () => {
   return (
     <div className="registration-page">
       <div className="registration-container">
-        <h1 className="site-title">GN</h1>
+        <h1 className="site-title">Storygram</h1>
         <div className="registration-box">
           <h2 className="title">Вхід</h2>
           {message && <p className="success">{message}</p>}

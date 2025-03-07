@@ -103,7 +103,7 @@ const UserRegistration = () => {
 
   return (
     <div className="registration-container">
-      <h1 className="site-title">GN</h1>
+      <h1 className="site-title">Storygram</h1>
       <div className="registration-box">
         <h2 className="title">Реєстрація</h2>
         {message && <p className="success">{message}</p>}

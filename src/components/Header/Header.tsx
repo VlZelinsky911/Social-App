@@ -28,7 +28,7 @@ const Header: React.FC = () => {
 
   const handleNavigation = (path: string) => {
     navigate(path);
-    setIsMenuOpen(false); // Close mobile menu if open
+    setIsMenuOpen(false);
   };
 
   return (
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
       <aside className="sidebar">
         <div className="sidebar-container">
           <div className="logo">
-            <span className="logo-text">GN</span>
+            <span className="logo-text">Storygram</span>
           </div>
 
           <nav className="sidebar-nav">
