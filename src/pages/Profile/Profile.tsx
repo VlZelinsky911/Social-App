@@ -4,6 +4,7 @@ import "./Profile.scss";
 import Spinner from "../Home/Feed/FeedComponents/Spinner/Spinner";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../components/Avatar/Avatar";
+import ProfilePosts from "./ProfilePosts/ProfilePosts";
 
 interface UserProfile {
   username: string;
@@ -12,6 +13,14 @@ interface UserProfile {
   bio: string;
   contact_info: string;
   avatar_url: string;
+	posts: Post[];
+}
+interface Post{
+  id: string,
+  text: string,
+  mediaurls?: string,
+  created_at: string,
+  userId: string
 }
 
 const Profile = () => {
@@ -26,7 +35,7 @@ const Profile = () => {
       
       const { data, error } = await supabase
         .from("user_profiles")
-        .select("username, fullname, birthdate, bio, contact_info, avatar_url")
+        .select("username, fullname, birthdate, bio, contact_info, avatar_url, posts(*)")
         .eq("id", user.user.id)
         .single();
 
@@ -63,6 +72,15 @@ const Profile = () => {
 				</button>
         </div>
 				<div className="profile-line"></div>
+				<div className="profile-posts">
+						{profile.posts.length > 0 ? (
+							profile.posts.map((post) => (
+							<ProfilePosts key={post.id} post={post}/>
+							))
+						) : (
+							<h2>Постів поки немає🥲</h2>
+						)}
+				</div>
       </div>
     </div>
   );

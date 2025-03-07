@@ -4,6 +4,15 @@
   gap: 10px;
   font-size: 16px;
   color: #333;
+
+	&__count {
+		cursor: pointer;
+
+		&:hover {
+			font-size: 18px;
+			text-decoration: underline;
+		}
+	}
 }
 
 .comment-modal {

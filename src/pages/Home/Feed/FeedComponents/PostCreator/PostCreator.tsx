@@ -28,7 +28,6 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
   const [usersProfile, setUsersProfile] = useState<UserProfile | null>(null);
   const maxChars = 280;
 
-  // Завантаження профілю користувача
   useEffect(() => {
     const fetchUserProfile = async () => {
       const { data: user } = await supabase.auth.getUser();
@@ -49,22 +48,19 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
     fetchUserProfile();
   }, []);
 
-  // Створення поста
   const handlePost = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Завантаження медіафайлів
       const mediaUrls = await uploadFiles(selectedFiles);
       console.log("📤 Завантажені файли:", mediaUrls);
 
-      // Вставка поста в базу даних
       const { error } = await supabase.from("posts").insert([
         {
           text: postText || null,
           mediaurls: mediaUrls.length > 0 ? mediaUrls : null,
-          user_id: userId, // Додаємо user_id до поста
+          user_id: userId,
         },
       ]);
 
@@ -81,7 +77,6 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
     }
   };
 
-  // Обробка зміни файлів
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
