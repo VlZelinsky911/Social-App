@@ -63,7 +63,6 @@ const Profile = () => {
           <p className="username">@{profile.username}</p>
 					<h1 className="full-name">{profile.fullname}</h1>
           <p className="bio">{profile.bio}</p>
-          <p className="friends">100 друзів</p>
           <p className="contact-info">{profile.contact_info}</p>
         </div>
         <div className="profile-actions">

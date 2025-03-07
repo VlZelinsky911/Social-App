@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Inter:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&display=swap');
+
 .sidebar {
   position: fixed;
   left: 0;
@@ -28,6 +30,7 @@
     }
 
     .logo-text {
+			font-family: 'Montserrat', sans-serif;
       font-size: 24px;
       font-weight: bold;
       display: block;
@@ -130,7 +133,7 @@
   }
 }
 
-// Mobile styles
+
 @media (max-width: 768px) {
   .sidebar {
     bottom: 0;

@@ -91,7 +91,7 @@ const CompleteProfile = () => {
   return (
     <div className="registration-page">
       <div className="registration-container">
-        <h1 className="site-title">GN</h1>
+        <h1 className="site-title">Storygram</h1>
         <div className="registration-box">
           <h2 className="title">Заповніть ваш профіль</h2>
           <form className="registration-form" onSubmit={handleSubmit}>
