@@ -1,62 +1,70 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaEllipsisH,
   FaMapMarkerAlt,
   FaPhotoVideo,
   FaUserTag,
 } from "react-icons/fa";
-import { supabase} from "../../../../../services/supabaseClient";
+import { supabase } from "../../../../../services/supabaseClient";
 import PreviewFiles from "./MediaPreview/MediaPreview";
 import "./PostCreator.scss";
 import { uploadFiles } from "../../../../../services/fileUploadService/fileUploadService";
-import { setUser } from "../../../../../features/user/userSlice";
 import Avatar from "../../../../../components/Avatar/Avatar";
 
 type UserProfile = {
-	fullname: string | null;
-	avatar_url: string | null | undefined;
+  fullname: string | null;
+  avatar_url: string | null | undefined;
+};
+
+interface PostCreatorProps {
+  userId: string | null;
 }
 
-const CreatePost = () => {
+const CreatePost = ({ userId }: PostCreatorProps) => {
   const [postText, setPostText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-	const [usersProfile, setUsersProfile] = useState<UserProfile | null>(null);
+  const [usersProfile, setUsersProfile] = useState<UserProfile | null>(null);
   const maxChars = 280;
 
-	useEffect(() => {
-		const feachUserProfile = async () => {
-			const {data: user } = await supabase.auth.getUser();
-			if (!user || !user.user) return;
+  // Завантаження профілю користувача
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user || !user.user) return;
 
-			const {data, error} = await supabase
-			.from("user_profiles")
-			.select("fullname, avatar_url")
-			.eq("id", user.user.id)
-			.single();
+      const { data, error } = await supabase
+        .from("user_profiles")
+        .select("fullname, avatar_url")
+        .eq("id", user.user.id)
+        .single();
 
-			if (error) {
-				console.error("❌ Помилка отримання профілю:", error);
-		}else{
-			setUsersProfile(data);
-		}
-	}
-	feachUserProfile();
-},[]);
+      if (error) {
+        console.error("❌ Помилка отримання профілю:", error);
+      } else {
+        setUsersProfile(data);
+      }
+    };
+    fetchUserProfile();
+  }, []);
 
+  // Створення поста
   const handlePost = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
+      // Завантаження медіафайлів
       const mediaUrls = await uploadFiles(selectedFiles);
       console.log("📤 Завантажені файли:", mediaUrls);
 
+      // Вставка поста в базу даних
       const { error } = await supabase.from("posts").insert([
         {
           text: postText || null,
           mediaurls: mediaUrls.length > 0 ? mediaUrls : null,
+          user_id: userId, // Додаємо user_id до поста
         },
       ]);
 
@@ -73,6 +81,7 @@ const CreatePost = () => {
     }
   };
 
+  // Обробка зміни файлів
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -87,7 +96,7 @@ const CreatePost = () => {
   return (
     <div className="create-post">
       <div className="post-header">
-        <Avatar name={usersProfile?.fullname || null} avatarUrl={usersProfile?.avatar_url}/>
+        <Avatar name={usersProfile?.fullname || null} avatarUrl={usersProfile?.avatar_url} />
         <textarea
           placeholder="Що у вас нового?"
           value={postText}

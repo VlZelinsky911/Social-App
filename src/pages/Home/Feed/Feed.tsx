@@ -15,6 +15,7 @@ interface Post {
   text: string;
   mediaurls?: string[];
   created_at: string;
+  username: string; // додано поле для імені користувача
 }
 
 const Home: React.FC = () => {
@@ -37,22 +38,33 @@ const Home: React.FC = () => {
     getUser();
   }, []);
 
-  const fetchPosts = async () => {
-    const { data, error } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Помилка завантаження постів:", error);
-    } else {
-      setPosts(data || []);
-    }
-  };
-
+	const fetchPosts = async () => {
+		const { data, error } = await supabase
+			.from("posts")
+			.select(`
+				id,
+				text,
+				mediaurls,
+				created_at,
+				user_profiles(username)
+			`)
+			.order("created_at", { ascending: false });
+	
+		if (error) {
+			console.error("Помилка завантаження постів:", error);
+		} else {
+			const formattedData = data.map((post: any) => ({
+				...post,
+				username: post.user_profiles.username,
+			}));
+	
+			setPosts(formattedData || []);
+		}
+	};
+	
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [user]);
 
   const fetchNews = useCallback(async () => {
     if (loading || !canLoadMore.current) return;
@@ -109,14 +121,14 @@ const Home: React.FC = () => {
             setActiveCategory={setActiveCategory}
             activeCategory={activeCategory}
           />
-          {activeCategory === "Стрічка" && <PostCreator />}
+          {activeCategory === "Стрічка" && <PostCreator userId={user?.id} />}
 
           <div className="feed-posts-container">
             {posts.map((post) => (
               <div key={post.id} className="feed-post-item">
                 <div className="home-news-details">
                   <PostTitle
-                    author="Користувач"
+                    author={post.username}
                     publishedAt={post.created_at}
                   />
                   <div className="home-article-border">
