@@ -15,7 +15,7 @@ interface Post {
   text: string;
   mediaurls?: string[];
   created_at: string;
-  username: string; // додано поле для імені користувача
+  username: string;
 }
 
 const Home: React.FC = () => {
