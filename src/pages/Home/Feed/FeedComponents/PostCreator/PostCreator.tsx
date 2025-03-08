@@ -18,9 +18,10 @@ type UserProfile = {
 
 interface PostCreatorProps {
   userId: string | null;
+  onPostCreated: () => void;
 }
 
-const CreatePost = ({ userId }: PostCreatorProps) => {
+const CreatePost = ({ userId, onPostCreated }: PostCreatorProps) => {
   const [postText, setPostText] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +49,40 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
     fetchUserProfile();
   }, []);
 
+  const handleTagFriend = () => {
+    setPostText((prevText) => prevText + "@");
+  };
+
+  const handleTagLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Ваш браузер не підтримує геолокацію.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await response.json();
+          const locationName =
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            "Невідоме місце";
+          setPostText((prevText) => prevText + ` 📍 ${locationName}`);
+        } catch (err) {
+          console.error("❌ Помилка отримання локації:", err);
+          setError("Не вдалося отримати вашу локацію.");
+        }
+      },
+      (error) => {
+        console.error("❌ Помилка отримання локації:", error);
+        setError("Не вдалося отримати вашу локацію.");
+      }
+    );
+  };
   const handlePost = async () => {
     setIsLoading(true);
     setError(null);
@@ -69,6 +104,7 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
       alert("✅ Пост створено!");
       setPostText("");
       setSelectedFiles([]);
+      onPostCreated();
     } catch (err: any) {
       console.error("❌ Помилка створення поста:", err);
       setError(err.message || "Помилка під час створення поста.");
@@ -91,7 +127,10 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
   return (
     <div className="create-post">
       <div className="post-header">
-        <Avatar name={usersProfile?.fullname || null} avatarUrl={usersProfile?.avatar_url} />
+        <Avatar
+          name={usersProfile?.fullname || null}
+          avatarUrl={usersProfile?.avatar_url}
+        />
         <textarea
           placeholder="Що у вас нового?"
           value={postText}
@@ -118,10 +157,18 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
             onChange={handleFileChange}
           />
         </label>
-        <button className="action-btn" disabled={isLoading}>
+        <button
+          className="action-btn"
+          disabled={isLoading}
+          onClick={handleTagFriend}
+        >
           <FaUserTag /> Відмітити друга
         </button>
-        <button className="action-btn" disabled={isLoading}>
+        <button
+          className="action-btn"
+          disabled={isLoading}
+          onClick={handleTagLocation}
+        >
           <FaMapMarkerAlt /> Місцезнаходження
         </button>
         <button className="action-btn" disabled={isLoading}>
@@ -129,7 +176,9 @@ const CreatePost = ({ userId }: PostCreatorProps) => {
         </button>
       </div>
 
-      {selectedFiles.length > 0 && <PreviewFiles files={selectedFiles} setFiles={setSelectedFiles} />}
+      {selectedFiles.length > 0 && (
+        <PreviewFiles files={selectedFiles} setFiles={setSelectedFiles} />
+      )}
 
       <button
         className={`post-btn ${isLoading ? "loading" : ""}`}

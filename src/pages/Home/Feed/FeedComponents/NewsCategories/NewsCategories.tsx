@@ -27,7 +27,6 @@ export const NewsCategories: React.FC<NewsCategoriesProps> = ({
           onClick={() => {
             setFilter(filter);
             setActiveCategory(name);
-            console.log("Фільтр змінено на:", name);
           }}
         >
           <h3>{name}</h3>
