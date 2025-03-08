@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   height: auto;
-	max-width: 800px;
+	width: 800px;
   margin: auto;
   background-color: #fff;
   border-radius: 8px;
@@ -129,4 +129,9 @@ button {
 }
 p.error, p.success{
 	padding-bottom: 10px;
+}
+.no-posts{
+	font-size: 16px;
+	color: #555;
+	margin-bottom: 23px;
 }

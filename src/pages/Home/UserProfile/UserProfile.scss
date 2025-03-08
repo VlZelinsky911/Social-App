@@ -44,9 +44,11 @@ button {
 }
 
 .profile-container {
-  width: 935px;
-  margin: 0 auto;
+  width: 100%;
+	max-width: 1200px;
   padding: 30px 20px;
+	position: absolute;
+	right: 0;
 
   .profile-content {
     background: #fff;
@@ -173,7 +175,6 @@ button {
   }
 }
 
-// Responsive adjustments
 @media (max-width: 768px) {
   .profile-container {
     padding: 16px;
