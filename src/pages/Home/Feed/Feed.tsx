@@ -27,6 +27,7 @@ const Home: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const pageRef = useRef<number>(1);
   const canLoadMore = useRef<boolean>(true);
+  const [isPostSubmitting, setIsPostSubmitting] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
@@ -38,30 +39,32 @@ const Home: React.FC = () => {
     getUser();
   }, []);
 
-	const fetchPosts = async () => {
-		const { data, error } = await supabase
-			.from("posts")
-			.select(`
+  const fetchPosts = async () => {
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        `
 				id,
 				text,
 				mediaurls,
 				created_at,
 				user_profiles(username)
-			`)
-			.order("created_at", { ascending: false });
-	
-		if (error) {
-			console.error("Помилка завантаження постів:", error);
-		} else {
-			const formattedData = data.map((post: any) => ({
-				...post,
-				username: post.user_profiles.username,
-			}));
-	
-			setPosts(formattedData || []);
-		}
-	};
-	
+			`
+      )
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Помилка завантаження постів:", error);
+    } else {
+      const formattedData = data.map((post: any) => ({
+        ...post,
+        username: post.user_profiles.username,
+      }));
+
+      setPosts(formattedData || []);
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, [user]);
@@ -112,6 +115,13 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [fetchNews, loading]);
 
+  const handlePostCreated = useCallback(() => {
+    setIsPostSubmitting(true);
+    fetchPosts().finally(() => {
+      setIsPostSubmitting(false);
+    });
+  }, []);
+
   return (
     <div className="feed-container">
       <div className="feed-content">
@@ -121,9 +131,12 @@ const Home: React.FC = () => {
             setActiveCategory={setActiveCategory}
             activeCategory={activeCategory}
           />
-          {activeCategory === "Стрічка" && <PostCreator userId={user?.id} />}
+          {activeCategory === "Стрічка" && (
+            <PostCreator userId={user?.id} onPostCreated={handlePostCreated} />
+          )}
 
           <div className="feed-posts-container">
+            {isPostSubmitting && <Spinner />}
             {posts.map((post) => (
               <div key={post.id} className="feed-post-item">
                 <div className="home-news-details">

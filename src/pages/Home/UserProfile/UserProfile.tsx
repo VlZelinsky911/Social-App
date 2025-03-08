@@ -29,7 +29,7 @@ const UserProfile: React.FC = () => {
   const [isFollowing, setIsFollowing] = useState(false);
 	const [followersCount, setFollowersCount] = useState<number>(0);
 	const [followingCount, setFollowingCount] = useState<number>(0);
-
+	const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -85,26 +85,65 @@ const UserProfile: React.FC = () => {
     setIsFollowing(!!data);
   };
 
-  const toggleFollow = async () => {
-    if (!profile) return;
-    const { data: user } = await supabase.auth.getUser();
-    if (!user || !user.user) return;
-
-    if (isFollowing) {
-      await supabase
-        .from("followers")
-        .delete()
-        .eq("follower_id", user.user.id)
-        .eq("following_id", profile.id);
-    } else {
-      await supabase.from("followers").insert([
-        { follower_id: user.user.id, following_id: profile.id },
-      ]);
-    }
-
-    setIsFollowing(!isFollowing);
-  };
-
+	const toggleFollow = async () => {
+		if (!profile || isProcessing) return;
+	
+		setIsProcessing(true);
+	
+		const { data: user } = await supabase.auth.getUser();
+		if (!user || !user.user) {
+			setIsProcessing(false);
+			return;
+		}
+	
+		const currentUserId = user.user.id;
+		const profileUserId = profile.id;
+	
+		const { data: recentActions, error } = await supabase
+			.from("followers")
+			.select("created_at")
+			.eq("follower_id", currentUserId)
+			.eq("following_id", profileUserId)
+			.order("created_at", { ascending: false })
+			.limit(1);
+	
+		if (error) {
+			console.error("Помилка перевірки підписок:", error);
+			setIsProcessing(false);
+			return;
+		}
+	
+		const lastActionTime = recentActions?.[0]?.created_at;
+		const now = new Date();
+		if(lastActionTime){
+			const lastActionDate = new Date(lastActionTime);
+			const timeDiff = (now.getTime() - lastActionDate.getTime()) / 1000;
+			if (timeDiff < 10) {
+				console.warn("Занадто швидкі підписки. Спробуйте пізніше.");
+				alert("Занадто швидкі підписки. Спробуйте пізніше.");
+				setIsProcessing(false);
+				return;
+			}
+		}
+	
+		if (isFollowing) {
+			await supabase
+				.from("followers")
+				.delete()
+				.eq("follower_id", currentUserId)
+				.eq("following_id", profileUserId);
+			setFollowersCount((prev) => Math.max(0, prev - 1));
+		} else {
+			await supabase.from("followers").insert([
+				{ follower_id: currentUserId, following_id: profileUserId },
+			]);
+			setFollowersCount((prev) => prev + 1);
+		}
+	
+		setIsFollowing(!isFollowing);
+		setIsProcessing(false);
+	};
+	
   if (loading) return <Spinner />;
   if (!profile) return <p className="error">Користувач не знайдений.😥</p>;
 
