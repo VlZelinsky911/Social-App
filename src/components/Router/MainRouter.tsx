@@ -27,6 +27,7 @@ import ResetPassword from "../UserManagement/ResetPasswordForm/ResetPassword";
 import CompleteProfile from "../UserManagement/CompleteProfile/CompleteProfile";
 import EditProfile from "../../pages/Profile/EditProfile/EditProfile";
 import Header from "../Header/Header";
+import SuggestedUsers from "../SuggestedUsers/SuggestedUsers";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(

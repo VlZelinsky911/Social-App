@@ -9,13 +9,14 @@ import { supabase } from "../../../services/supabaseClient";
 import LikeButton from "./FeedComponents/InteractionButtons/LikeButton/LikeButton";
 import CommentButton from "./FeedComponents/InteractionButtons/CommentButton/CommentButtton";
 import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
+import SuggestedUsers from "../../../components/SuggestedUsers/SuggestedUsers";
 
 interface Post {
   id: number;
   text: string;
   mediaurls?: string[];
   created_at: string;
-  username: string; // додано поле для імені користувача
+  username: string;
 }
 
 const Home: React.FC = () => {
@@ -123,6 +124,10 @@ const Home: React.FC = () => {
   }, []);
 
   return (
+		<div className="home-container">
+			<div className="suggested-users">
+				<SuggestedUsers/>
+			</div>
     <div className="feed-container">
       <div className="feed-content">
         <div className="feed-news-feed">
@@ -209,6 +214,7 @@ const Home: React.FC = () => {
         </div>
       </div>
     </div>
+	</div>
   );
 };
 

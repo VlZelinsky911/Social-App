@@ -77,7 +77,7 @@ const Profile = () => {
 							<ProfilePosts key={post.id} post={post}/>
 							))
 						) : (
-							<h2>Постів поки немає🥲</h2>
+							<h2 className="no-posts">Постів поки немає🥲</h2>
 						)}
 				</div>
       </div>
