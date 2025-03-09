@@ -103,8 +103,7 @@ const Header: React.FC = () => {
           </div>
         )}
       </aside>
-
-      {/* Mobile navigation */}
+      
       <nav
         className={`navMobile ${isMenuOpen ? "active" : ""}`}
         style={{ display: isMenuOpen ? "flex" : "none" }}
