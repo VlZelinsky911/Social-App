@@ -60,9 +60,7 @@ const Header: React.FC = () => {
             </div>
           </div>
         )}
-      </aside>
-
-      <MobileMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      </aside>master
 
       <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}></div>
     </>
