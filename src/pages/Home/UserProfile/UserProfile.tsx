@@ -151,7 +151,7 @@ const UserProfile: React.FC = () => {
     <div className="profile-container">
       <div className="profile-content">
         <div className="profile-avatar">
-          <Avatar name={profile.fullname} avatarUrl={profile.avatar_url} />
+          <Avatar name={profile.username} avatarUrl={profile.avatar_url} />
         </div>
         <div className="profile-info">
           <p className="username">@{profile.username}</p>
