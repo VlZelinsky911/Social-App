@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FaSearch,
-  FaBars,
-  FaHome,
-  FaCompass,
-  FaHeart,
-  FaUser,
-} from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import "./Header.scss";
-import Navigation from "./Modile/NavigationMobile/NavigationMobile";
+import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
+import SearchInput from "./SearchInput/SearchInput";
+import MobileMenu from "./MobileMenu/MobileMenu";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -31,6 +26,10 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  const toggleSearch = () => {
+    setIsSearchExpanded(!isSearchExpanded);
+  };
+
   return (
     <>
       <aside className="sidebar">
@@ -40,47 +39,14 @@ const Header: React.FC = () => {
           </div>
 
           <nav className="sidebar-nav">
-            <button className="nav-item" onClick={() => handleNavigation("/")}>
-              <FaHome />
-              <span>Home</span>
-            </button>
-
-            <button
-              className={`nav-item search-button ${
-                isSearchExpanded ? "active" : ""
-              }`}
-              onClick={() => setIsSearchExpanded(!isSearchExpanded)}
-            >
-              <FaSearch />
-              <span>Search</span>
-            </button>
-
-            <button
-              className="nav-item"
-              onClick={() => handleNavigation("/explore")}
-            >
-              <FaCompass />
-              <span>Explore</span>
-            </button>
-
-            <button
-              className="nav-item"
-              onClick={() => handleNavigation("/notifications")}
-            >
-              <FaHeart />
-              <span>Notifications</span>
-            </button>
-
-            <button
-              className="nav-item"
-              onClick={() => handleNavigation("/profile")}
-            >
-              <FaUser />
-              <span>Profile</span>
-            </button>
+            <NavigationButtons
+              handleNavigation={handleNavigation}
+              isSearchExpanded={isSearchExpanded}
+              toggleSearch={toggleSearch}
+            />
           </nav>
 
-          <button className="nav-item menu-button">
+          <button className="nav-item menu-button" onClick={toggleMenu}>
             <FaBars />
             <span>Menu</span>
           </button>
@@ -90,32 +56,15 @@ const Header: React.FC = () => {
           <div className="search-overlay">
             <div className="search-container">
               <h4>Search</h4>
-              <div className="search-box">
-                <FaSearch className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
-              </div>
+              <SearchInput searchTerm={searchTerm} onSearchChange={handleSearchChange} />
             </div>
           </div>
         )}
       </aside>
 
-      {/* Mobile navigation */}
-      <nav
-        className={`navMobile ${isMenuOpen ? "active" : ""}`}
-        style={{ display: isMenuOpen ? "flex" : "none" }}
-      >
-        <Navigation setIsMenuOpen={setIsMenuOpen} />
-      </nav>
+      <MobileMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
-      <div
-        className={`backdrop ${isMenuOpen ? "active" : ""}`}
-        onClick={toggleMenu}
-      ></div>
+      <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu}></div>
     </>
   );
 };

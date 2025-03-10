@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Inter:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Inter:wght@400;700&family=Raleway:wght@400;700&family=Nunito:wght@400;700&display=swap");
 
 .sidebar {
   position: fixed;
@@ -30,7 +30,7 @@
     }
 
     .logo-text {
-			font-family: 'Montserrat', sans-serif;
+      font-family: "Montserrat", sans-serif;
       font-size: 24px;
       font-weight: bold;
       display: block;
@@ -58,7 +58,7 @@
     font-size: 16px;
     color: #65676b;
     text-align: left;
-		outline: none;
+    outline: none;
 
     &:hover {
       background-color: #f0f2f5;
@@ -97,6 +97,7 @@
 
   .search-container {
     h4 {
+      color: #1877f2;
       font-size: 24px;
       font-weight: 600;
       margin: 24px 0 16px;
@@ -132,7 +133,6 @@
     }
   }
 }
-
 
 @media (max-width: 768px) {
   .sidebar {
@@ -178,7 +178,6 @@
   }
 }
 
-// Hide mobile navigation and backdrop on desktop
 .navMobile,
 .backdrop {
   @media (min-width: 769px) {
