@@ -56,7 +56,7 @@ const Header: React.FC = () => {
           <div className="search-overlay">
             <div className="search-container">
               <h4>Search</h4>
-              <SearchInput searchTerm={searchTerm} onSearchChange={handleSearchChange} />
+              <SearchInput searchTerm={searchTerm} onSearchChange={handleSearchChange} setIsSearchExpanded={setIsSearchExpanded}/>
             </div>
           </div>
         )}

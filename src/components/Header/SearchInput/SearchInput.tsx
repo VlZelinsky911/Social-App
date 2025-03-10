@@ -3,6 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { supabase } from "../../../services/supabaseClient";
 import "./SearchInput.scss";
 import Avatar from "../../Avatar/Avatar";
+import { Link } from "react-router-dom";
 
 interface UserProfile {
   id: string;
@@ -13,19 +14,23 @@ interface UserProfile {
 interface SearchInputProps {
   searchTerm: string;
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	setIsSearchExpanded: (value: React.SetStateAction<boolean>) => void
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
   searchTerm,
   onSearchChange,
+	setIsSearchExpanded,
 }) => {
   const [users, setUsers] = useState<UserProfile[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(true);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       if (searchTerm.length < 1) {
         setUsers([]);
+				setErrorMessage(null);
         return;
       }
 
@@ -36,15 +41,26 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
       if (error) {
         console.error("Помилка отримання користувачів:", error.message);
+				setErrorMessage("Помилка завантаження користувачів. Спробуйте пізніше.");
         return;
       }
 
-      setUsers(data || []);
+      if(!data || data.length === 0){
+				setErrorMessage("Користувача не знайдено.");
+				setUsers([]);
+			}else{
+				setUsers(data);
+				setErrorMessage(null);
+			}
       setShowSuggestions(true);
     };
 
     fetchUsers();
   }, [searchTerm]);
+
+	const handleClose = () => {
+		setIsSearchExpanded(false);
+	};
 
   return (
     <div className="search-container">
@@ -56,19 +72,29 @@ const SearchInput: React.FC<SearchInputProps> = ({
           value={searchTerm}
           onChange={onSearchChange}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
         />
       </div>
 
-      {showSuggestions && users.length > 0 && (
-        <ul className="suggestions-list">
-          {users.map((user) => (
-            <li key={user.id}>
-							<Avatar name={user.username} avatarUrl={user.avatar_url} />
-              <span className="username">{user.username}</span>
-            </li>
-          ))}
-        </ul>
+      {showSuggestions && (
+			<>
+          {errorMessage ? (
+            <li className="error-message">{errorMessage}</li>
+          ) : (
+            users.map((user) => (
+							<ul className="suggestions-list">	
+              <Link
+                key={user.id}
+                to={`/profile/${user.username ?? "unknown"}`}
+                className="suggestion-item"
+                onClick={handleClose}
+              >
+                <Avatar name={user.username} avatarUrl={user.avatar_url} />
+                <span className="username">{user.username}</span>
+              </Link>
+						</ul>
+            ))
+          )}
+				</>
       )}
     </div>
   );

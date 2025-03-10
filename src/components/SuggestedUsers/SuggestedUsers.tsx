@@ -114,7 +114,7 @@ const SuggestedUsers: React.FC = () => {
         {users.map((user) => (
           <div key={user.id} className="suggested-user">
             <div className="user-info">
-              <Avatar name={user.fullname} avatarUrl={user.avatar_url} />
+              <Avatar name={user.username} avatarUrl={user.avatar_url} />
               <div className="user-details">
 								<Link to={`/profile/${user.username ?? "unknown"}`} className="username">
 									@{user.username ?? "Невідомий"}
