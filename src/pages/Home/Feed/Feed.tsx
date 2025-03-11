@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, use } from "react";
 import "./Feed.scss";
 import { NewsArticle } from "./FeedInterface/interfaces";
 import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
@@ -10,6 +10,8 @@ import LikeButton from "./FeedComponents/InteractionButtons/LikeButton/LikeButto
 import CommentButton from "./FeedComponents/InteractionButtons/CommentButton/CommentButtton";
 import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
 import SuggestedUsers from "../../../components/SuggestedUsers/SuggestedUsers";
+import { FaBookmark } from "react-icons/fa";
+import SavePostButton from "./FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
 
 interface Post {
   id: number;
@@ -169,6 +171,7 @@ const Home: React.FC = () => {
                       )}
                       <ShareButton />
                     </div>
+										{user &&<SavePostButton postId={String(post.id)} userId={user.id} />}
                   </div>
                 </div>
               </div>
@@ -204,6 +207,7 @@ const Home: React.FC = () => {
                       )}
                       <ShareButton />
                     </div>
+										{user && <SavePostButton newsId={article.url} userId={user.id} />}
                   </div>
                 </div>
               </div>
