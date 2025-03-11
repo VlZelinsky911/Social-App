@@ -5,6 +5,7 @@ import Avatar from "../../../components/Avatar/Avatar";
 import Spinner from "../../Home/Feed/FeedComponents/Spinner/Spinner";
 import ProfilePosts from "../../Profile/ProfilePosts/ProfilePosts";
 import "./UserProfile.scss";
+import ProfileSubscribers from "./ProfileSubscribers/ProfileSubscribers";
 
 interface UserProfileData {
   id: string;
@@ -157,8 +158,7 @@ const UserProfile: React.FC = () => {
           <p className="username">@{profile.username}</p>
           <h1 className="full-name">{profile.fullname}</h1>
 					<div className="profile-subscribers">
-						<p className="profile-subscribers__count">Підписників: {followersCount}</p>
-						<p className="profile-subscribers__count">Підписані: {followingCount}</p>
+						<ProfileSubscribers	userId={profile.id} followersCount={followersCount} followingCount={followingCount}/>
 					</div>	
           <p className="bio">{profile.bio}</p>
         </div>
@@ -168,9 +168,6 @@ const UserProfile: React.FC = () => {
             {isFollowing ? "Відписатися" : "Підписатися"}
           </button>
         )}
-
-        <div className="profile-line"></div>
-
         <div className="profile-posts">
           {profile.posts.length > 0 ? (
             profile.posts.map((post) => <ProfilePosts key={post.id} post={post} />)
