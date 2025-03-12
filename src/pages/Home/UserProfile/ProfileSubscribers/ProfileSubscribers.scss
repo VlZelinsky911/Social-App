@@ -1,0 +1,115 @@
+.profile-subscribers__count {
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    color: #2563eb !important;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .profile-subscribers__modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+		position: relative;
+
+		.close-button{
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			cursor: pointer;
+			background: none;
+			border: none;
+			font-size: 16px;
+		}
+
+    .profile-subscribers__modal-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .profile-subscribers__empty-list {
+      color: #666;
+      font-size: 16px;
+      margin: 20px 0;
+    }
+
+    .profile-subscribers__list {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .profile-subscribers__user-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+				background: none;
+				
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+				.avatar-placeholder,
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            color: #fff;
+            font-weight: bold;
+            object-fit: cover;
+          }
+
+          .profile-subscribers__user-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+          }
+        }
+
+        .profile-subscribers__follow-btn {
+          padding: 6px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          border: none;
+          transition: background 0.3s ease, color 0.3s ease;
+
+          &.follow {
+            background-color: #007bff !important;
+            color: white;
+          }
+
+          &.unfollow {
+            background-color: #ddd !important;
+            color: black;
+          }
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+  }
