@@ -122,7 +122,7 @@ const SuggestedUsers: React.FC = () => {
               </div>
             </div>
             <button
-              className={`follow-button ${user.isFollowing ? "following" : ""}`}
+              className={`follow-btn ${user.isFollowing ? "unfollow" : "follow"}`}
               onClick={() => handleFollow(user.id)}
             >
               {user.isFollowing ? "Підписаний" : "Підписатися"}
