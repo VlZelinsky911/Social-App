@@ -4,7 +4,6 @@ import { FaBars } from "react-icons/fa";
 import "./Header.scss";
 import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import SearchInput from "./SearchInput/SearchInput";
-import MobileMenu from "./MobileMenu/MobileMenu";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();

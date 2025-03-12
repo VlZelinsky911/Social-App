@@ -28,6 +28,7 @@ import CompleteProfile from "../UserManagement/CompleteProfile/CompleteProfile";
 import EditProfile from "../../pages/Profile/EditProfile/EditProfile";
 import Header from "../Header/Header";
 import SuggestedUsers from "../SuggestedUsers/SuggestedUsers";
+import Saved from "../Saved/Saved";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(
@@ -66,7 +67,7 @@ function AppRoutes() {
                 <Route path="/" element={<Main />}>
                   <Route index element={<Home />} />
                   <Route path="categories" element={<Categories />} />
-                  <Route path="favorites" element={<Favorites />} />
+                  <Route path="saved" element={<Saved/>} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="/profile/edit" element={<EditProfile />} />
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
