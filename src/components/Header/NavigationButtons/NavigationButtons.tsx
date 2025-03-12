@@ -1,5 +1,5 @@
 import React, { JSX } from "react";
-import { FaHome, FaSearch, FaCompass, FaHeart, FaUser } from "react-icons/fa";
+import { FaHome, FaSearch, FaCompass, FaHeart, FaUser, FaBookmark } from "react-icons/fa";
 
 interface NavigationButtonProps {
   onClick: () => void;
@@ -35,7 +35,7 @@ export const NavigationButtons = ({
       activeClassName={isSearchExpanded ? "active" : ""}
     />
     <NavigationButton onClick={() => handleNavigation("/explore")} icon={<FaCompass />} label="Explore" />
-    <NavigationButton onClick={() => handleNavigation("/notifications")} icon={<FaHeart />} label="Notifications" />
+    <NavigationButton onClick={() => handleNavigation("/saved")} icon={<FaBookmark />} label="Saved" />
     <NavigationButton onClick={() => handleNavigation("/profile")} icon={<FaUser />} label="Profile" />
   </>
 );

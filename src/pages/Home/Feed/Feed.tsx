@@ -207,7 +207,7 @@ const Home: React.FC = () => {
                       )}
                       <ShareButton />
                     </div>
-										{user && <SavePostButton newsId={article.url} userId={user.id} />}
+										{user && <SavePostButton newsId={article.title} userId={user.id} />}
                   </div>
                 </div>
               </div>
