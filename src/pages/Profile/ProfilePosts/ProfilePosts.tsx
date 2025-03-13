@@ -2,7 +2,7 @@ import React from "react";
 import "./ProfilePosts.scss";
 import LikeButton from "../../Home/Feed/FeedComponents/InteractionButtons/LikeButton/LikeButton";
 import ShareButton from "../../Home/Feed/FeedComponents/InteractionButtons/SendButton/ShareButton";
-import CommentButton from "../../Home/Feed/FeedComponents/InteractionButtons/CommentButton/CommentButtton";
+import CommentButton from "../../Home/Feed/FeedComponents/InteractionButtons/CommentButton/CommentButton";
 interface ProfilePostProps {
   post: {
     id: string;
@@ -11,9 +11,12 @@ interface ProfilePostProps {
     created_at: string;
     userId: string;
   };
+	user?: any;
 }
 
-const ProfilePosts: React.FC<ProfilePostProps> = ({ post }) => {
+const ProfilePosts: React.FC<ProfilePostProps> = ({ post, user = null }) => {
+	
+
   return (
     <div className="profile-post">
       <div className="post-header">
@@ -42,8 +45,8 @@ const ProfilePosts: React.FC<ProfilePostProps> = ({ post }) => {
           </div>
         )}
         <div className="home-likes-comments">
-          <LikeButton contentId={post.id} userId={post.userId} type={"post"} />
-          <CommentButton contentId={post.id} userId={post.userId} />
+          <LikeButton contentId={post.id} userId={user?.user?.id ?? ""} type={"post"} />
+          <CommentButton contentId={post.id} userId={user?.user?.id ?? ""} />
           <ShareButton />
         </div>
       </div>
