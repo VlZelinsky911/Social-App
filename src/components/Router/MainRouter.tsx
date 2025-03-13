@@ -30,6 +30,9 @@ import Header from "../Header/Header";
 import SuggestedUsers from "../SuggestedUsers/SuggestedUsers";
 import Saved from "../Saved/Saved";
 
+import Popular from "../Recommendations/Popular/Popular";
+import Recommended from "../Recommendations/Recommended/Recommended";
+
 function AppRoutes() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -73,6 +76,8 @@ function AppRoutes() {
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="terms-of-service" element={<TermsOfService />} />
                   <Route path="/profile/:username" element={<UserProfile />} />
+                  <Route path="/popular" element={<Popular/>} />
+                  <Route path="/recommended" element={<Recommended/>} />
                 </Route>
 
                 <Route path="/complete-profile" element={<Navigate to="/" />} />

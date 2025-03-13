@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import "./Feed.scss";
-import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
-import PostTitle from "./FeedComponents/PostTitle/PostTitle";
-import Spinner from "./FeedComponents/Spinner/Spinner";
-import PostCreator from "./FeedComponents/PostCreator/PostCreator";
-import { supabase } from "../../../services/supabaseClient";
-import LikeButton from "./FeedComponents/InteractionButtons/LikeButton/LikeButton";
-import CommentButton from "./FeedComponents/InteractionButtons/CommentButton/CommentButton";
-import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
 import SuggestedUsers from "../../../components/SuggestedUsers/SuggestedUsers";
-import SavePostButton from "./FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
+import { supabase } from "../../../services/supabaseClient";
+import PostTitle from "../../../pages/Home/Feed/FeedComponents/PostTitle/PostTitle";
+import Spinner from "../../../pages/Home/Feed/FeedComponents/Spinner/Spinner";
+import LikeButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/LikeButton/LikeButton";
+import CommentButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/CommentButton/CommentButton";
+import ShareButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/SendButton/ShareButton";
+import SavePostButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
+import { NewsCategories } from "../../../pages/Home/Feed/FeedComponents/NewsCategories/NewsCategories";
 
 interface Post {
   id: number;
@@ -19,7 +17,7 @@ interface Post {
   username: string;
 }
 
-const Home: React.FC = () => {
+const Recommended: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("all");
@@ -85,15 +83,6 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading]);
 
-  const handlePostCreated = useCallback(() => {
-    setIsPostSubmitting(true);
-    setPosts([]);
-    pageRef.current = 1;
-    canLoadMore.current = true;
-    fetchPosts().finally(() => {
-      setIsPostSubmitting(false);
-    });
-  }, []);
 
   return (
     <div className="home-container">
@@ -107,10 +96,6 @@ const Home: React.FC = () => {
               setFilter={setFilter}
               setActiveCategory={setActiveCategory}
             />
-            {activeCategory === "Стрічка" && (
-              <PostCreator userId={user?.id} onPostCreated={handlePostCreated} />
-            )}
-
             <div className="feed-posts-container">
               {isPostSubmitting && <Spinner />}
               {posts.map((post) => (
@@ -143,4 +128,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Recommended;
