@@ -8,6 +8,7 @@ import CommentButton from "../../../pages/Home/Feed/FeedComponents/InteractionBu
 import ShareButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/SendButton/ShareButton";
 import SavePostButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
 import { NewsCategories } from "../../../pages/Home/Feed/FeedComponents/NewsCategories/NewsCategories";
+import { any } from "zod";
 
 interface Post {
   id: number;
@@ -36,44 +37,41 @@ const Popular: React.FC = () => {
     getUser();
   }, []);
 
-  const fetchPosts = async () => {
-    if (loading || !canLoadMore.current) return;
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("posts")
-      .select(`
-        id, 
-        text, 
-        mediaurls, 
-        created_at, 
-        user_id, 
-        user_profiles(username), 
-        likes(count)`
-      )
-      .order("created_at", { ascending: false })
-      .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
-
-    if (error) {
-      console.error("Помилка завантаження постів:", error);
-    } else {
-      if (data.length > 0) {
-        const formattedData = data.map((post: any) => ({
-          ...post,
+	const fetchPosts = async () => {
+		if (loading || !canLoadMore.current) return;
+		setLoading(true);
+	
+		try {
+			const { data, error } = await supabase
+				.from("posts")
+				.select("id, text, mediaurls, created_at, user_id, user_profiles(username), likes_count")
+				.order("likes_count", { ascending: false })
+				.range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
+	
+			if (error) {
+				console.error("Помилка завантаження постів:", error);
+				return;
+			}
+	
+			if (data.length > 0) {
+				const formattedData = data.map((post: any) => ({
+					...post,
           username: post.user_profiles?.username || "Анонім",
-          likesCount: post.likes?.count || 0,
-        }));
-
-        const sortedData = formattedData.sort((a, b) => a.likesCount - b.likesCount);
-
-        setPosts((prev) => [...prev, ...sortedData]);
-        pageRef.current += 1;
-      } else {
-        canLoadMore.current = false;
-      }
-    }
-    setLoading(false);
-  };
+					likesCount: post.likes_count || 0,
+				}));
+	
+				setPosts((prev) => [...prev, ...formattedData]);
+				pageRef.current += 1;
+			} else {
+				canLoadMore.current = false;
+			}
+		} catch (err) {
+			console.error("Непередбачена помилка:", err);
+		}
+	
+		setLoading(false);
+	};
+	
 
   useEffect(() => {
     fetchPosts();

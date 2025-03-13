@@ -37,33 +37,34 @@ const Recommended: React.FC = () => {
     getUser();
   }, []);
 
-  const fetchPosts = async () => {
-    if (loading || !canLoadMore.current) return;
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("posts")
-      .select(`id, text, mediaurls, created_at, user_profiles(username)`) 
-      .order("created_at", { ascending: false })
-      .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
-
-    if (error) {
-      console.error("Помилка завантаження постів:", error);
-    } else {
-      if (data.length > 0) {
-        const formattedData = data.map((post: any) => ({
-          ...post,
-          username: post.user_profiles.username,
-        }));
-
-        setPosts((prev) => [...prev, ...formattedData]);
-        pageRef.current += 1;
-      } else {
-        canLoadMore.current = false;
-      }
-    }
-    setLoading(false);
-  };
+	const fetchPosts = async () => {
+		if (loading || !canLoadMore.current) return;
+		setLoading(true);
+	
+		const { data, error } = await supabase
+			.from("posts")
+			.select("id, text, mediaurls, created_at, user_id, user_profiles(username), comments_count")
+			.order("comments_count", { ascending: false }) 
+			.order("created_at", { ascending: false })
+			.range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
+	
+		if (error) {
+			console.error("Помилка завантаження постів:", error);
+		} else {
+			if (data.length > 0) {
+				const formattedData = data.map((post: any) => ({
+					...post,
+					username: post.user_profiles?.username || "Анонім",
+				}));
+	
+				setPosts((prev) => [...prev, ...formattedData]);
+				pageRef.current += 1;
+			} else {
+				canLoadMore.current = false;
+			}
+		}
+		setLoading(false);
+	};	
 
   useEffect(() => {
     fetchPosts();
@@ -82,7 +83,6 @@ const Recommended: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading]);
-
 
   return (
     <div className="home-container">
