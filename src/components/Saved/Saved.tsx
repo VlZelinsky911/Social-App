@@ -3,17 +3,11 @@ import "./Saved.scss";
 import { supabase } from "../../services/supabaseClient";
 import Spinner from "../../pages/Home/Feed/FeedComponents/Spinner/Spinner";
 
-interface SavedPost {
-  id: string;
-  post_id: string | null;
-  news_id: string | null;
-}
-
 interface Post {
-  id: string;
+  id: number;
   text: string;
   created_at: string;
-  mediaurls: string[];
+  mediaurls: string[] | null;
 }
 
 interface News {
@@ -28,41 +22,46 @@ function Saved() {
   const [savedPosts, setSavedPosts] = useState<Post[]>([]);
   const [savedNews, setSavedNews] = useState<News[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<any>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Помилка отримання користувача:", error);
+        return;
+      }
+      setUserId(data.user?.id || null);
     };
     getUser();
   }, []);
 
   useEffect(() => {
-    const fetchSavedPosts = async () => {
-      if (!user) return;
+    if (!userId) return;
 
+    const fetchSavedPosts = async () => {
       setLoading(true);
       try {
         const { data, error } = await supabase
           .from("saved_posts")
           .select("post_id")
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
 
         if (error) throw error;
 
-        if (data.length > 0) {
-          const postIds = data.map((item) => item.post_id).filter(Boolean);
-          const { data: posts, error: postsError } = await supabase
-            .from("posts")
-            .select("id, text, created_at, mediaurls")
-            .in("id", postIds);
-
-          if (postsError) throw postsError;
-          setSavedPosts(posts || []);
+        const postIds = data.map((item) => item.post_id).filter(Boolean);
+        if (postIds.length === 0) {
+          setSavedPosts([]);
+          return;
         }
+
+        const { data: posts, error: postsError } = await supabase
+          .from("posts")
+          .select("id, text, created_at, mediaurls")
+          .in("id", postIds);
+
+        if (postsError) throw postsError;
+        setSavedPosts(posts || []);
       } catch (error) {
         console.error("Помилка отримання збережених постів:", error);
       } finally {
@@ -71,22 +70,20 @@ function Saved() {
     };
 
     fetchSavedPosts();
-  }, [user]);
+  }, [userId]);
 
-  const removeSavedPost = async (postId: string) => {
-    if (!user) return;
+  const removeSavedPost = async (postId: number) => {
+    if (!userId) return;
 
     try {
       const { error } = await supabase
         .from("saved_posts")
         .delete()
-        .eq("user_id", user.id)
+        .eq("user_id", userId)
         .eq("post_id", postId);
 
       if (error) throw error;
-      setSavedPosts((prevPosts) =>
-        prevPosts.filter((post) => post.id !== postId)
-      );
+      setSavedPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
     } catch (error) {
       console.error("Помилка видалення поста:", error);
     }
@@ -114,33 +111,12 @@ function Saved() {
                     <strong>Дата:</strong>{" "}
                     {new Date(post.created_at).toLocaleDateString()}
                   </p>
-                  {post.mediaurls.length > 0 && (
-                    <img src={post.mediaurls[0]} alt="Медіа"/>
+                  {post.mediaurls && post.mediaurls.length > 0 && (
+                    <img src={post.mediaurls[0]} alt="Медіа" />
                   )}
-                  <button onClick={() => removeSavedPost(post.id)} className="remove__btn">❌</button>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <h2>📰 Збережені новини:</h2>
-          {savedNews.length === 0 ? (
-            <p>Перевищення ліміту.🥲</p>
-          ) : (
-            <ul>
-              {savedNews.map((news, index) => (
-                <li key={index}>
-                  <a href={news.url} target="_blank" rel="noopener noreferrer">
-                    <h3>{news.title}</h3>
-                  </a>
-                  <p>{news.description}</p>
-                  {news.urlToImage && (
-                    <img src={news.urlToImage} alt="Новина" width="100" />
-                  )}
-                  <p>
-                    <strong>Дата:</strong>{" "}
-                    {new Date(news.publishedAt).toLocaleDateString()}
-                  </p>
+                  <button onClick={() => removeSavedPost(post.id)} className="remove__btn">
+                    ❌
+                  </button>
                 </li>
               ))}
             </ul>

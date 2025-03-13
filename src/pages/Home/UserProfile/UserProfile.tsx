@@ -31,10 +31,13 @@ const UserProfile: React.FC = () => {
 	const [followersCount, setFollowersCount] = useState<number>(0);
 	const [followingCount, setFollowingCount] = useState<number>(0);
 	const [isProcessing, setIsProcessing] = useState(false);
+	const [user, setUser] = useState<any>(null);
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const { data: user } = await supabase.auth.getUser();
+			setUser(user);
       if (!user || !user.user) return;
 
       const { data, error } = await supabase
@@ -170,7 +173,7 @@ const UserProfile: React.FC = () => {
         )}
         <div className="profile-posts">
           {profile.posts.length > 0 ? (
-            profile.posts.map((post) => <ProfilePosts key={post.id} post={post} />)
+            profile.posts.map((post) => <ProfilePosts key={post.id} post={post} user={user}/>)
           ) : (
             <p>У користувача ще немає постів.</p>
           )}
