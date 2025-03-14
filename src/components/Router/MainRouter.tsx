@@ -32,6 +32,8 @@ import Saved from "../Saved/Saved";
 
 import Popular from "../Recommendations/Popular/Popular";
 import Recommended from "../Recommendations/Recommended/Recommended";
+import Notifications from "../Notifications/Notifications";
+import PostPage from "../PostPage/PostPage";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(
@@ -69,7 +71,7 @@ function AppRoutes() {
               <>
                 <Route path="/" element={<Main />}>
                   <Route index element={<Home />} />
-                  <Route path="categories" element={<Categories />} />
+									<Route path="notifications" element={<Notifications />} />
                   <Route path="saved" element={<Saved/>} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="/profile/edit" element={<EditProfile />} />
@@ -78,6 +80,7 @@ function AppRoutes() {
                   <Route path="/profile/:username" element={<UserProfile />} />
                   <Route path="/popular" element={<Popular/>} />
                   <Route path="/recommended" element={<Recommended/>} />
+                  <Route path="/post/:postId" element={<PostPage/>} />
                 </Route>
 
                 <Route path="/complete-profile" element={<Navigate to="/" />} />
