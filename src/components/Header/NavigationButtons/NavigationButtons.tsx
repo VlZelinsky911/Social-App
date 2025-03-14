@@ -24,7 +24,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavi
 
       <button onClick={() => handleNavigation("/notifications")} className="nav-item">
         <FaBell />
-        {showDot && <span className="notification-dot"></span>}
+				{showDot && <span className="notification-dot"></span>}
         <span>Сповіщення</span>
       </button>
 

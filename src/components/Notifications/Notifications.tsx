@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabaseClient";
-import { differenceInHours, format, isToday, isYesterday, parseISO } from "date-fns";
+import { differenceInHours, format } from "date-fns";
 import Avatar from "../Avatar/Avatar";
 import "./Notifications.scss";
 import { useNavigate } from "react-router-dom";
@@ -16,10 +16,11 @@ interface Notification {
   username: string;
   avatar_url: string;
   comment_text?: string;
-	mediaurls?: string
+  mediaurls?: string;
 }
+
 interface Props {
-	notif: Notification;
+  notif: Notification;
   formatTime: (date: string) => string;
 }
 
@@ -64,8 +65,27 @@ const Notifications = () => {
 
     const subscription = supabase
       .channel("notifications")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications" }, (payload: any) => {
-        setNotifications((prev) => [payload.new as Notification, ...prev]);
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications" }, async (payload: any) => {
+        const newNotif = payload.new;
+
+        const { data: userData, error } = await supabase
+          .from("user_profiles")
+          .select("username, avatar_url")
+          .eq("id", newNotif.actor_id)
+          .single();
+
+        if (error) {
+          console.error("Помилка отримання даних користувача:", error);
+        }
+
+        setNotifications((prev) => [
+          {
+            ...newNotif,
+            username: userData?.username || "Анонім",
+            avatar_url: userData?.avatar_url || "",
+          },
+          ...prev,
+        ]);
       })
       .subscribe();
 
@@ -80,60 +100,15 @@ const Notifications = () => {
     return format(adjustedDate, "HH:mm");
   };
 
-  const groupNotificationsByDate = () => {
-    const today: Notification[] = [];
-    const yesterday: Notification[] = [];
-    const earlier: Notification[] = [];
-
-    notifications.forEach((notif) => {
-      const notifDate = parseISO(notif.created_at);
-
-      if (isToday(notifDate)) {
-        today.push(notif);
-      } else if (isYesterday(notifDate)) {
-        yesterday.push(notif);
-      } else {
-        earlier.push(notif);
-      }
-    });
-
-    return { today, yesterday, earlier };
-  };
-
-  const { today, yesterday, earlier } = groupNotificationsByDate();
-
   return (
     <div className="notifications">
       <h2>Сповіщення</h2>
 
-      {today.length > 0 && (
-        <>
-          <h3>Сьогодні</h3>
-          {today.map((notif) => (
-            <NotificationItem key={notif.id} notif={notif} formatTime={formatTime} />
-          ))}
-        </>
+      {notifications.length > 0 ? (
+        notifications.map((notif) => <NotificationItem key={notif.id} notif={notif} formatTime={formatTime} />)
+      ) : (
+        <p>Немає нових сповіщень</p>
       )}
-
-      {yesterday.length > 0 && (
-        <>
-          <h3>Вчора</h3>
-          {yesterday.map((notif) => (
-            <NotificationItem key={notif.id} notif={notif} formatTime={formatTime} />
-          ))}
-        </>
-      )}
-
-      {earlier.length > 0 && (
-        <>
-          <h3>Раніше</h3>
-          {earlier.map((notif) => (
-            <NotificationItem key={notif.id} notif={notif} formatTime={formatTime} />
-          ))}
-        </>
-      )}
-
-      {notifications.length === 0 && <p>Немає нових сповіщень</p>}
     </div>
   );
 };
@@ -149,12 +124,14 @@ const NotificationItem: React.FC<Props> = ({ notif, formatTime }) => {
     <div className="notification" onClick={handleClick} style={{ cursor: "pointer" }}>
       <Avatar name={notif.username} avatarUrl={notif.avatar_url} />
       <div>
-        <p>{notif.username || "Анонім"} {notif.type === "like" ? "лайкнув ваш пост" : `прокоментував: "${notif.comment_text}"`}</p>
+        <p>
+          {notif.username || "Анонім"} {notif.type === "like" ? "лайкнув ваш пост" : `прокоментував: "${notif.comment_text}"`}
+        </p>
         <span className="time">{formatTime(notif.created_at)}</span>
       </div>
-			<div className="notification-type">
-				<span>{notif.type === "like" ? <FaHeart /> : <FaComment />}</span>
-			</div>
+      <div className="notification-type">
+        <span>{notif.type === "like" ? <FaHeart /> : <FaComment />}</span>
+      </div>
     </div>
   );
 };

@@ -21,37 +21,23 @@ const Header: React.FC = () => {
         setUserId(data.user.id);
       }
     };
-
     fetchUser();
   }, []);
-
-  const fetchUnreadCount = async () => {
-    if (!userId) return;
-    const { data, error } = await supabase
-      .from("notifications")
-      .select("id", { count: "exact" })
-      .eq("user_id", userId)
-      .eq("is_read", false);
-
-    if (!error) {
-      setUnreadCount(data.length);
-    }
-  };
 
   useEffect(() => {
     if (!userId) return;
 
-    fetchUnreadCount();
-
     const subscription = supabase
-      .channel("notifications")
-      .on("postgres_changes", { event: "*", schema: "public", table: "notifications" }, (payload: any) => {
-        if (!payload?.new) return;
+      .channel('public:posts')
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, (payload: any) => {
 
-        if (payload.eventType === "INSERT" && payload.new.user_id === userId) {
+        if (!payload.new) return;
+
+        if (
+          payload.new.likes_count !== payload.old?.likes_count ||
+          payload.new.comments_count !== payload.old?.comments_count
+        ) {
           setUnreadCount((prev) => prev + 1);
-        } else if (payload.eventType === "UPDATE" && payload.new.is_read && payload.new.user_id === userId) {
-          setUnreadCount((prev) => Math.max(prev - 1, 0));
         }
       })
       .subscribe();
@@ -64,14 +50,7 @@ const Header: React.FC = () => {
   const handleNavigation = async (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
-
     if (path === "/notifications" && unreadCount > 0) {
-      await supabase
-        .from("notifications")
-        .update({ is_read: true })
-        .eq("user_id", userId)
-        .eq("is_read", false);
-
       setUnreadCount(0);
     }
   };
@@ -83,7 +62,6 @@ const Header: React.FC = () => {
           <div className="logo">
             <span className="logo-text">Storygram</span>
           </div>
-
           <nav className="sidebar-nav">
             <NavigationButtons
               handleNavigation={handleNavigation}
@@ -92,13 +70,11 @@ const Header: React.FC = () => {
               showDot={unreadCount > 0}
             />
           </nav>
-
           <button className="nav-item menu-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             <FaBars />
             <span>Menu</span>
           </button>
         </div>
-
         {isSearchExpanded && (
           <div className="search-overlay">
             <div className="search-container">
@@ -108,7 +84,6 @@ const Header: React.FC = () => {
           </div>
         )}
       </aside>
-
       <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={() => setIsMenuOpen(false)}></div>
     </>
   );
