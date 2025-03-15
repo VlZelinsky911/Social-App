@@ -9,9 +9,10 @@ interface NavigationButtonsProps {
   toggleSearch: () => void;
 	toggleChats: () => void;
   showDot?: boolean;
+	showMessagesDot?: boolean
 }
 
-export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavigation, isSearchExpanded,isChatsOpen, toggleSearch, toggleChats ,showDot }) => {
+export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavigation, isSearchExpanded,isChatsOpen, toggleSearch, toggleChats ,showDot, showMessagesDot }) => {
   return (
     <div className="nav-buttons">
       <button onClick={() => handleNavigation("/")} className="nav-item">
@@ -27,6 +28,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavi
 			<button onClick={toggleChats} className={`nav-item ${isChatsOpen ? "active" : ""}`}>
 				<FaComments />
         <span>Повідомлення</span>
+				{showMessagesDot && <span className="notification-dot"></span>}
       </button>
 
       <button onClick={() => handleNavigation("/notifications")} className="nav-item">

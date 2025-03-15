@@ -6,6 +6,7 @@ import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import SearchInput from "./SearchInput/SearchInput";
 import { supabase } from "../../services/supabaseClient";
 import UserChats from "./UserChats/UserChats";
+import { set } from "date-fns";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isChatsOpen, setIsChatsOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+	const [unreadMessages, setUnreadMessages] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [userId, setUserId] = useState<string | null>(null);
 	
@@ -63,6 +65,28 @@ const Header: React.FC = () => {
     };
   }, [userId]);
 
+	useEffect(() => {
+		if(!userId) return;
+
+		const subscription = supabase
+		.channel("messages")
+		.on(
+			"postgres_changes",
+			{ event: "INSERT", schema: "public", table: "messages" },
+			(payload: any) => {
+				if (payload.new.receiver_id === userId) {
+					setUnreadMessages(true);
+				}
+			}
+		)
+		.subscribe();
+
+		return () => {
+			supabase.removeChannel(subscription);
+		};
+	},[userId]);
+
+
   const handleNavigation = async (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
@@ -89,8 +113,9 @@ const Header: React.FC = () => {
               toggleChats={() => {
                 setIsChatsOpen(!isChatsOpen);
                 setIsSearchExpanded(false);
+								setUnreadMessages(false);
               }}
-
+							showMessagesDot={unreadMessages}
               showDot={unreadCount > 0}
             />
           </nav>
