@@ -29,7 +29,7 @@ const PostPage = () => {
           created_at, 
           user_profiles(username, avatar_url, id) 
         `)
-        .eq("id", postId) // тепер передаємо рядок, а не число
+        .eq("id", postId)
         .single();
 
       if (error) {

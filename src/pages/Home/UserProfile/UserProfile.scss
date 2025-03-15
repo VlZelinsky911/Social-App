@@ -98,6 +98,31 @@ button {
       }
     }
 
+		.profile-buttons{
+		width: 280px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+
+		.username__btn{
+		width: 150px;
+		background-color: #4a76a8;
+    color: white;
+		border: none;
+		border-radius: 20px;
+		font-size: 14px;
+		font-weight: 600;
+		transition: all 0.2s ease;
+		cursor: pointer;
+		text-align: center;
+		line-height: 30px;
+		&:hover{
+			background-color: #3d6898;
+			}	
+		}
+	}
+
     .profile-subscribers {
       display: flex;
       justify-content: center;

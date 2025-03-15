@@ -10,10 +10,11 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [isChatsOpen, setIsChatsOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [userId, setUserId] = useState<string | null>(null);
-
+	
   useEffect(() => {
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -26,8 +27,6 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     if (!userId) return;
-
-    console.log("🔄 Підписка на зміни у posts запущена");
 
     const subscription = supabase.channel('public:posts')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, (payload: any) => {
@@ -70,7 +69,6 @@ const Header: React.FC = () => {
       setUnreadCount(0);
     }
   };
-
   return (
     <>
       <aside className="sidebar">
@@ -82,7 +80,16 @@ const Header: React.FC = () => {
             <NavigationButtons
               handleNavigation={handleNavigation}
               isSearchExpanded={isSearchExpanded}
-              toggleSearch={() => setIsSearchExpanded(!isSearchExpanded)}
+							isChatsOpen={isChatsOpen}
+              toggleSearch={() => {
+                setIsSearchExpanded(!isSearchExpanded);
+                setIsChatsOpen(false);
+              }}
+              toggleChats={() => {
+                setIsChatsOpen(!isChatsOpen);
+                setIsSearchExpanded(false);
+              }}
+
               showDot={unreadCount > 0}
             />
           </nav>
@@ -99,6 +106,13 @@ const Header: React.FC = () => {
             </div>
           </div>
         )}
+				{isChatsOpen && (
+					<div className="search-overlay">
+						<div className="search-container">
+							<h4>Chats</h4>
+						</div>
+					</div>
+				)}
       </aside>
       <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={() => setIsMenuOpen(false)}></div>
     </>

@@ -1,15 +1,17 @@
 import React from "react";
-import { FaBell, FaSearch, FaHome, FaBookmark, FaUser } from "react-icons/fa"; // Додано іконку Home
+import { FaBell, FaSearch, FaHome, FaBookmark, FaUser, FaPlane, FaPlaceOfWorship, FaPaperPlane, FaComment, FaComments } from "react-icons/fa"; // Додано іконку Home
 import "./NavigationButtons.scss";
 
 interface NavigationButtonsProps {
   handleNavigation: (path: string) => void;
   isSearchExpanded: boolean;
+	isChatsOpen: boolean;
   toggleSearch: () => void;
+	toggleChats: () => void;
   showDot?: boolean;
 }
 
-export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavigation, isSearchExpanded, toggleSearch, showDot }) => {
+export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavigation, isSearchExpanded,isChatsOpen, toggleSearch, toggleChats ,showDot }) => {
   return (
     <div className="nav-buttons">
       <button onClick={() => handleNavigation("/")} className="nav-item">
@@ -20,6 +22,11 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavi
       <button onClick={toggleSearch} className={`nav-item ${isSearchExpanded ? "active" : ""}`}>
         <FaSearch />
         <span>Пошук</span>
+      </button>
+
+			<button onClick={toggleChats} className={`nav-item ${isChatsOpen ? "active" : ""}`}>
+				<FaComments />
+        <span>Повідомлення</span>
       </button>
 
       <button onClick={() => handleNavigation("/notifications")} className="nav-item">
