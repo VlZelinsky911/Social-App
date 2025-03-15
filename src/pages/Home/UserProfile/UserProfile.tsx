@@ -1,11 +1,11 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../../services/supabaseClient";
 import Avatar from "../../../components/Avatar/Avatar";
 import Spinner from "../../Home/Feed/FeedComponents/Spinner/Spinner";
 import ProfilePosts from "../../Profile/ProfilePosts/ProfilePosts";
-import "./UserProfile.scss";
 import ProfileSubscribers from "./ProfileSubscribers/ProfileSubscribers";
+import "./UserProfile.scss";
 
 interface UserProfileData {
   id: string;
@@ -24,20 +24,20 @@ interface UserProfileData {
 
 const UserProfile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-	const [followersCount, setFollowersCount] = useState<number>(0);
-	const [followingCount, setFollowingCount] = useState<number>(0);
-	const [isProcessing, setIsProcessing] = useState(false);
-	const [user, setUser] = useState<any>(null);
-
+  const [followersCount, setFollowersCount] = useState<number>(0);
+  const [followingCount, setFollowingCount] = useState<number>(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const { data: user } = await supabase.auth.getUser();
-			setUser(user);
+      setUser(user);
       if (!user || !user.user) return;
 
       const { data, error } = await supabase
@@ -52,8 +52,8 @@ const UserProfile: React.FC = () => {
         setProfile(data);
         setIsOwnProfile(data.id === user.user.id);
         checkIfFollowing(user.user.id, data.id);
-				fetchFollowersCount(data.id);
-				fetchFollowingCount(data.id);
+        fetchFollowersCount(data.id);
+        fetchFollowingCount(data.id);
       }
       setLoading(false);
     };
@@ -61,22 +61,23 @@ const UserProfile: React.FC = () => {
     fetchUserProfile();
   }, [username]);
 
-	const fetchFollowersCount = async (userId: string) => {
-		const { count } = await supabase
-			.from("followers")
-			.select("id", {count: "exact"})
-			.eq("following_id", userId);
+  const fetchFollowersCount = async (userId: string) => {
+    const { count } = await supabase
+      .from("followers")
+      .select("id", { count: "exact" })
+      .eq("following_id", userId);
 
-			setFollowersCount(count || 0);
-	}
-	const fetchFollowingCount = async (userId: string) => {
-		const { count } = await supabase
-			.from("followers")
-			.select("id", {count: "exact"})
-			.eq("follower_id", userId);
+    setFollowersCount(count || 0);
+  };
 
-			setFollowingCount(count || 0);
-	}
+  const fetchFollowingCount = async (userId: string) => {
+    const { count } = await supabase
+      .from("followers")
+      .select("id", { count: "exact" })
+      .eq("follower_id", userId);
+
+    setFollowingCount(count || 0);
+  };
 
   const checkIfFollowing = async (currentUserId: string, profileUserId: string) => {
     const { data } = await supabase
@@ -89,65 +90,83 @@ const UserProfile: React.FC = () => {
     setIsFollowing(!!data);
   };
 
-	const toggleFollow = async () => {
-		if (!profile || isProcessing) return;
-	
-		setIsProcessing(true);
+  const toggleFollow = async () => {
+    if (!profile || isProcessing) return;
+
+    setIsProcessing(true);
+
+    const { data: user } = await supabase.auth.getUser();
+    if (!user || !user.user) {
+      setIsProcessing(false);
+      return;
+    }
+
+    const currentUserId = user.user.id;
+    const profileUserId = profile.id;
+
+    if (isFollowing) {
+      await supabase
+        .from("followers")
+        .delete()
+        .eq("follower_id", currentUserId)
+        .eq("following_id", profileUserId);
+      setFollowersCount((prev) => Math.max(0, prev - 1));
+    } else {
+      await supabase.from("followers").insert([
+        { follower_id: currentUserId, following_id: profileUserId },
+      ]);
+      setFollowersCount((prev) => prev + 1);
+    }
+
+    setIsFollowing(!isFollowing);
+    setIsProcessing(false);
+  };
+
+  const startConversation = async () => {
+		if (!profile) return;
 	
 		const { data: user } = await supabase.auth.getUser();
-		if (!user || !user.user) {
-			setIsProcessing(false);
-			return;
-		}
+		if (!user?.user) return;
 	
 		const currentUserId = user.user.id;
-		const profileUserId = profile.id;
+		const recipientId = profile.id;
 	
-		const { data: recentActions, error } = await supabase
-			.from("followers")
-			.select("created_at")
-			.eq("follower_id", currentUserId)
-			.eq("following_id", profileUserId)
-			.order("created_at", { ascending: false })
-			.limit(1);
+		const { data: existingConversation, error } = await supabase
+  .from("conversations")
+  .select("id")
+  .or(
+    `and(user1_id.eq.${currentUserId},user2_id.eq.${recipientId}),` +
+    `and(user1_id.eq.${recipientId},user2_id.eq.${currentUserId})`
+  )
+  .maybeSingle();
+
 	
 		if (error) {
-			console.error("Помилка перевірки підписок:", error);
-			setIsProcessing(false);
+			console.error("❌ Помилка пошуку чату:", error);
 			return;
 		}
 	
-		const lastActionTime = recentActions?.[0]?.created_at;
-		const now = new Date();
-		if(lastActionTime){
-			const lastActionDate = new Date(lastActionTime);
-			const timeDiff = (now.getTime() - lastActionDate.getTime()) / 1000;
-			if (timeDiff < 10) {
-				console.warn("Занадто швидкі підписки. Спробуйте пізніше.");
-				alert("Занадто швидкі підписки. Спробуйте пізніше.");
-				setIsProcessing(false);
+		let conversationId = existingConversation?.id;
+	
+		if (!conversationId) {
+			const { data: newConversation, error: insertError } = await supabase
+				.from("conversations")
+				.insert([{ user1_id: currentUserId, user2_id: recipientId }])
+				.select()
+				.single();
+	
+			if (insertError) {
+				console.error("❌ Помилка створення чату:", insertError);
 				return;
 			}
+	
+			conversationId = newConversation.id;
 		}
 	
-		if (isFollowing) {
-			await supabase
-				.from("followers")
-				.delete()
-				.eq("follower_id", currentUserId)
-				.eq("following_id", profileUserId);
-			setFollowersCount((prev) => Math.max(0, prev - 1));
-		} else {
-			await supabase.from("followers").insert([
-				{ follower_id: currentUserId, following_id: profileUserId },
-			]);
-			setFollowersCount((prev) => prev + 1);
-		}
+		navigate(`/chat/${conversationId}`);
+	};	
 	
-		setIsFollowing(!isFollowing);
-		setIsProcessing(false);
-	};
-	
+
   if (loading) return <Spinner />;
   if (!profile) return <p className="error">Користувач не знайдений.😥</p>;
 
@@ -160,20 +179,31 @@ const UserProfile: React.FC = () => {
         <div className="profile-info">
           <p className="username">@{profile.username}</p>
           <h1 className="full-name">{profile.fullname}</h1>
-					<div className="profile-subscribers">
-						<ProfileSubscribers	userId={profile.id} followersCount={followersCount} followingCount={followingCount}/>
-					</div>	
+          <div className="profile-subscribers">
+            <ProfileSubscribers
+              userId={profile.id}
+              followersCount={followersCount}
+              followingCount={followingCount}
+            />
+          </div>
           <p className="bio">{profile.bio}</p>
         </div>
 
-        {!isOwnProfile && (
-          <button onClick={toggleFollow} className={isFollowing ? "following-btn" : "follow-btn"}>
-            {isFollowing ? "Відписатися" : "Підписатися"}
-          </button>
-        )}
+        <div className="profile-buttons">
+          {!isOwnProfile && (
+            <button onClick={startConversation} className="username__btn">
+              Повідомлення
+            </button>
+          )}
+          {!isOwnProfile && (
+            <button onClick={toggleFollow} className={isFollowing ? "following-btn" : "follow-btn"}>
+              {isFollowing ? "Відписатися" : "Підписатися"}
+            </button>
+          )}
+        </div>
         <div className="profile-posts">
           {profile.posts.length > 0 ? (
-            profile.posts.map((post) => <ProfilePosts key={post.id} post={post} user={user}/>)
+            profile.posts.map((post) => <ProfilePosts key={post.id} post={post} user={user} />)
           ) : (
             <p>У користувача ще немає постів.</p>
           )}
