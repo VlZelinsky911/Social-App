@@ -27,18 +27,34 @@ const Header: React.FC = () => {
   useEffect(() => {
     if (!userId) return;
 
-    const subscription = supabase
-      .channel('public:posts')
+    console.log("🔄 Підписка на зміни у posts запущена");
+
+    const subscription = supabase.channel('public:posts')
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, (payload: any) => {
 
-        if (!payload.new) return;
+        if (!payload.new || payload.new.user_id !== userId) return;
+
+        const storedData = JSON.parse(localStorage.getItem("postCounts") || "{}");
+        const prevLikes = storedData[payload.new.id]?.likes_count || 0;
+        const prevComments = storedData[payload.new.id]?.comments_count || 0;
 
         if (
-          payload.new.likes_count !== payload.old?.likes_count ||
-          payload.new.comments_count !== payload.old?.comments_count
+          payload.new.likes_count > prevLikes ||
+          payload.new.comments_count > prevComments
         ) {
           setUnreadCount((prev) => prev + 1);
         }
+
+        localStorage.setItem(
+          "postCounts",
+          JSON.stringify({
+            ...storedData,
+            [payload.new.id]: {
+              likes_count: payload.new.likes_count,
+              comments_count: payload.new.comments_count,
+            },
+          })
+        );
       })
       .subscribe();
 
