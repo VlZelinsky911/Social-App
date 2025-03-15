@@ -1,5 +1,5 @@
 import React from "react";
-import { FaBell, FaSearch, FaHome, FaBookmark, FaUser, FaPlane, FaPlaceOfWorship, FaPaperPlane, FaComment, FaComments } from "react-icons/fa"; // Додано іконку Home
+import { FaBell, FaSearch, FaHome, FaBookmark, FaUser, FaComments } from "react-icons/fa";
 import "./NavigationButtons.scss";
 
 interface NavigationButtonsProps {

@@ -5,6 +5,7 @@ import "./Header.scss";
 import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import SearchInput from "./SearchInput/SearchInput";
 import { supabase } from "../../services/supabaseClient";
+import UserChats from "./UserChats/UserChats";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -110,6 +111,7 @@ const Header: React.FC = () => {
 					<div className="search-overlay">
 						<div className="search-container">
 							<h4>Chats</h4>
+							<UserChats setIsChatsOpen={setIsChatsOpen}/>
 						</div>
 					</div>
 				)}
