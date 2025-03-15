@@ -26,12 +26,10 @@ import CompleteProfile from "../UserManagement/CompleteProfile/CompleteProfile";
 import EditProfile from "../../pages/Profile/EditProfile/EditProfile";
 import Header from "../Header/Header";
 import Saved from "../Saved/Saved";
-
 import Popular from "../Recommendations/Popular/Popular";
 import Recommended from "../Recommendations/Recommended/Recommended";
 import Notifications from "../Notifications/Notifications";
 import PostPage from "../PostPage/PostPage";
-import Communication from "../Communication/Communication";
 import Chat from "../Chat/Chat";
 
 function AppRoutes() {
@@ -73,7 +71,6 @@ function AppRoutes() {
 									<Route path="notifications" element={<Notifications />} />
                   <Route path="saved" element={<Saved/>} />
                   <Route path="profile" element={<Profile />} />
-									<Route path="communication" element={<Communication />} />
                   <Route path="/profile/edit" element={<EditProfile />} />
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="terms-of-service" element={<TermsOfService />} />

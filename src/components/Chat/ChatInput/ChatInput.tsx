@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { supabase } from "../../../services/supabaseClient";
-import { FaPaperPlane, FaImage, FaSmile } from "react-icons/fa";
+import { FaPaperPlane, FaImage, FaSmile, FaCheckCircle } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import "./ChatInput.scss";
+import { set } from "date-fns";
 
 interface ChatInputProps {
   conversationId: string;
@@ -13,6 +14,7 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+	const [isMediaSelected, setIsMediaSelected] = useState(false);
 
 
   const handleEmojiClick = (emoji: any) => {
@@ -72,6 +74,12 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
     setShowEmojiPicker(false);
   };
 
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files?.[0] || null;
+		setImage(files);
+		setIsMediaSelected(true);
+	}
+
   return (
     <div className="chat-input">
       <button onClick={() => setShowEmojiPicker((prev) => !prev)}>
@@ -94,12 +102,12 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
       <input
         type="file"
         accept="image/*"
-        onChange={(e) => setImage(e.target.files?.[0] || null)}
+        onChange={handleFileChange}
         style={{ display: "none" }}
         id="file-upload"
       />
-      <label htmlFor="file-upload">
-        <FaImage />
+      <label htmlFor="file-upload" className={`upload-label ${isMediaSelected ? "selected" : ""}`}>
+			{isMediaSelected ? <FaCheckCircle className="check-icon" /> : <FaImage />}
       </label>
 
       <button onClick={sendMessage}>
