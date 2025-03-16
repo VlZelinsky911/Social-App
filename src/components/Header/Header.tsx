@@ -6,7 +6,6 @@ import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import SearchInput from "./SearchInput/SearchInput";
 import { supabase } from "../../services/supabaseClient";
 import UserChats from "./UserChats/UserChats";
-import { set } from "date-fns";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
