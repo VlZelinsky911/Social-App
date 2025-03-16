@@ -1,0 +1,103 @@
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-top: 1px solid #ddd;
+  gap: 10px;
+
+	.emoji-picker {
+		position: absolute;
+		bottom: 50px;
+		right: 20px;
+	}
+
+	.upload-label {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+
+    &.selected {
+      background-color: #d4f5d4;
+    }
+
+		.check-icon {
+			font-size: 16px;
+			color: green;
+		}
+  }
+
+  input[type="text"] {
+    flex-grow: 1;
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+    background: #f1f1f1;
+		color: #333;
+    font-size: 14px;
+    transition: border 0.3s;
+
+    &:focus {
+      border: 1px solid #007bff;
+      background: #fff;
+    }
+  }
+
+  button {
+    background: #007bff;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px;
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+
+    &:hover {
+      background: #0056b3;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  label {
+    cursor: pointer;
+    font-size: 18px;
+    color: #007bff;
+    transition: 0.3s;
+
+    &:hover {
+      color: #0056b3;
+    }
+  }
+}
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+
+  input {
+    display: none;
+  }
+}

@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import "./Feed.scss";
-import { NewsCategories } from "./FeedComponents/NewsCategories/NewsCategories";
-import PostTitle from "./FeedComponents/PostTitle/PostTitle";
-import Spinner from "./FeedComponents/Spinner/Spinner";
-import PostCreator from "./FeedComponents/PostCreator/PostCreator";
-import { supabase } from "../../../services/supabaseClient";
-import LikeButton from "./FeedComponents/InteractionButtons/LikeButton/LikeButton";
-import CommentButton from "./FeedComponents/InteractionButtons/CommentButton/CommentButton";
-import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
+import React, { useEffect, useState, useRef } from "react";
 import SuggestedUsers from "../../../components/SuggestedUsers/SuggestedUsers";
-import SavePostButton from "./FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
+import { supabase } from "../../../services/supabaseClient";
+import PostTitle from "../../../pages/Home/Feed/FeedComponents/PostTitle/PostTitle";
+import Spinner from "../../../pages/Home/Feed/FeedComponents/Spinner/Spinner";
+import LikeButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/LikeButton/LikeButton";
+import CommentButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/CommentButton/CommentButton";
+import ShareButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/SendButton/ShareButton";
+import SavePostButton from "../../../pages/Home/Feed/FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
+import { NewsCategories } from "../../../pages/Home/Feed/FeedComponents/NewsCategories/NewsCategories";
+import { any } from "zod";
 
 interface Post {
   id: number;
@@ -17,9 +16,10 @@ interface Post {
   mediaurls?: string[];
   created_at: string;
   username: string;
+  likesCount: number;
 }
 
-const Home: React.FC = () => {
+const Popular: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>("all");
@@ -31,41 +31,47 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
     };
     getUser();
   }, []);
 
-  const fetchPosts = async () => {
-    if (loading || !canLoadMore.current) return;
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("posts")
-      .select(`id, text, mediaurls, created_at, user_profiles(username)`) 
-      .order("created_at", { ascending: false })
-      .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
-
-    if (error) {
-      console.error("Помилка завантаження постів:", error);
-    } else {
-      if (data.length > 0) {
-        const formattedData = data.map((post: any) => ({
-          ...post,
-          username: post.user_profiles.username,
-        }));
-
-        setPosts((prev) => [...prev, ...formattedData]);
-        pageRef.current += 1;
-      } else {
-        canLoadMore.current = false;
-      }
-    }
-    setLoading(false);
-  };
+	const fetchPosts = async () => {
+		if (loading || !canLoadMore.current) return;
+		setLoading(true);
+	
+		try {
+			const { data, error } = await supabase
+				.from("posts")
+				.select("id, text, mediaurls, created_at, user_id, user_profiles(username), likes_count")
+				.order("likes_count", { ascending: false })
+				.range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
+	
+			if (error) {
+				console.error("Помилка завантаження постів:", error);
+				return;
+			}
+	
+			if (data.length > 0) {
+				const formattedData = data.map((post: any) => ({
+					...post,
+          username: post.user_profiles?.username || "Анонім",
+					likesCount: post.likes_count || 0,
+				}));
+	
+				setPosts((prev) => [...prev, ...formattedData]);
+				pageRef.current += 1;
+			} else {
+				canLoadMore.current = false;
+			}
+		} catch (err) {
+			console.error("Непередбачена помилка:", err);
+		}
+	
+		setLoading(false);
+	};
+	
 
   useEffect(() => {
     fetchPosts();
@@ -74,8 +80,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 10 &&
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 10 &&
         !loading
       ) {
         fetchPosts();
@@ -85,16 +90,6 @@ const Home: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading]);
 
-  const handlePostCreated = useCallback(() => {
-    setIsPostSubmitting(true);
-    setPosts([]);
-    pageRef.current = 1;
-    canLoadMore.current = true;
-    fetchPosts().finally(() => {
-      setIsPostSubmitting(false);
-    });
-  }, []);
-
   return (
     <div className="home-container">
       <div className="suggested-users">
@@ -103,14 +98,7 @@ const Home: React.FC = () => {
       <div className="feed-container">
         <div className="feed-content">
           <div className="feed-news-feed">
-            <NewsCategories
-              setFilter={setFilter}
-              setActiveCategory={setActiveCategory}
-            />
-            {activeCategory === "Стрічка" && (
-              <PostCreator userId={user?.id} onPostCreated={handlePostCreated} />
-            )}
-
+            <NewsCategories setFilter={setFilter} setActiveCategory={setActiveCategory} />
             <div className="feed-posts-container">
               {isPostSubmitting && <Spinner />}
               {posts.map((post) => (
@@ -143,4 +131,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Popular;

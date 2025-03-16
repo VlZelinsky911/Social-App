@@ -49,6 +49,7 @@ button {
   padding: 30px 20px;
 	position: absolute;
 	right: 0;
+	top: 0;
 
   .profile-content {
     background: #fff;
@@ -96,6 +97,30 @@ button {
         white-space: pre-wrap;
       }
     }
+
+		.profile-buttons{
+		width: 280px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+
+		.username__btn{
+		width: 150px;
+		background-color: #4a76a8;
+    color: white;
+		border: none;
+		border-radius: 20px;
+		font-size: 14px;
+		font-weight: 600;
+		transition: all 0.2s ease;
+		cursor: pointer;
+		text-align: center;
+		&:hover{
+			background-color: #3d6898;
+			}	
+		}
+	}
 
     .profile-subscribers {
       display: flex;
@@ -152,13 +177,6 @@ button {
       &:hover {
         background-color: #dce1e6;
       }
-    }
-
-    .profile-line {
-      width: 100%;
-      height: 1px;
-      background-color: #dce1e6;
-      margin: 24px 0;
     }
 
     .profile-posts {

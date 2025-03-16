@@ -3,8 +3,8 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 20px;
+  position: relative;
+	top: 3px;
 
   h3 {
     font-size: 16px;
@@ -60,21 +60,28 @@
         }
       }
 
-      .follow-button {
-        background-color: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 16px;
-        padding: 4px 14px;
-        font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color 0.2s;
+      .follow-btn {
+				padding: 5px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-size: 14px;
+				border: none;
+				transition: background 0.3s ease, color 0.3s ease;
 
-        &:hover {
-          background-color: #3d6898;
-        }
-      }
+				&.follow {
+					background-color: #007bff !important;
+					color: white;
+				}
+
+				&.unfollow {
+					background-color: #ddd !important;
+					color: black;
+				}
+
+				&:hover {
+					opacity: 0.8;
+				}
+			}
     }
   }
 	.line{

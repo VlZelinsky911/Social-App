@@ -70,7 +70,6 @@ const Profile = () => {
 					Відредагувати
 				</button>
         </div>
-				<div className="profile-line"></div>
 				<div className="profile-posts">
 						{profile.posts.length > 0 ? (
 							profile.posts.map((post) => (

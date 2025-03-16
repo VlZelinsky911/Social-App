@@ -1,41 +1,51 @@
-import React, { JSX } from "react";
-import { FaHome, FaSearch, FaCompass, FaHeart, FaUser } from "react-icons/fa";
+import React from "react";
+import { FaBell, FaSearch, FaHome, FaBookmark, FaUser, FaComments } from "react-icons/fa";
+import "./NavigationButtons.scss";
 
-interface NavigationButtonProps {
-  onClick: () => void;
-  icon: JSX.Element;
-  label: string;
-  activeClassName?: string;
-}
-
-const NavigationButton: React.FC<NavigationButtonProps> = ({ onClick, icon, label, activeClassName }) => {
-  return (
-    <button className={`nav-item ${activeClassName}`} onClick={onClick}>
-      {icon}
-      <span>{label}</span>
-    </button>
-  );
-};
-
-export const NavigationButtons = ({
-  handleNavigation,
-  isSearchExpanded,
-  toggleSearch,
-}: {
+interface NavigationButtonsProps {
   handleNavigation: (path: string) => void;
   isSearchExpanded: boolean;
+	isChatsOpen: boolean;
   toggleSearch: () => void;
-}) => (
-  <>
-    <NavigationButton onClick={() => handleNavigation("/")} icon={<FaHome />} label="Home" />
-    <NavigationButton
-      onClick={toggleSearch}
-      icon={<FaSearch />}
-      label="Search"
-      activeClassName={isSearchExpanded ? "active" : ""}
-    />
-    <NavigationButton onClick={() => handleNavigation("/explore")} icon={<FaCompass />} label="Explore" />
-    <NavigationButton onClick={() => handleNavigation("/notifications")} icon={<FaHeart />} label="Notifications" />
-    <NavigationButton onClick={() => handleNavigation("/profile")} icon={<FaUser />} label="Profile" />
-  </>
-);
+	toggleChats: () => void;
+  showDot?: boolean;
+	showMessagesDot?: boolean
+}
+
+export const NavigationButtons: React.FC<NavigationButtonsProps> = ({ handleNavigation, isSearchExpanded,isChatsOpen, toggleSearch, toggleChats ,showDot, showMessagesDot }) => {
+  return (
+    <div className="nav-buttons">
+      <button onClick={() => handleNavigation("/")} className="nav-item">
+        <FaHome />
+        <span>Головна</span>
+      </button>
+
+      <button onClick={toggleSearch} className={`nav-item ${isSearchExpanded ? "active" : ""}`}>
+        <FaSearch />
+        <span>Пошук</span>
+      </button>
+
+			<button onClick={toggleChats} className={`nav-item ${isChatsOpen ? "active" : ""}`}>
+				<FaComments />
+        <span>Повідомлення</span>
+				{showMessagesDot && <span className="notification-dot"></span>}
+      </button>
+
+      <button onClick={() => handleNavigation("/notifications")} className="nav-item">
+        <FaBell />
+				{showDot && <span className="notification-dot"></span>}
+        <span>Сповіщення</span>
+      </button>
+
+      <button onClick={() => handleNavigation("/saved")} className="nav-item">
+			{<FaBookmark />}
+			<span>Збережені</span> 
+      </button>
+
+      <button onClick={() => handleNavigation("/profile")} className="nav-item">
+			{<FaUser />} 
+			<span>Профіль</span>
+      </button>
+    </div>
+  );
+};

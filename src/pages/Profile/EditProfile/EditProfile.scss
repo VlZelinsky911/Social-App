@@ -2,15 +2,17 @@
   max-width: 500px;
   margin: 20px auto;
   padding: 20px;
-  background: #1c1c1e;
+  background: #f7f7f7;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   color: #ffffff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
   h2 {
+		font-family: "Montserrat", sans-serif;
     text-align: center;
     font-size: 24px;
-    color: #ffffff;
+		font-weight: bold;
+		color: #1877f2;
     margin-bottom: 20px;
   }
 
@@ -23,18 +25,14 @@
     textarea {
       width: 100%;
       padding: 12px;
-      background: #2c2c2e;
-      border: 1px solid #3a3a3c;
+      border: 1px solid #ccc;
+    background: #f8f9fa;
+    color: #555;
       border-radius: 8px;
-      color: #ffffff;
       font-size: 16px;
       outline: none;
       transition: border 0.3s ease;
       box-sizing: border-box;
-
-      &:focus {
-        border-color: #007aff;
-      }
     }
 
     textarea {
@@ -110,19 +108,16 @@
       }
 
       &:last-of-type {
-        background: #2c2c2e;
-        color: #ffffff;
-        border: 1px solid #3a3a3c;
-
-        &:hover {
-          background: #3a3a3c;
-        }
+				background: none;
+				background-color: #e0e0e0;
+				color: #ffffff;
+				}
       }
 
       &:disabled {
         background: #555;
         cursor: not-allowed;
-      }
+      
     }
   }
 }

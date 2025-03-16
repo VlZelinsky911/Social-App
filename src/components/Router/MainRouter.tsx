@@ -12,8 +12,6 @@ import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
 
 import Home from "../../pages/Home/Feed/Feed";
-import Categories from "../../pages/Categories/Categories";
-import Favorites from "../../pages/Favorites/Favorites";
 import Profile from "../../pages/Profile/Profile";
 
 import PrivacyPolicy from "../../policies/PrivacyPolicy";
@@ -27,7 +25,12 @@ import ResetPassword from "../UserManagement/ResetPasswordForm/ResetPassword";
 import CompleteProfile from "../UserManagement/CompleteProfile/CompleteProfile";
 import EditProfile from "../../pages/Profile/EditProfile/EditProfile";
 import Header from "../Header/Header";
-import SuggestedUsers from "../SuggestedUsers/SuggestedUsers";
+import Saved from "../Saved/Saved";
+import Popular from "../Recommendations/Popular/Popular";
+import Recommended from "../Recommendations/Recommended/Recommended";
+import Notifications from "../Notifications/Notifications";
+import PostPage from "../PostPage/PostPage";
+import Chat from "../Chat/Chat";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(
@@ -65,13 +68,17 @@ function AppRoutes() {
               <>
                 <Route path="/" element={<Main />}>
                   <Route index element={<Home />} />
-                  <Route path="categories" element={<Categories />} />
-                  <Route path="favorites" element={<Favorites />} />
+									<Route path="notifications" element={<Notifications />} />
+                  <Route path="saved" element={<Saved/>} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="/profile/edit" element={<EditProfile />} />
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="terms-of-service" element={<TermsOfService />} />
                   <Route path="/profile/:username" element={<UserProfile />} />
+                  <Route path="/popular" element={<Popular/>} />
+                  <Route path="/recommended" element={<Recommended/>} />
+                  <Route path="/post/:postId" element={<PostPage/>} />
+                  <Route path="/chat/:conversationId" element={<Chat/>} />
                 </Route>
 
                 <Route path="/complete-profile" element={<Navigate to="/" />} />
