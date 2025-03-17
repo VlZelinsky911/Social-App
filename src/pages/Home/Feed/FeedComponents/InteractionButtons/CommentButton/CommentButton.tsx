@@ -183,8 +183,8 @@ const CommentSection = ({ contentId, userId }: CommentSectionProps) => {
                       <strong>{c.username}</strong>
 											{c.user_id === userId && (
 													<button 
-													onClick={() => handleDelete(c.id)} 
-													className="comment-list__delete">
+														onClick={() => handleDelete(c.id)} 
+														className="comment-list__delete">
 														<FaTrash/>
 													</button>
 												)}
