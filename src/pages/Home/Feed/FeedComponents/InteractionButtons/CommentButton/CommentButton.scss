@@ -189,7 +189,21 @@
     gap: 10px;
     font-weight: bold;
 		margin-bottom: 10px;
+
+		.comment-list__delete {
+			cursor: pointer;
+			position: relative;
+			left: 140px;
+
+			&:hover {
+				color: #f44336;
+			}
+		}
   }
+
+	.comment-list__text {
+		text-align: left;
+	}
 
   .comment-list__empty {
     color: #888;
