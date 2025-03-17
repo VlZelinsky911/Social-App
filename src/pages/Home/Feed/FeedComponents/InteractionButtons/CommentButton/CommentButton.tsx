@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaComment } from "react-icons/fa";
+import { FaComment, FaTrash } from "react-icons/fa";
 import { supabase } from "../../../../../../services/supabaseClient";
 import "./CommentButton.scss";
 import Avatar from "../../../../../../components/Avatar/Avatar";
@@ -62,6 +62,23 @@ const CommentSection = ({ contentId, userId }: CommentSectionProps) => {
   useEffect(() => {
     fetchComments();
   }, [contentId]);
+
+	const handleDelete = async (commentId: number) => {
+    try {
+      const { error } = await supabase
+        .from("comments")
+        .delete()
+        .eq("id", commentId)
+        .eq("user_id", userId);
+
+      if (error) throw error;
+
+      setComments(comments.filter((c) => c.id !== commentId));
+    } catch (error) {
+      console.error("Помилка видалення коментаря:", error);
+      setError("Не вдалося видалити коментар. Спробуйте ще раз.");
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -164,8 +181,15 @@ const CommentSection = ({ contentId, userId }: CommentSectionProps) => {
                     <div className="comment-list__header">
                       <Avatar name={c.username} avatarUrl={c.avatar_url} />
                       <strong>{c.username}</strong>
+											{c.user_id === userId && (
+													<button 
+													onClick={() => handleDelete(c.id)} 
+													className="comment-list__delete">
+														<FaTrash/>
+													</button>
+												)}
                     </div>
-                    <p>{c.text}</p>
+                    <p className="comment-list__text">{c.text}</p>
                   </div>
                 ))
               ) : (
