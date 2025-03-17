@@ -17,6 +17,7 @@ interface Post {
   mediaurls?: string[];
   created_at: string;
   username: string;
+  user_id: string;
 }
 
 const Home: React.FC = () => {
@@ -45,7 +46,7 @@ const Home: React.FC = () => {
 
     const { data, error } = await supabase
       .from("posts")
-      .select(`id, text, mediaurls, created_at, user_profiles(username)`) 
+      .select("id, text, mediaurls, created_at, user_id, user_profiles(username)")
       .order("created_at", { ascending: false })
       .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
 
@@ -95,6 +96,17 @@ const Home: React.FC = () => {
     });
   }, []);
 
+  const handleDeletePost = async (postId: number) => {
+    try {
+      const { error } = await supabase.from("posts").delete().eq("id", postId);
+      if (error) throw error;
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+			alert("Пост успішно видалено!");
+		} catch (error) {
+      console.error("Помилка видалення поста:", error);
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="suggested-users">
@@ -103,26 +115,26 @@ const Home: React.FC = () => {
       <div className="feed-container">
         <div className="feed-content">
           <div className="feed-news-feed">
-            <NewsCategories
-              setFilter={setFilter}
-              setActiveCategory={setActiveCategory}
-            />
-            {activeCategory === "Стрічка" && (
-              <PostCreator userId={user?.id} onPostCreated={handlePostCreated} />
-            )}
+            <NewsCategories setFilter={setFilter} setActiveCategory={setActiveCategory} />
+            {activeCategory === "Стрічка" && <PostCreator userId={user?.id} onPostCreated={handlePostCreated} />}
 
             <div className="feed-posts-container">
               {isPostSubmitting && <Spinner />}
               {posts.map((post) => (
                 <div key={post.id} className="feed-post-item">
                   <div className="home-news-details">
-                    <PostTitle author={post.username} publishedAt={post.created_at} />
+                    <PostTitle
+                      author={post.username}
+                      publishedAt={post.created_at}
+                      handleDeletePost={handleDeletePost}
+                      postId={post.id}
+                      userId={user?.id}
+                      postUserId={post.user_id}
+                    />
                     <div className="home-article-border">
                       <p>{post.text}</p>
                     </div>
-                    {post.mediaurls && post.mediaurls.length > 0 && (
-                      <img src={post.mediaurls[0]} alt="Медіа" />
-                    )}
+                    {post.mediaurls && post.mediaurls.length > 0 && <img src={post.mediaurls[0]} alt="Медіа" />}
                     <div className="home-news-actions">
                       <div className="home-likes-comments">
                         {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
