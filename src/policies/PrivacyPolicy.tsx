@@ -129,10 +129,6 @@ const PrivacyPolicy: React.FC = () => {
         alias itaque quod suscipit molestiae, possimus nemo est ut, dolorum
         impedit sit aliquid reiciendis doloremque modi quisquam fugit fugiat
         ullam sapiente?
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam,
-        alias itaque quod suscipit molestiae, possimus nemo est ut, dolorum
-        impedit sit aliquid reiciendis doloremque modi quisquam fugit fugiat
-        ullam sapiente?
       </p>
     </div>
   );
