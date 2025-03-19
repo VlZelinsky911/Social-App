@@ -31,6 +31,7 @@ import Recommended from "../Recommendations/Recommended/Recommended";
 import Notifications from "../Notifications/Notifications";
 import PostPage from "../PostPage/PostPage";
 import Chat from "../Chat/Chat";
+import SettingsProfile from "../SettingsProfile/SettingsProfile";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(
@@ -77,6 +78,7 @@ function AppRoutes() {
                   <Route path="/profile/:username" element={<UserProfile />} />
                   <Route path="/popular" element={<Popular/>} />
                   <Route path="/recommended" element={<Recommended/>} />
+                  <Route path="/settings" element={<SettingsProfile/>} />
                   <Route path="/post/:postId" element={<PostPage/>} />
                   <Route path="/chat/:conversationId" element={<Chat/>} />
                 </Route>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaCog } from "react-icons/fa";
 import "./Header.scss";
 import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import SearchInput from "./SearchInput/SearchInput";
@@ -93,6 +93,11 @@ const Header: React.FC = () => {
       setUnreadCount(0);
     }
   };
+
+	const goToSettings = () => {
+		navigate("/settings");
+		setIsMenuOpen(false);
+	}
   return (
     <>
       <aside className="sidebar">
@@ -118,10 +123,11 @@ const Header: React.FC = () => {
               showDot={unreadCount > 0}
             />
           </nav>
-          <button className="nav-item menu-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            <FaBars />
-            <span>Menu</span>
+          <button className="nav-item menu-button" onClick={goToSettings}>
+            <FaCog />
+            <span>Налаштування</span>
           </button>
+
         </div>
         {isSearchExpanded && (
           <div className="search-overlay">
