@@ -1,0 +1,146 @@
+.profile-editor__title {
+	font-family: "Montserrat", sans-serif;
+	text-align: center;
+	font-size: 22px;
+	font-weight: bold;
+	color: #1877f2;
+	margin: 20px;
+}
+
+.profile-editor {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+
+
+  &__message {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+
+    &--error {
+      background: #ffdddd;
+      color: #d9534f;
+    }
+
+    &--success {
+      background: #d4edda;
+      color: #155724;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      background: #f8f9fa;
+      color: #555;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border 0.3s ease;
+      box-sizing: border-box;
+			
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    input[type="file"] {
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: #a1a1a3;
+      cursor: pointer;
+
+      &::-webkit-file-upload-button {
+        background: #e0e0e0;
+      color: #555;
+			font-weight: bold;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background: #005ecb;
+        }
+      }
+    }
+  }
+
+  &__avatar-preview {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+		.profile-editor__avatar-delete{
+			background: #007aff !important;
+      color: white !important;
+      &:hover {
+        background: #005ecb !important;
+			}
+		}
+
+    button {
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+  }
+
+  button {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+
+    &:first-of-type {
+      background: #007aff;
+      color: white;
+
+      &:hover {
+        background: #005ecb;
+      }
+    }
+
+    &:last-of-type {
+      background: #e0e0e0;
+      color: #555;
+    }
+
+    &:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+  }
+}

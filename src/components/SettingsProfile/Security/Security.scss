@@ -1,0 +1,116 @@
+.security-title{
+	font-family: "Montserrat", sans-serif;
+	text-align: center;
+	font-size: 22px;
+	font-weight: bold;
+	color: #1877f2;
+	margin: 20px;
+}
+
+.security-settings {
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+
+  .section {
+    margin-bottom: 20px;
+
+		.password-input {
+		width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background: #f8f9fa;
+    color: #555;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+    box-sizing: border-box;
+		}
+  }
+
+  label, h3 {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+		color: #65676b;
+		font-size: 16px;
+		font-family: "Montserrat", sans-serif;
+  }
+
+	h3 {
+		margin-bottom: 10px;
+	}
+
+	p{
+		font-size: 15px;
+		font-weight: 700;
+		font-family: "Montserrat", sans-serif;
+		margin-bottom: 10px;
+		color: #65676b;
+	}
+
+  button {
+    display: block;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &.danger {
+      background-color: #dc3545;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+  }
+
+  .sessions-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .session-info {
+        color: #333;
+      }
+
+      .logout-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+
+        &:hover {
+          background-color: #c82333;
+        }
+      }
+    }
+  }
+}
