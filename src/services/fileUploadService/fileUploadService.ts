@@ -1,6 +1,6 @@
 import { supabase, supabaseUrl} from "../../services/supabaseClient";
 
-export const uploadFiles = async (selectedFiles: File[]): Promise<string[]> => {
+export const uploadFiles = async (selectedFiles: File[], p0: string): Promise<string[]> => {
   if (selectedFiles.length === 0) {
     console.warn("⚠ Немає файлів для завантаження!");
     return [];
