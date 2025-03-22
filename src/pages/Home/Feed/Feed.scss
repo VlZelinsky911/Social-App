@@ -55,19 +55,21 @@ border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 16px;
 
-  img {
+  img , video{
     width: 100%;
-    height: auto;
-    border-radius: 4px;
+		height: 350px;
+    border-radius: 15px;
     margin: 12px 0;
   }
 
   .home-article-border {
-    padding: 12px 0;
+	padding: 0 !important;
 
-    p {
+    .post-text {
       margin: 0;
-      line-height: 1.5;
+			font-size: 16px;
+			line-height: 1.5;
+			padding: 3px;
     }
   }
 
@@ -137,10 +139,6 @@ border-radius: 8px;
   font-size: 18px;
   color: #555;
   margin-bottom: 20px;
-}
-
-.home-article-border p::first-letter {
-  font-size: 1.3em;
 }
 
 .home-article-border blockquote {
@@ -280,6 +278,11 @@ border-radius: 8px;
 .home-news-feed .spinner-container {
   text-align: center;
   margin-top: 20px;
+}
+
+.slick-dots {
+	position: absolute;
+	bottom: -10px !important;
 }
 
 @media (max-width: 768px) {

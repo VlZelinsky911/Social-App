@@ -24,8 +24,6 @@ const UserChats: React.FC<UserChatsProps> = ({ setIsChatsOpen }) => {
     };
     getUser();
   }, []);
-
-  // Функція отримання чатів
   const fetchChats = async (userId: string) => {
     setLoading(true);
 
