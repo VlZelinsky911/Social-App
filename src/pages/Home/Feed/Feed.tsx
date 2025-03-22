@@ -7,9 +7,15 @@ import PostCreator from "./FeedComponents/PostCreator/PostCreator";
 import { supabase } from "../../../services/supabaseClient";
 import LikeButton from "./FeedComponents/InteractionButtons/LikeButton/LikeButton";
 import CommentButton from "./FeedComponents/InteractionButtons/CommentButton/CommentButton";
-import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
 import SuggestedUsers from "../../../components/SuggestedUsers/SuggestedUsers";
 import SavePostButton from "./FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
+import VideoPlayer from "./VideoPlayer/VideoPlayer";
+import Slider from "react-slick";
+import { sliderSettings } from "./FeedComponents/PostSlider/sliderSettings";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
+
 
 interface Post {
   id: number;
@@ -46,7 +52,9 @@ const Home: React.FC = () => {
 
     const { data, error } = await supabase
       .from("posts")
-      .select("id, text, mediaurls, created_at, user_id, user_profiles(username)")
+      .select(
+        "id, text, mediaurls, created_at, user_id, user_profiles(username)"
+      )
       .order("created_at", { ascending: false })
       .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
 
@@ -101,8 +109,8 @@ const Home: React.FC = () => {
       const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-			alert("Пост успішно видалено!");
-		} catch (error) {
+      alert("Пост успішно видалено!");
+    } catch (error) {
       console.error("Помилка видалення поста:", error);
     }
   };
@@ -115,8 +123,16 @@ const Home: React.FC = () => {
       <div className="feed-container">
         <div className="feed-content">
           <div className="feed-news-feed">
-            <NewsCategories setFilter={setFilter} setActiveCategory={setActiveCategory} />
-            {activeCategory === "Стрічка" && <PostCreator userId={user?.id} onPostCreated={handlePostCreated} />}
+            <NewsCategories
+              setFilter={setFilter}
+              setActiveCategory={setActiveCategory}
+            />
+            {activeCategory === "Стрічка" && (
+              <PostCreator
+                userId={user?.id}
+                onPostCreated={handlePostCreated}
+              />
+            )}
 
             <div className="feed-posts-container">
               {isPostSubmitting && <Spinner />}
@@ -131,17 +147,46 @@ const Home: React.FC = () => {
                       userId={user?.id}
                       postUserId={post.user_id}
                     />
-                    <div className="home-article-border">
-                      <p>{post.text}</p>
+										
+										<div className="home-article-border">
+                      <p className="post-text">{post.text}</p>
                     </div>
-                    {post.mediaurls && post.mediaurls.length > 0 && <img src={post.mediaurls[0]} alt="Медіа" />}
+                    {post.mediaurls && post.mediaurls.length > 0 && (
+                      <div key={post.id}>
+												<Slider {...sliderSettings}>
+                        {post.mediaurls.map((url, index) => (
+                          <div key={index}>
+                            {url.endsWith(".mp4") ||
+                            url.endsWith(".webm") ||
+                            url.endsWith(".mkv") ? (
+                              <VideoPlayer key={index} videoUrl={url} />
+                            ) : (
+                              <img src={url} alt={`Медіа ${index + 1}`} />
+                            )}
+                          </div>
+                        ))}
+												</Slider>
+                      </div>
+                    )}
                     <div className="home-news-actions">
                       <div className="home-likes-comments">
-                        {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
-                        {user && <CommentButton contentId={post.id} userId={user.id} />}
-                        <ShareButton />
+                        {user && (
+                          <LikeButton
+                            contentId={post.id}
+                            type="post"
+                            userId={user.id}
+                          />
+                        )}
+                        {user && (
+                          <CommentButton contentId={post.id} userId={user.id} />
+                        )}
+                        {user && (
+                          <ShareButton postId={post.id} userId={user?.id} />
+                        )}
                       </div>
-                      {user && <SavePostButton postId={post.id} userId={user.id} />}
+                      {user && (
+                        <SavePostButton postId={post.id} userId={user.id} />
+                      )}
                     </div>
                   </div>
                 </div>

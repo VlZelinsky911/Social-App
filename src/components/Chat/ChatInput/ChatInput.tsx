@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { supabase } from "../../../services/supabaseClient";
-import { FaPaperPlane, FaImage, FaSmile, FaCheckCircle } from "react-icons/fa";
+import { FaPaperPlane, FaImage, FaSmile, FaCheckCircle, FaVideo } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import "./ChatInput.scss";
-import { set } from "date-fns";
 
 interface ChatInputProps {
   conversationId: string;
@@ -12,34 +11,39 @@ interface ChatInputProps {
 
 const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
   const [message, setMessage] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [media, setMedia] = useState<File | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-	const [isMediaSelected, setIsMediaSelected] = useState(false);
-
+  const [isMediaSelected, setIsMediaSelected] = useState(false);
 
   const handleEmojiClick = (emoji: any) => {
     setMessage((prev) => prev + emoji.emoji);
   };
 
-  const handleImageUpload = async () => {
-    if (!image) return null;
+  const handleMediaUpload = async () => {
+    if (!media) return null;
 
-    const fileName = `${Date.now()}-${image.name}`;
+    const fileExt = media.name.split(".").pop();
+    const fileType = media.type.startsWith("image/") ? "images" : "videos"; 
+    const safeFileName = `${Date.now()}.${fileExt}`;
+    const filePath = `${fileType}/${safeFileName}`;
+
     const { data, error } = await supabase.storage
       .from("chat-images")
-      .upload(fileName, image);
+      .upload(filePath, media, {
+        contentType: media.type,
+        upsert: true,
+      });
 
     if (error) {
       console.error("❌ Помилка завантаження:", error);
       return null;
     }
 
-    return supabase.storage.from("chat-images").getPublicUrl(fileName).data.publicUrl;
+    return supabase.storage.from("chat-images").getPublicUrl(filePath).data.publicUrl;
   };
 
   const sendMessage = async () => {
-    if (!message.trim() && !image) return;
-
+    if (!message.trim() && !media) return;
 
     const { data: conversation, error: convoError } = await supabase
       .from("conversations")
@@ -53,8 +57,8 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
     }
 
     const receiverId = conversation.user1_id === senderId ? conversation.user2_id : conversation.user1_id;
-
-    const imageUrl = image ? await handleImageUpload() : null;
+    const mediaUrl = media ? await handleMediaUpload() : null;
+    const mediaType = media ? media.type.split("/")[0] : null; 
 
     const { error } = await supabase.from("messages").insert([
       {
@@ -62,7 +66,8 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
         sender_id: senderId,
         receiver_id: receiverId,
         content: message,
-        media_url: imageUrl,
+        media_url: mediaUrl,
+        media_type: mediaType, 
         created_at: new Date(),
       },
     ]);
@@ -70,15 +75,26 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
     if (error) console.error("❌ Помилка надсилання:", error);
 
     setMessage("");
-    setImage(null);
+    setMedia(null);
     setShowEmojiPicker(false);
+    setIsMediaSelected(false);
   };
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const files = e.target.files?.[0] || null;
-		setImage(files);
-		setIsMediaSelected(true);
-	}
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (!file) return;
+
+    const isImage = file.type.startsWith("image/");
+    const isVideo = file.type.startsWith("video/");
+
+    if (!isImage && !isVideo) {
+      alert("Дозволені тільки фото та відео!");
+      return;
+    }
+
+    setMedia(file);
+    setIsMediaSelected(true);
+  };
 
   return (
     <div className="chat-input">
@@ -101,13 +117,13 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
 
       <input
         type="file"
-        accept="image/*"
+        accept="image/*,video/*"
         onChange={handleFileChange}
         style={{ display: "none" }}
         id="file-upload"
       />
       <label htmlFor="file-upload" className={`upload-label ${isMediaSelected ? "selected" : ""}`}>
-			{isMediaSelected ? <FaCheckCircle className="check-icon" /> : <FaImage />}
+        {isMediaSelected ? <FaCheckCircle className="check-icon" /> : <FaImage />}
       </label>
 
       <button onClick={sendMessage}>
