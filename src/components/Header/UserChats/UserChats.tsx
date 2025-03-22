@@ -53,7 +53,6 @@ const UserChats: React.FC<UserChatsProps> = ({ setIsChatsOpen }) => {
       ...chat,
       otherUser: chat.user1_id === userId ? chat.user2 : chat.user1,
     }));
-    console.log(formattedChats);
     setChats(formattedChats);
     setLoading(false);
   };

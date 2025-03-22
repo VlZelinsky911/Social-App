@@ -106,6 +106,7 @@ const Chat: React.FC = () => {
                 )
               )}
               <p>{msg.content}</p>
+							
             </div>
           ))
         )}

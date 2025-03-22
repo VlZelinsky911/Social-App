@@ -117,7 +117,7 @@ const LikeButton = ({ contentId, type, userId }: LikeButtonProps) => {
                 <h4>Немає уподобань</h4>
               )}
             </ul>
-            <button onClick={() => setIsModalOpen(false)}>❌</button>
+            <button className="close-button" onClick={() => setIsModalOpen(false)}>❌</button>
           </div>
         </div>
       )}
