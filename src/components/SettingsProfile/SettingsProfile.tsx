@@ -1,34 +1,41 @@
-import { useNavigate } from "react-router-dom";
-import { FaUser, FaShieldAlt, FaBell } from "react-icons/fa";
+import { FaUser, FaShieldAlt, FaBell, FaBan } from "react-icons/fa";
 import "./SettingsProfile.scss";
 import { useState } from "react";
-import { set } from "date-fns";
-import EditProfile from "../../pages/Profile/EditProfile/EditProfile";
 import ProfileEdit from "./ProfileEdit/ProfileEdit";
 import SecuritySettings from "./Security/Security";
-import Notifications from "../Notifications/Notifications";
 import SettingsNotifications from "./Notifications/SettingsNotifications";
+import Blocked from "./Blocked/Blocked";
 
 function SettingsProfile() {
 	const [isOpenProfile, setIsOpenProfile] = useState(false);
 	const [isOpenSecurity, setIsOpenSecurity] = useState(false);
 	const [isOpenNotification, setIsOpenNotification] = useState(false);
+	const [isOpenBlocked, setIsOpenBlocked] = useState(false);
 
 
 	const goToProfileEdit = () => {
 		setIsOpenProfile(true);
 		setIsOpenSecurity(false);
 		setIsOpenNotification(false);
+		setIsOpenBlocked(false);
 	};
 	const goToSecurity = () => {
 		setIsOpenProfile(false);
 		setIsOpenSecurity(true);
 		setIsOpenNotification(false);
+		setIsOpenBlocked(false);
 	};
 	const goToNotification = () => {
 		setIsOpenProfile(false);
 		setIsOpenSecurity(false);
 		setIsOpenNotification(true);
+		setIsOpenBlocked(false);
+	};
+	const goToBlocked = () => {
+		setIsOpenProfile(false);
+		setIsOpenSecurity(false);
+		setIsOpenNotification(false);
+		setIsOpenBlocked(true);
 	};
 
   return (
@@ -44,6 +51,9 @@ function SettingsProfile() {
 				<h2 onClick={goToNotification}>
           <FaBell/> Сповіщення
         </h2>
+				<h2 onClick={goToBlocked}>
+          <FaBan/> Заблоковані
+        </h2>
 			</div>	
 			{isOpenProfile && (
 				<div className="settings__profile">
@@ -58,6 +68,11 @@ function SettingsProfile() {
 			{isOpenNotification && (
 				<div className="settings__notification">
 					<SettingsNotifications/>
+				</div>
+			)}
+			{isOpenBlocked && (
+				<div className="settings__blocked">
+					<Blocked/>
 				</div>
 			)}
 
