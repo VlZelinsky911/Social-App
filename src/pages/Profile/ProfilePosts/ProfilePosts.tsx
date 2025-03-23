@@ -47,7 +47,7 @@ const ProfilePosts: React.FC<ProfilePostProps> = ({ post, user = null }) => {
         <div className="home-likes-comments">
           <LikeButton contentId={post.id} userId={user?.user?.id ?? ""} type={"post"} />
           <CommentButton contentId={post.id} userId={user?.user?.id ?? ""} />
-          <ShareButton />
+          <ShareButton  postId={Number(post.id)} userId={user?.user?.id ?? ""}/>
         </div>
       </div>
     </div>
