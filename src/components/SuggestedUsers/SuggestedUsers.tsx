@@ -136,7 +136,10 @@ const SuggestedUsers: React.FC = () => {
           Політика конфіденційності
         </Link>
         <Link className="policy-link" to="/terms-of-service">
-          Умови використання
+					Умови використання
+        </Link>
+        <Link className="policy-link" to="/about-us">
+					Про мене
         </Link>
       </div>
     </div>
