@@ -14,8 +14,7 @@ import Main from "../Main/Main";
 import Home from "../../pages/Home/Feed/Feed";
 import Profile from "../../pages/Profile/Profile";
 
-import PrivacyPolicy from "../../policies/PrivacyPolicy";
-import TermsOfService from "../../policies/TermsOfService";
+
 import UserProfile from "../../pages/Home/UserProfile/UserProfile";
 import UserRegistration from "../../pages/UserRegistration/UserRegistration";
 
@@ -32,6 +31,9 @@ import Notifications from "../Notifications/Notifications";
 import PostPage from "../PostPage/PostPage";
 import Chat from "../Chat/Chat";
 import SettingsProfile from "../SettingsProfile/SettingsProfile";
+import AboutMe from "../../policies/AboutMe/AboutMe";
+import PrivacyPolicy from "../../policies/PrivacyPolicy/PrivacyPolicy";
+import TermsOfService from "../../policies/TermsOfService/TermsOfService";
 
 function AppRoutes() {
   const isAuthenticated = useSelector(
@@ -75,6 +77,7 @@ function AppRoutes() {
                   <Route path="/profile/edit" element={<EditProfile />} />
                   <Route path="privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="terms-of-service" element={<TermsOfService />} />
+                  <Route path="about-me" element={<AboutMe />} />
                   <Route path="/profile/:username" element={<UserProfile />} />
                   <Route path="/popular" element={<Popular/>} />
                   <Route path="/recommended" element={<Recommended/>} />
