@@ -55,6 +55,7 @@ button {
     background: #fff;
     border-radius: 12px;
     padding: 32px;
+		margin-bottom: 70px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
     .profile-avatar {
@@ -120,6 +121,16 @@ button {
 		&:hover{
 			background-color: #3d6898;
 			}	
+		}
+		.setting__btn{
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			background: none;
+			color: #2c2d2e;
+			border: none;
+			font-size: 16px;
+			cursor: pointer;
 		}
 	}
 
@@ -191,6 +202,84 @@ button {
       }
     }
   }
+	.modal_userProfile {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 9999;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.modal-content_userProfile {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background: white;
+		padding: 20px;
+		border-radius: 8px;
+		min-width: 300px;
+		text-align: center;
+		position: relative;
+	
+		h3 {
+			margin-bottom: 15px;
+			font-size: 20px;
+			color: #333;
+			font-weight: bold;
+		}
+	
+		p {
+			width: 80%;
+			margin-bottom: 20px;
+			font-size: 16px;
+			color: #555;
+		}	
+		.close-button_userProfile {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			cursor: pointer;
+			background: none;
+		}
+		.block-button{
+			background-color: #007bff;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-weight: bold;
+			transition: 0.3s;
+			&:hover {
+				background-color: #0056b3;
+			}
+		}
+		.modal-buttons_userProfile{
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			width: 100%;
+		button{
+			background-color: #007bff;
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-weight: bold;
+			transition: 0.3s;
+			&:hover {
+				background-color: #0056b3;
+			}}
+		}
+	}
 }
 
 @media (max-width: 768px) {

@@ -47,34 +47,54 @@ const Home: React.FC = () => {
   }, []);
 
   const fetchPosts = async () => {
-    if (loading || !canLoadMore.current) return;
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from("posts")
-      .select(
-        "id, text, mediaurls, created_at, user_id, user_profiles(username)"
-      )
-      .order("created_at", { ascending: false })
-      .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
-
-    if (error) {
-      console.error("Помилка завантаження постів:", error);
-    } else {
-      if (data.length > 0) {
-        const formattedData = data.map((post: any) => ({
-          ...post,
-          username: post.user_profiles.username,
-        }));
-
-        setPosts((prev) => [...prev, ...formattedData]);
-        pageRef.current += 1;
-      } else {
-        canLoadMore.current = false;
-      }
-    }
-    setLoading(false);
-  };
+		if (loading || !canLoadMore.current) return;
+		setLoading(true);
+	
+		const { data: user } = await supabase.auth.getUser();
+		if (!user?.user) {
+			setLoading(false);
+			return;
+		}
+		
+		const currentUserId = user.user.id;
+	
+		const { data: blockedUsers, error: blockedError } = await supabase
+			.from("blocked_users")
+			.select("blocked_user_id")
+			.eq("user_id", currentUserId);
+	
+		if (blockedError) {
+			console.error("❌ Помилка отримання списку заблокованих користувачів:", blockedError);
+			setLoading(false);
+			return;
+		}
+	
+		const blockedIds = blockedUsers ? blockedUsers.map((b) => b.blocked_user_id) : [];
+	
+		const { data, error } = await supabase
+			.from("posts")
+			.select("id, text, mediaurls, created_at, user_id, user_profiles(username)")
+			.order("created_at", { ascending: false })
+			.not("user_id", "in", `(${blockedIds.join(",")})`)
+			.range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
+	
+		if (error) {
+			console.error("❌ Помилка завантаження постів:", error);
+		} else {
+			if (data.length > 0) {
+				const formattedData = data.map((post: any) => ({
+					...post,
+					username: post.user_profiles.username,
+				}));
+				setPosts((prev) => [...prev, ...formattedData]);
+				pageRef.current += 1;
+			} else {
+				canLoadMore.current = false;
+			}
+		}
+		setLoading(false);
+	};
+	
 
   useEffect(() => {
     fetchPosts();
@@ -135,7 +155,7 @@ const Home: React.FC = () => {
             )}
 
             <div className="feed-posts-container">
-              {isPostSubmitting && <Spinner />}
+              {isPostSubmitting && !loading && <Spinner />}
               {posts.map((post) => (
                 <div key={post.id} className="feed-post-item">
                   <div className="home-news-details">
