@@ -28,6 +28,8 @@
     }
 
     h2 {
+			display: flex;
+			gap: 10px;
       font-size: 17px;
       color: #65676b;
       cursor: pointer;
@@ -42,7 +44,8 @@
 
 .settings__profile,
 .settings__security,
-.settings__notification {
+.settings__notification,
+.settings__blocked {
   flex-grow: 1;
   padding: 20px;
   background-color: #ffffff;
