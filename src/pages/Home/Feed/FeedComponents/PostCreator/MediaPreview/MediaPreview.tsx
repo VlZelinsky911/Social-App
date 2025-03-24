@@ -3,7 +3,7 @@ import "./MediaPreview.scss";
 
 interface PreviewFilesProps {
   files: File[];
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>; // Додаємо setFiles у пропси
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 const PreviewFiles: React.FC<PreviewFilesProps> = ({ files, setFiles }) => {

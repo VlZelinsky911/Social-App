@@ -5,7 +5,7 @@ import Avatar from "../../../../../../components/Avatar/Avatar";
 import { FaPaperPlane } from "react-icons/fa";
 
 interface ShareButtonProps {
-  postId: number;
+  postId: string;
   userId: string;
 }
 
@@ -14,6 +14,25 @@ const ShareButton: React.FC<ShareButtonProps> = ({ postId, userId }) => {
   const [contacts, setContacts] = useState<{ id: string; username: string; avatar_url?: string }[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [shareCount, setShareCount] = useState<number>(0);
+
+	useEffect(() => {
+		const fetchShareCount = async () => {
+			const { data, error } = await supabase
+			.from("posts")
+			.select("share_count")
+			.eq("id", postId)
+			.single();
+
+			if (error) {
+				console.error("Помилка завантаження кількості поділів:", error);
+			} else if (data){
+					setShareCount(data.share_count || 0); 
+			}
+		}
+
+		fetchShareCount();
+	},[postId]);
+
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -32,7 +51,6 @@ const ShareButton: React.FC<ShareButtonProps> = ({ postId, userId }) => {
     fetchContacts();
   }, [userId]);
 
-  // Функція для надсилання поста
   const handleShare = async () => {
     if (!selectedUserId) {
       alert("Оберіть користувача для надсилання.");
@@ -63,7 +81,15 @@ const ShareButton: React.FC<ShareButtonProps> = ({ postId, userId }) => {
       if (updateError) {
         console.error("Помилка оновлення лічильника:", updateError);
       } else {
-        setShareCount((prev) => prev + 1);
+				const {data ,error} = await supabase
+				.from("posts")
+				.select("share_count")
+				.eq("id", postId)
+				.single();
+
+				if(!error && data){
+					setShareCount(data.share_count || 0);				
+				}
         alert("✅ Пост успішно надіслано!");
       }
 

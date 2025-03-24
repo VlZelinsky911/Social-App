@@ -17,7 +17,7 @@ border-radius: 8px;
 }
 
 .feed-content {
-  max-width: 750px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
@@ -27,7 +27,7 @@ border-radius: 8px;
 
 .feed-news-feed {
   width: 100%;
-  max-width: 800px;
+  max-width: 700px;
 }
 
 .feed-posts-container {
@@ -54,9 +54,10 @@ border-radius: 8px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 16px;
+	
 
   img , video{
-    width: 100%;
+		max-width: 600px;
 		height: 350px;
     border-radius: 15px;
     margin: 12px 0;
@@ -282,8 +283,20 @@ border-radius: 8px;
 
 .slick-dots {
 	position: absolute;
-	bottom: -10px !important;
+	bottom: -15px !important;
 }
+.home-news-media {
+margin-top: 10px;
+}
+
+.home-news-media img {
+	box-sizing: border-box;
+  margin-top: 5px;
+  object-fit: contain; 
+  margin: 0 auto; 
+  display: block;
+}
+
 
 @media (max-width: 768px) {
   .feed-container {

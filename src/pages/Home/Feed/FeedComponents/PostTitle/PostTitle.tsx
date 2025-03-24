@@ -10,26 +10,25 @@ interface PostTitleProps {
   handleDeletePost: (postId: number) => void;
   postId: number;
   userId: string | null;
-  postUserId: string;
+  postUserId?: string;
 }
 
 const timeAgo = (dateString: string) => {
   const now = new Date();
   const publishedAt = new Date(dateString);
-  const timeDiff = Math.floor((now.getTime() - publishedAt.getTime()) / 1000);
 
-  if (timeDiff < 60) {
-    return `${timeDiff} сек.`;
-  } else if (timeDiff < 3600) {
-    return `${Math.floor(timeDiff / 60)} хв.`;
-  } else if (timeDiff < 86400) {
-    return `${Math.floor(timeDiff / 3600)} год.`;
-  } else if (timeDiff < 604800) {
-    return `${Math.floor(timeDiff / 86400)} дн.`;
-  } else {
-    return `${Math.floor(timeDiff / 604800)} тиж.`;
-  }
+  const localOffset = now.getTimezoneOffset() * 60000;
+  const localTime = new Date(publishedAt.getTime() - localOffset);
+
+  const timeDiff = Math.floor((now.getTime() - localTime.getTime()) / 1000);
+
+  if (timeDiff < 60) return `${timeDiff} сек.`;
+  if (timeDiff < 3600) return `${Math.floor(timeDiff / 60)} хв.`;
+  if (timeDiff < 86400) return `${Math.floor(timeDiff / 3600)} год.`;
+  if (timeDiff < 604800) return `${Math.floor(timeDiff / 86400)} дн.`;
+  return `${Math.floor(timeDiff / 604800)} тиж.`;
 };
+
 
 const PostTitle: React.FC<PostTitleProps> = ({ author, publishedAt, handleDeletePost, postId, userId, postUserId }) => {
   const [isModalOpen, setModalOpen] = useState(false);

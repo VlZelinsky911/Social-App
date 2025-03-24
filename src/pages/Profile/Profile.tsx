@@ -15,12 +15,12 @@ interface UserProfile {
   avatar_url: string;
 	posts: Post[];
 }
-interface Post{
-  id: string,
-  text: string,
-  mediaurls?: string,
-  created_at: string,
-  userId: string
+interface Post {
+  id: number;
+  text: string;
+  mediaurls?: string[];
+  created_at: string;
+  user_id: string;
 }
 
 const Profile = () => {
@@ -57,7 +57,7 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-content">
         <div className="profile-avatar">
-					<Avatar name={profile.fullname}	avatarUrl={profile.avatar_url}/>
+					<Avatar name={profile.username}	avatarUrl={profile.avatar_url}/>
         </div>
         <div className="profile-info">
           <p className="username">@{profile.username}</p>
