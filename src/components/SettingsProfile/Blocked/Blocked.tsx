@@ -35,9 +35,8 @@ const Blocked = () => {
     if (error) {
       console.error("❌ Помилка розблокування користувача:", error);
     } else {
-			console.log(blockedUserId);
-			
       setBlockedUsers((prev) => prev.filter((user) => user.blocked_user_id !== blockedUserId));
+			alert("Користувач успішно розблокований!");
     }
   };
 

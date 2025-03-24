@@ -45,6 +45,8 @@ const UserRegistration = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
+
 
   useEffect(() => {
     const checkUser = async () => {
@@ -68,7 +70,10 @@ const UserRegistration = () => {
         password: data.password,
       });
 
-      if (error) throw error;
+      if (error) {
+				setError(error.message);
+				throw error;
+			}
       if (!signUpData.user) throw new Error("Не вдалося створити користувача");
 
       const { error: profileError } = await supabase.from("profiles").insert([
@@ -103,10 +108,11 @@ const UserRegistration = () => {
 
   return (
     <div className="registration-container">
-      <h1 className="site-title">Storygram</h1>
+      <h1 className="site-title">Pixogram</h1>
       <div className="registration-box">
         <h2 className="title">Реєстрація</h2>
         {message && <p className="success">{message}</p>}
+
         <form onSubmit={handleSubmit(onSubmit)} className="registration-form">
           <div className="input-group">
             <input type="text" placeholder="Ім'я" {...register("firstName")} />

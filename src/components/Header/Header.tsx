@@ -103,7 +103,7 @@ const Header: React.FC = () => {
       <aside className="sidebar">
         <div className="sidebar-container">
           <div className="logo">
-            <span className="logo-text">Storygram</span>
+            <span className="logo-text">Pixogram</span>
           </div>
           <nav className="sidebar-nav">
             <NavigationButtons

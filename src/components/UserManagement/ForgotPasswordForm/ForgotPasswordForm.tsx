@@ -22,7 +22,7 @@ const ForgotPassword = () => {
 
   return (
     <div className="forgot-password-page">
-      <h1 className="site-title">Storygram</h1>
+      <h1 className="site-title">Pixogram</h1>
       <div className="forgot-password-container">
         <h2>Відновлення пароля</h2>
         {message && <p className="success">{message}</p>}

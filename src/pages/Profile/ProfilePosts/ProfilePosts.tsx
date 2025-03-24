@@ -3,51 +3,62 @@ import "./ProfilePosts.scss";
 import LikeButton from "../../Home/Feed/FeedComponents/InteractionButtons/LikeButton/LikeButton";
 import ShareButton from "../../Home/Feed/FeedComponents/InteractionButtons/SendButton/ShareButton";
 import CommentButton from "../../Home/Feed/FeedComponents/InteractionButtons/CommentButton/CommentButton";
+import SavePostButton from "../../Home/Feed/FeedComponents/InteractionButtons/SavePostButton/SavePostButton";
+import Slider from "react-slick";
+import ExpandableText from "../../Home/Feed/FeedComponents/ExpandableText/ExpandableText";
+import { sliderSettings } from "../../Home/Feed/FeedComponents/PostSlider/sliderSettings";
+import VideoPlayer from "../../Home/Feed/VideoPlayer/VideoPlayer";
+
+
 interface ProfilePostProps {
   post: {
-    id: string;
+    id: number;
     text: string;
-    mediaurls?: string;
+    mediaurls?: string[];
     created_at: string;
-    userId: string;
+    username?: string;
+    user_id: string;
   };
-	user?: any;
+  user?: any;
 }
 
-const ProfilePosts: React.FC<ProfilePostProps> = ({ post, user = null }) => {
-	
+const ProfilePosts: React.FC<ProfilePostProps> = ({ post, user }) => {
 
-  return (
-    <div className="profile-post">
-      <div className="post-header">
-        <div className="post-info">
-          <div className="post-date">
+	return (
+    <div key={post.id} className="feed-post-item">
+      <div className="home-news-details">
+			<div className="post-date">
             {new Date(post.created_at).toLocaleString("uk-UA", {
               day: "2-digit",
               month: "2-digit",
               year: "numeric",
             })}
           </div>
+        <div className="home-article-border">
+          <ExpandableText text={post.text} maxLength={33} />
         </div>
-      </div>
-
-      <div className="post-content">
-        <div className="post-content__border">
-          <p className="post-text">{post.text}</p>
-        </div>
-        {post.mediaurls && (
-          <div className="post-media">
-            <img
-              src={post.mediaurls}
-              alt="Post content"
-              className="post-image"
-            />
+        {post.mediaurls && post.mediaurls.length > 0 && (
+          <div className="home-news-media">
+            <Slider {...sliderSettings}>
+              {post.mediaurls.map((url, index) => (
+                <div key={index}>
+                  {url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".mkv") ? (
+                    <VideoPlayer key={index} videoUrl={url} />
+                  ) : (
+                    <img src={url} alt={`Медіа ${index + 1}`} />
+                  )}
+                </div>
+              ))}
+            </Slider>
           </div>
         )}
-        <div className="home-likes-comments">
-          <LikeButton contentId={post.id} userId={user?.user?.id ?? ""} type={"post"} />
-          <CommentButton contentId={post.id} userId={user?.user?.id ?? ""} />
-          <ShareButton  postId={Number(post.id)} userId={user?.user?.id ?? ""}/>
+        <div className="home-news-actions">
+          <div className="home-likes-comments">
+            {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
+            {user && <CommentButton contentId={post.id} userId={user.id} />}
+            {user && <ShareButton postId={post.id} userId={user?.id} />}
+          </div>
+          {user && <SavePostButton postId={post.id} userId={user.id} />}
         </div>
       </div>
     </div>

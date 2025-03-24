@@ -12,7 +12,7 @@ import { uploadFiles } from "../../../../../services/fileUploadService/fileUploa
 import Avatar from "../../../../../components/Avatar/Avatar";
 
 type UserProfile = {
-  fullname: string | null;
+  username: string | null;
   avatar_url: string | null | undefined;
 };
 
@@ -27,7 +27,7 @@ const CreatePost = ({ userId, onPostCreated }: PostCreatorProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [usersProfile, setUsersProfile] = useState<UserProfile | null>(null);
-  const maxChars = 280;
+  const maxChars = 1080;
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -36,7 +36,7 @@ const CreatePost = ({ userId, onPostCreated }: PostCreatorProps) => {
 
       const { data, error } = await supabase
         .from("user_profiles")
-        .select("fullname, avatar_url")
+        .select("username, avatar_url")
         .eq("id", user.user.id)
         .single();
 
@@ -128,7 +128,7 @@ const CreatePost = ({ userId, onPostCreated }: PostCreatorProps) => {
     <div className="create-post">
       <div className="post-header">
         <Avatar
-          name={usersProfile?.fullname || null}
+          name={usersProfile?.username || null}
           avatarUrl={usersProfile?.avatar_url}
         />
         <textarea

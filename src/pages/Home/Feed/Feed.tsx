@@ -15,7 +15,7 @@ import { sliderSettings } from "./FeedComponents/PostSlider/sliderSettings";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ShareButton from "./FeedComponents/InteractionButtons/SendButton/ShareButton";
-
+import ExpandableText from "./FeedComponents/ExpandableText/ExpandableText";
 
 interface Post {
   id: number;
@@ -25,7 +25,6 @@ interface Post {
   username: string;
   user_id: string;
 }
-
 const Home: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,54 +46,60 @@ const Home: React.FC = () => {
   }, []);
 
   const fetchPosts = async () => {
-		if (loading || !canLoadMore.current) return;
-		setLoading(true);
-	
-		const { data: user } = await supabase.auth.getUser();
-		if (!user?.user) {
-			setLoading(false);
-			return;
-		}
-		
-		const currentUserId = user.user.id;
-	
-		const { data: blockedUsers, error: blockedError } = await supabase
-			.from("blocked_users")
-			.select("blocked_user_id")
-			.eq("user_id", currentUserId);
-	
-		if (blockedError) {
-			console.error("❌ Помилка отримання списку заблокованих користувачів:", blockedError);
-			setLoading(false);
-			return;
-		}
-	
-		const blockedIds = blockedUsers ? blockedUsers.map((b) => b.blocked_user_id) : [];
-	
-		const { data, error } = await supabase
-			.from("posts")
-			.select("id, text, mediaurls, created_at, user_id, user_profiles(username)")
-			.order("created_at", { ascending: false })
-			.not("user_id", "in", `(${blockedIds.join(",")})`)
-			.range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
-	
-		if (error) {
-			console.error("❌ Помилка завантаження постів:", error);
-		} else {
-			if (data.length > 0) {
-				const formattedData = data.map((post: any) => ({
-					...post,
-					username: post.user_profiles.username,
-				}));
-				setPosts((prev) => [...prev, ...formattedData]);
-				pageRef.current += 1;
-			} else {
-				canLoadMore.current = false;
-			}
-		}
-		setLoading(false);
-	};
-	
+    if (loading || !canLoadMore.current) return;
+    setLoading(true);
+
+    const { data: user } = await supabase.auth.getUser();
+    if (!user?.user) {
+      setLoading(false);
+      return;
+    }
+
+    const currentUserId = user.user.id;
+
+    const { data: blockedUsers, error: blockedError } = await supabase
+      .from("blocked_users")
+      .select("blocked_user_id")
+      .eq("user_id", currentUserId);
+
+    if (blockedError) {
+      console.error(
+        "❌ Помилка отримання списку заблокованих користувачів:",
+        blockedError
+      );
+      setLoading(false);
+      return;
+    }
+
+    const blockedIds = blockedUsers
+      ? blockedUsers.map((b) => b.blocked_user_id)
+      : [];
+
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        "id, text, mediaurls, created_at, user_id, user_profiles(username)"
+      )
+      .order("created_at", { ascending: false })
+      .not("user_id", "in", `(${blockedIds.join(",")})`)
+      .range((pageRef.current - 1) * 5, pageRef.current * 5 - 1);
+
+    if (error) {
+      console.error("❌ Помилка завантаження постів:", error);
+    } else {
+      if (data.length > 0) {
+        const formattedData = data.map((post: any) => ({
+          ...post,
+          username: post.user_profiles.username,
+        }));
+        setPosts((prev) => [...prev, ...formattedData]);
+        pageRef.current += 1;
+      } else {
+        canLoadMore.current = false;
+      }
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     fetchPosts();
@@ -167,25 +172,25 @@ const Home: React.FC = () => {
                       userId={user?.id}
                       postUserId={post.user_id}
                     />
-										
-										<div className="home-article-border">
-                      <p className="post-text">{post.text}</p>
+
+                    <div className="home-article-border">
+										<ExpandableText text={post.text} maxLength={33} />
                     </div>
                     {post.mediaurls && post.mediaurls.length > 0 && (
-                      <div key={post.id}>
-												<Slider {...sliderSettings}>
-                        {post.mediaurls.map((url, index) => (
-                          <div key={index}>
-                            {url.endsWith(".mp4") ||
-                            url.endsWith(".webm") ||
-                            url.endsWith(".mkv") ? (
-                              <VideoPlayer key={index} videoUrl={url} />
-                            ) : (
-                              <img src={url} alt={`Медіа ${index + 1}`} />
-                            )}
-                          </div>
-                        ))}
-												</Slider>
+                      <div key={post.id} className="home-news-media">
+                        <Slider {...sliderSettings}>
+                          {post.mediaurls.map((url, index) => (
+                            <div key={index}>
+                              {url.endsWith(".mp4") ||
+                              url.endsWith(".webm") ||
+                              url.endsWith(".mkv") ? (
+                                <VideoPlayer key={index} videoUrl={url} />
+                              ) : (
+                                <img src={url} alt={`Медіа ${index + 1}`} />
+                              )}
+                            </div>
+                          ))}
+                        </Slider>
                       </div>
                     )}
                     <div className="home-news-actions">
@@ -201,7 +206,7 @@ const Home: React.FC = () => {
                           <CommentButton contentId={post.id} userId={user.id} />
                         )}
                         {user && (
-                          <ShareButton postId={post.id} userId={user?.id} />
+                          <ShareButton postId={String(post.id)} userId={user?.id} />
                         )}
                       </div>
                       {user && (
