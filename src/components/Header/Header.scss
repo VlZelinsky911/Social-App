@@ -29,6 +29,10 @@
       color: #1877f2;
     }
 
+    .short-text {
+      display: none;
+    }
+
     .logo-text {
       font-family: "Montserrat", sans-serif;
       font-size: 24px;
@@ -86,7 +90,7 @@
 
 .search-overlay {
   position: fixed;
-  left: 244px;
+  left: 235px;
   top: 0;
   bottom: 0;
   width: 397px;
@@ -133,6 +137,41 @@
     }
   }
 }
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 200px;
+    .search-overlay {
+      left: 200px !important;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 70px;
+    .search-overlay {
+      left: 70px !important;
+    }
+    .logo {
+      .logo-text {
+        display: none;
+      }
+      .short-text {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        display: flex;
+        color: #1877f2;
+      }
+    }
+  }
+  .nav-item {
+    span {
+      display: none !important;
+    }
+  }
+}
 
 @media (max-width: 768px) {
   .sidebar {
@@ -158,6 +197,12 @@
       flex-direction: row;
       justify-content: space-around;
       gap: 0;
+
+			.nav-buttons {
+				display: flex;
+				flex-direction: row;
+				gap: 45px;
+			}
     }
 
     .nav-item {
@@ -178,9 +223,17 @@
   }
 }
 
-.navMobile,
-.backdrop {
-  @media (min-width: 769px) {
-    display: none !important;
-  }
+@media (max-width: 600px) {
+		.nav-buttons {
+			display: flex;
+			flex-direction: row;
+			gap: 30px !important;
+	}
+}
+@media (max-width: 515px) {
+		.nav-buttons {
+			display: flex;
+			flex-direction: row;
+			gap: 25px !important;
+	}
 }

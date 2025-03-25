@@ -298,6 +298,24 @@ margin-top: 10px;
 }
 
 
+@media (max-width: 1200px) {
+	.feed-content {
+		max-width: 650px !important;
+	
+	.feed-post-item {
+		img {
+			max-width: 550px !important;
+		}
+	}
+	.suggested-users{
+		width: 250px;
+		margin-right: 0!important;
+		margin-top: 6px;
+		border-radius: 8px;
+		}
+}
+
+
 @media (max-width: 768px) {
   .feed-container {
     padding: 12px;
@@ -306,4 +324,5 @@ margin-top: 10px;
   .feed-post-item {
     padding: 12px;
   }
+}
 }
