@@ -99,57 +99,64 @@ const Header: React.FC = () => {
 		setIsMenuOpen(false);
 	}
   return (
-    <>
-      <aside className="sidebar">
-        <div className="sidebar-container">
-          <div className="logo">
-            <span className="logo-text">Pixogram</span>
-            <span className="short-text">Pi</span>
-          </div>
-          <nav className="sidebar-nav">
-            <NavigationButtons
-              handleNavigation={handleNavigation}
-              isSearchExpanded={isSearchExpanded}
-							isChatsOpen={isChatsOpen}
-              toggleSearch={() => {
-                setIsSearchExpanded(!isSearchExpanded);
-                setIsChatsOpen(false);
-              }}
-              toggleChats={() => {
-                setIsChatsOpen(!isChatsOpen);
-                setIsSearchExpanded(false);
-								setUnreadMessages(false);
-              }}
-							showMessagesDot={unreadMessages}
-              showDot={unreadCount > 0}
-            />
-          </nav>
-          <button className="nav-item menu-button" onClick={goToSettings}>
-            <FaCog />
-            <span>Налаштування</span>
-          </button>
-
-        </div>
-        {isSearchExpanded && (
-          <div className="search-overlay">
-            <div className="search-container">
-              <h4>Search</h4>
-              <SearchInput searchTerm={searchTerm} onSearchChange={(e) => setSearchTerm(e.target.value)} setIsSearchExpanded={setIsSearchExpanded} />
-            </div>
-          </div>
-        )}
-				{isChatsOpen && (
-					<div className="search-overlay">
-						<div className="search-container">
-							<h4>Chats</h4>
-							<UserChats setIsChatsOpen={setIsChatsOpen}/>
-						</div>
+		<>
+			<aside className="sidebar">
+				<div className="sidebar-container">
+					<div className="logo">
+						<span className="logo-text">Pixogram</span>
+						<span className="short-text">Pi</span>
 					</div>
-				)}
-      </aside>
-      <div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={() => setIsMenuOpen(false)}></div>
-    </>
-  );
+					<nav className="sidebar-nav">
+						<NavigationButtons
+							handleNavigation={handleNavigation}
+							isSearchExpanded={isSearchExpanded}
+							isChatsOpen={isChatsOpen}
+							toggleSearch={() => {
+								setIsSearchExpanded(!isSearchExpanded);
+								setIsChatsOpen(false);
+							}}
+							toggleChats={() => {
+								setIsChatsOpen(!isChatsOpen);
+								setIsSearchExpanded(false);
+								setUnreadMessages(false);
+							}}
+							showMessagesDot={unreadMessages}
+							showDot={unreadCount > 0}
+						/>
+					</nav>
+					<button className="nav-item menu-button" onClick={goToSettings}>
+						<FaCog />
+						<span>Налаштування</span>
+					</button>
+				</div>
+			</aside>
+	
+
+			{isSearchExpanded && (
+				<div className="search-overlay">
+					<div className="search-container">
+						<h4>Search</h4>
+						<SearchInput
+							searchTerm={searchTerm}
+							onSearchChange={(e) => setSearchTerm(e.target.value)}
+							setIsSearchExpanded={setIsSearchExpanded}
+						/>
+					</div>
+				</div>
+			)}
+	
+			{isChatsOpen && (
+				<div className="search-overlay">
+					<div className="search-container">
+						<h4>Chats</h4>
+						<UserChats setIsChatsOpen={setIsChatsOpen} />
+					</div>
+				</div>
+			)}
+	
+			<div className={`backdrop ${isMenuOpen ? "active" : ""}`} onClick={() => setIsMenuOpen(false)}></div>
+		</>
+	);	
 };
 
 export default Header;

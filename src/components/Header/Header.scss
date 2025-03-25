@@ -140,18 +140,15 @@
 @media (max-width: 1200px) {
   .sidebar {
     width: 200px;
-    .search-overlay {
-      left: 200px !important;
-    }
   }
+	.search-overlay {
+		left: 200px !important;
+	}
 }
 
 @media (max-width: 1024px) {
   .sidebar {
     width: 70px;
-    .search-overlay {
-      left: 70px !important;
-    }
     .logo {
       .logo-text {
         display: none;
@@ -171,6 +168,10 @@
       display: none !important;
     }
   }
+	.search-overlay {
+		width: 300px;
+		left: 70px !important;
+	}
 }
 
 @media (max-width: 768px) {
@@ -221,6 +222,10 @@
     top: 0;
     width: 100%;
   }
+	.search-overlay {
+		width: 100%;
+		left: 0 !important;
+	}
 }
 
 @media (max-width: 600px) {
