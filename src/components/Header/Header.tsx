@@ -104,6 +104,7 @@ const Header: React.FC = () => {
         <div className="sidebar-container">
           <div className="logo">
             <span className="logo-text">Pixogram</span>
+            <span className="short-text">Pi</span>
           </div>
           <nav className="sidebar-nav">
             <NavigationButtons

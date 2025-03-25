@@ -16,8 +16,8 @@ export const NewsCategories: React.FC<NewsCategoriesProps> = ({
 
   const categories = [
     { name: "Стрічка", filter: "" },
-    { name: "Популярні", filter: "popular" },
     { name: "Рекомендовані", filter: "recommended" },
+    { name: "Популярні", filter: "popular" },
   ];
 
   const currentCategory = categories.find((cat) => `/${cat.filter}` === location.pathname)?.name || "Стрічка";
