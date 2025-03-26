@@ -180,7 +180,7 @@ const Recommended: React.FC = () => {
                       <div className="home-likes-comments">
                         {user && <LikeButton contentId={post.id} type="post" userId={user.id} />}
                         {user && <CommentButton contentId={post.id} userId={user.id} />}
-                        {user && <ShareButton postId={post.id} userId={user?.id} />}
+                        {user && <ShareButton postId={String(post.id)} userId={user?.id} />}
                       </div>
                       {user && <SavePostButton postId={post.id} userId={user.id} />}
                     </div>

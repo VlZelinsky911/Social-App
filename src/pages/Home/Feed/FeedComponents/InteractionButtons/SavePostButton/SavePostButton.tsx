@@ -66,12 +66,12 @@ const SavePostButton: React.FC<SavePostButtonProps> = ({ postId, userId }) => {
   };
 
   return (
-    <div
-      className={`post-save ${isSaved ? "active" : ""}`}
-      onClick={toggleSavePost}
-    >
-      <FaBookmark className="bookmark-icon" />
-    </div>
+			<div
+				className={`post-save ${isSaved ? "active" : ""}`}
+				onClick={toggleSavePost}
+			>
+				<FaBookmark className="bookmark-icon" />
+			</div>
   );
 };
 

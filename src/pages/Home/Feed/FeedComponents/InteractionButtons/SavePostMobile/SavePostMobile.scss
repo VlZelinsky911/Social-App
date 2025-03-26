@@ -1,0 +1,22 @@
+	.post-save_mobile{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #0073e6;
+		color: #fff;
+		padding: 10px 20px;
+		border-radius: 8px;
+		box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+		font-size: 16px;
+		cursor: pointer;
+		transition: all 0.3s ease-in-out;
+	
+		.bookmark-icon {
+			font-size: 17px;
+			transition: transform 0.3s ease, color 0.3s ease;	
+		}
+	
+		&:hover {
+			background: #f0f0f0;
+		}
+	}

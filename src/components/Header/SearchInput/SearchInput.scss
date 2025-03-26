@@ -107,6 +107,17 @@
   }
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(100%); /* Початкове положення знизу */
+    opacity: 0; /* Початково непрозорий */
+  }
+  to {
+    transform: translateY(0); /* Переміщається до нормального положення */
+    opacity: 1; /* Стає видимим */
+  }
+}
+
 @media (max-width: 768px) {
   .search-container {
     .search-box {
@@ -115,15 +126,20 @@
 
     .suggestions-list {
       position: fixed;
-      top: auto;
-      left: 0;
-      width: 100%;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+      top: 120px;
+      left: 5%;
+      transform: translateX(-50%);
+      width: 90%;
       max-height: 50vh;
-      animation: slideUp 0.3s ease;
+      animation: slideUp 0.3s ease forwards;
+      background: white;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow-y: auto;
     }
   }
+}
+
 
   @keyframes slideUp {
     from {
@@ -133,4 +149,3 @@
       transform: translateY(0);
     }
   }
-}

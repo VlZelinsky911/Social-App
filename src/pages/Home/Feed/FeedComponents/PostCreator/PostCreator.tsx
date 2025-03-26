@@ -147,29 +147,41 @@ const CreatePost = ({ userId, onPostCreated }: PostCreatorProps) => {
       </div>
 
       <div className="post-actions">
-        <label className={`action-btn ${isLoading ? "disabled" : ""}`}>
-          <FaPhotoVideo /> Додати медіа
+        <label className={`action-btn ${isLoading ? "disabled" : ""}`} title="Додати медіа">
+          <FaPhotoVideo /> 
+					<span className="text__adapt">	
+					Додати медіа
+          </span>
           <input
             type="file"
             accept="image/*,video/*"
             multiple
             hidden
             onChange={handleFileChange}
+            aria-label="Додати медіа"
           />
         </label>
         <button
           className="action-btn"
           disabled={isLoading}
           onClick={handleTagFriend}
+          aria-label="Відмітити друга"
         >
-          <FaUserTag /> Відмітити друга
+        		<FaUserTag /> 
+						<span className="text__adapt">	
+						Відмітити друга
+          	</span>
         </button>
         <button
           className="action-btn"
           disabled={isLoading}
           onClick={handleTagLocation}
+          aria-label="Місцезнаходження"
         >
-          <FaMapMarkerAlt /> Місцезнаходження
+            <FaMapMarkerAlt /> 
+						<span className="text__adapt">	
+						Місцезнаходження
+          	</span>
         </button>
         <button className="action-btn" disabled={isLoading}>
           <FaEllipsisH />

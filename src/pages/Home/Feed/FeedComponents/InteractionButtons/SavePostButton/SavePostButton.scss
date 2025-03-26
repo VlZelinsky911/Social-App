@@ -24,6 +24,10 @@
       color: #1877f2;
     }
 	}
+}
 
-
+@media(max-width : 550px){
+.post-save{
+		display: none;
+	}
 }
