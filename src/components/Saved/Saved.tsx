@@ -89,6 +89,13 @@ function Saved() {
     }
   };
 
+	const truncateText = (text: string, maxLength: number) => {
+		if (text.length > maxLength) {
+			return text.slice(0, maxLength) + "...";
+		}
+		return text;
+	};
+
   return (
     <div className="saved">
       <h1>Збережені пости та новини</h1>
@@ -105,7 +112,7 @@ function Saved() {
               {savedPosts.map((post) => (
                 <li key={post.id}>
                   <p>
-                    <strong>Текст:</strong> {post.text}
+                    <strong>Текст:</strong>{truncateText(post.text, 40)}
                   </p>
                   <p>
                     <strong>Дата:</strong>{" "}
