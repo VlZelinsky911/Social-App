@@ -81,7 +81,7 @@ const ProfileEdit = () => {
       avatarUrl = "";
     } else if (avatarFile) {
       console.log("📤 Завантаження аватарки...");
-      const uploadedUrls = await uploadFiles([avatarFile], "avatars");
+      const uploadedUrls = await uploadFiles([avatarFile]);
 
       if (uploadedUrls.length > 0) {
         avatarUrl = uploadedUrls[0];

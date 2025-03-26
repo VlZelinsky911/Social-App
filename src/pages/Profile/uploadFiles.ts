@@ -9,10 +9,9 @@ export const uploadFiles = async (selectedFiles: File[], bucket: string): Promis
   const uploadedUrls: string[] = [];
 
   for (const file of selectedFiles) {
-    const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}-${file.name.replace(/\s/g, "_")}`;
 
-    const { data, error } = await supabase.storage.from(bucket).upload(fileName, file, { upsert: true });
+    const { error } = await supabase.storage.from(bucket).upload(fileName, file, { upsert: true });
 
     if (error) {
       console.error(`❌ Помилка завантаження ${file.name}:`, error);

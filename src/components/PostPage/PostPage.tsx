@@ -79,7 +79,7 @@ const PostPage = () => {
           <div className="postpage__actions">
             <LikeButton contentId={post.id} userId={post.user_profiles.id} type={"post"} />
             <CommentButton contentId={post.id} userId={post.user_profiles.id} />
-            <ShareButton />
+            <ShareButton  postId={post.id} userId={post.user_profiles.id}/>
           </div>
         </div>
       ) : (

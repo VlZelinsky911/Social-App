@@ -3,7 +3,6 @@ import "./Popular.scss";
 import { supabase } from "../../../services/supabaseClient";
 import SuggestedUsers from "../../SuggestedUsers/SuggestedUsers";
 import { NewsCategories } from "../../../pages/Home/Feed/FeedComponents/NewsCategories/NewsCategories";
-import PostCreator from "../../../pages/Home/Feed/FeedComponents/PostCreator/PostCreator";
 import Spinner from "../../../pages/Home/Feed/FeedComponents/Spinner/Spinner";
 import PostTitle from "../../../pages/Home/Feed/FeedComponents/PostTitle/PostTitle";
 import ExpandableText from "../../../pages/Home/Feed/FeedComponents/ExpandableText/ExpandableText";
@@ -33,7 +32,7 @@ const Popular: React.FC = () => {
   const canLoadMore = useRef<boolean>(true);
   const [isPostSubmitting, setIsPostSubmitting] = useState(false);
 	const [filter, setFilter] = useState<string>("all");
-		const [activeCategory, setActiveCategory] = useState<string>("Стрічка");
+	const [activeCategory, setActiveCategory] = useState<string>("Стрічка");
 
   useEffect(() => {
     const getUser = async () => {
@@ -110,16 +109,6 @@ const Popular: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading]);
-
-  const handlePostCreated = useCallback(() => {
-    setIsPostSubmitting(true);
-    setPosts([]);
-    pageRef.current = 1;
-    canLoadMore.current = true;
-    fetchPosts().finally(() => {
-      setIsPostSubmitting(false);
-    });
-  }, []);
 
   const handleDeletePost = async (postId: number) => {
     try {

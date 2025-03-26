@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import "./PostTitle.scss";
 import { Link } from "react-router-dom";
 import { FaEllipsisH } from "react-icons/fa";
-import { set } from "date-fns";
-import { Save } from "lucide-react";
-import SavePostButton from "../InteractionButtons/SavePostButton/SavePostButton";
 import SavePostMobile from "../InteractionButtons/SavePostMobile/SavePostMobile";
 
 interface PostTitleProps {

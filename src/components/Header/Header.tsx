@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars, FaCog } from "react-icons/fa";
+import { FaCog } from "react-icons/fa";
 import "./Header.scss";
 import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import SearchInput from "./SearchInput/SearchInput";
