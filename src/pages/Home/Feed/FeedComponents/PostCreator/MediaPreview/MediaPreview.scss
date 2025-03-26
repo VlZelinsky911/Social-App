@@ -63,8 +63,8 @@ video::-webkit-media-controls-panel {
 
 .lightbox-close {
   position: absolute;
-  top: 5px;
-  right: 10px;
+  top: -45px;
+  right: -20px;
   background: none;
   border: none;
   color: white;
@@ -77,8 +77,8 @@ video::-webkit-media-controls-panel {
 }
 .lightbox-delete{
 	position: absolute;
-	top: 20px;
-	left: 10px;
+	top: -40px;
+	left: -40px;
 	outline: none;
 	border: none;
 	background: none;
@@ -104,11 +104,11 @@ video::-webkit-media-controls-panel {
 }
 
 .lightbox-prev {
-  left: 20px;
+  left: 0;
 }
 
 .lightbox-next {
-  right: 20px;
+  right: 0;
 }
 .video-preview-container {
   position: relative;
@@ -134,4 +134,31 @@ video::-webkit-media-controls-panel {
   padding: 15px 20px;
   cursor: pointer;
 	border: none;
+}
+
+@media(max-width: 640px){
+	.lightbox-delete {
+		left: -30px;
+	
+		&:hover{
+			transform: scale(1.1);
+		}
+	}
+	
+	.lightbox-prev {
+		left: -20px;
+	}
+	
+	.lightbox-next {
+		right: -20px;
+	}
+}
+@media(max-width: 640px){
+	.lightbox-prev {
+		left: -30px;
+	}
+	
+	.lightbox-next {
+		right: -30px;
+	}
 }

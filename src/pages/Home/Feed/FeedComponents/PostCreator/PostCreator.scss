@@ -37,14 +37,14 @@
     margin-bottom: 10px;
 
     img {
-      width: 90px;
-      height: 80px;
-      border-radius: 50%;
-      border: 2px solid #007bff ;
-    }
-    .avatar-placeholder {
       width: 80px;
       height: 70px;
+      border-radius: 50%;
+      border: 2px solid #007bff;
+    }
+    .avatar-placeholder {
+      width: 70px;
+      height: 60px;
       border-radius: 50%;
       border: 2px solid #2563eb;
       display: flex;
@@ -74,7 +74,7 @@
       padding: 8px;
       border-radius: 6px;
       font-size: 13px;
-			font-weight: 400;
+      font-weight: 400;
       cursor: pointer;
       color: #555;
       transition: background 0.3s;
@@ -83,6 +83,9 @@
         background: rgba(0, 132, 255, 0.1);
         color: #2563eb;
       }
+    }
+    .icon__adapt {
+      display: none;
     }
   }
 
@@ -128,5 +131,49 @@
   &.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+}
+
+@media (max-width: 767px) {
+  .create-post {
+    .post-actions {
+      .action-btn {
+        &:last-child {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .create-post {
+    .char-counter {
+      display: none;
+    }
+    .post-header {
+      img,
+      .avatar-placeholder {
+        display: none;
+      }
+    }
+    .post-actions {
+      .action-btn {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: 492px) {
+  .create-post {
+    .post-actions {
+      .action-btn {
+        font-size: 18px;
+        .text__adapt {
+          display: none;
+        }
+      }
+    }
   }
 }

@@ -3,6 +3,9 @@ import "./PostTitle.scss";
 import { Link } from "react-router-dom";
 import { FaEllipsisH } from "react-icons/fa";
 import { set } from "date-fns";
+import { Save } from "lucide-react";
+import SavePostButton from "../InteractionButtons/SavePostButton/SavePostButton";
+import SavePostMobile from "../InteractionButtons/SavePostMobile/SavePostMobile";
 
 interface PostTitleProps {
   author: string | null;
@@ -62,7 +65,7 @@ const PostTitle: React.FC<PostTitleProps> = ({ author, publishedAt, handleDelete
                 Видалити пост
               </button>
             )}
-            <button>In process🫣</button>
+						<SavePostMobile postId={postId} userId={String(userId)}/>
             <button>In process🫣</button>
             <button>In process🫣</button>
           </div>

@@ -6,13 +6,16 @@
   border-top: 1px solid #ddd;
   gap: 10px;
 
-	.emoji-picker {
-		position: absolute;
-		bottom: 50px;
-		right: 20px;
-	}
+  .emoji-picker {
+    position: absolute;
+    bottom: 60px;
+    left: 2%;
+    .epr_-8ygbw8 {
+      display: none;
+    }
+  }
 
-	.upload-label {
+  .upload-label {
     cursor: pointer;
     position: relative;
     display: flex;
@@ -32,10 +35,10 @@
       background-color: #d4f5d4;
     }
 
-		.check-icon {
-			font-size: 16px;
-			color: green;
-		}
+    .check-icon {
+      font-size: 16px;
+      color: green;
+    }
   }
 
   input[type="text"] {
@@ -45,7 +48,7 @@
     border-radius: 25px;
     outline: none;
     background: #f1f1f1;
-		color: #333;
+    color: #333;
     font-size: 14px;
     transition: border 0.3s;
 
