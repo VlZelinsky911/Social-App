@@ -88,7 +88,7 @@ const CreatePost = ({ userId, onPostCreated }: PostCreatorProps) => {
     setError(null);
 
     try {
-      const mediaUrls = await uploadFiles(selectedFiles, "posts");
+      const mediaUrls = await uploadFiles(selectedFiles);
       console.log("📤 Завантажені файли:", mediaUrls);
 
       const { error } = await supabase.from("posts").insert([

@@ -8,25 +8,11 @@ import ProfileSubscribers from "./ProfileSubscribers/ProfileSubscribers";
 import "./UserProfile.scss";
 import { FaEllipsisH } from "react-icons/fa";
 
-interface UserProfileData {
-  id: string;
-  username: string;
-  fullname: string;
-  avatar_url: string;
-  bio: string;
-  posts: {
-    id: string;
-    text: string;
-    mediaurls?: string;
-    created_at: string;
-    userId: string;
-  }[];
-}
 
 const UserProfile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<UserProfileData | null>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -282,7 +268,7 @@ const UserProfile: React.FC = () => {
         {!isBlocked && (
           <div className="profile-posts">
             {profile.posts.length > 0 ? (
-              profile.posts.map((post) => (
+              profile.posts.map((post: any) => (
                 <ProfilePosts key={post.id} post={post} user={user} />
               ))
             ) : (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "../../../services/supabaseClient";
-import { FaPaperPlane, FaImage, FaSmile, FaCheckCircle, FaVideo } from "react-icons/fa";
+import { FaPaperPlane, FaImage, FaSmile, FaCheckCircle } from "react-icons/fa";
 import EmojiPicker from "emoji-picker-react";
 import "./ChatInput.scss";
 
@@ -27,7 +27,7 @@ const ChatInput = ({ conversationId, senderId }: ChatInputProps) => {
     const safeFileName = `${Date.now()}.${fileExt}`;
     const filePath = `${fileType}/${safeFileName}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("chat-images")
       .upload(filePath, media, {
         contentType: media.type,
