@@ -42,7 +42,7 @@ const CompleteProfile = () => {
       
       const { data: profile, error: profileError } = await supabase
         .from("user_profiles")
-        .select("username, birthdate, bio, contact_info, avatar_url")
+        .select("username, birthdate, bio, contact_info, avatar_url", {head: true})
         .eq("id", user.user.id)
         .single();
       
@@ -61,37 +61,56 @@ const CompleteProfile = () => {
     setErrors({ ...errors, [name]: "" });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    let newErrors: Errors = {};
-    if (!formData.username) newErrors.username = "Ім'я обов'язкове";
-    if (!formData.birthdate) newErrors.birthdate = "Дата народження обов'язкова";
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length > 0) return;
-
-    setLoading(true);
-    const { data: user } = await supabase.auth.getUser();
-    if (!user?.user) return;
-
-    const { error } = await supabase.from("user_profiles").upsert(
-      { id: user.user.id, ...formData },
-      { onConflict: "id" }
-    );
-    
-    if (!error) {
-      dispatch(setProfileComplete(true));
-      navigate("/dashboard");
-    }
-    setLoading(false);
-  };
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		let newErrors: Errors = {};
+		if (!formData.username) newErrors.username = "Ім'я обов'язкове";
+		if (!formData.birthdate) newErrors.birthdate = "Дата народження обов'язкова";
+		setErrors(newErrors);
+	
+		if (Object.keys(newErrors).length > 0) return;
+	
+		setLoading(true);
+	
+		const { data, error } = await supabase.auth.getUser();
+		if (error || !data?.user) {
+			navigate("/login");
+			return;
+		}
+		const user = data.user;
+	
+		const { data: existingProfile } = await supabase
+			.from("user_profiles")
+			.select("id")
+			.eq("id", user.id)
+			.single();
+	
+		let profileError;
+		if (existingProfile) {
+			({ error: profileError } = await supabase
+				.from("user_profiles")
+				.update(formData)
+				.eq("id", user.id));
+		} else {
+			({ error: profileError } = await supabase
+				.from("user_profiles")
+				.insert([{ id: user.id, ...formData }]));
+		}
+	
+		if (!profileError) {
+			dispatch(setProfileComplete(true));
+			navigate("/dashboard");
+			return;
+		}
+		setLoading(false);
+	};	
 
   if (loading) return <Spinner/>
 
   return (
     <div className="registration-page">
       <div className="registration-container">
-        <h1 className="site-title">Pixogram</h1>
+			{!errors && <h1 className="site-title">Pixogram</h1>}
         <div className="registration-box">
           <h2 className="title">Заповніть ваш профіль</h2>
           <form className="registration-form" onSubmit={handleSubmit}>
