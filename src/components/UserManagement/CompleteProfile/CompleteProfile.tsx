@@ -35,17 +35,21 @@ const CompleteProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: user, error: userError } = await supabase.auth.getUser();
+      console.log("User fetch result:", user, userError);
+      
       if (userError || !user?.user) {
         navigate("/login");
         return;
       }
-      
+
       const { data: profile, error: profileError } = await supabase
         .from("user_profiles")
-        .select("username, birthdate, bio, contact_info, avatar_url", {head: true})
+        .select("username, birthdate, bio, contact_info, avatar_url")
         .eq("id", user.user.id)
         .single();
       
+      console.log("Profile fetch result:", profile, profileError);
+
       if (!profileError && profile) {
         setFormData(profile);
       }
@@ -61,56 +65,46 @@ const CompleteProfile = () => {
     setErrors({ ...errors, [name]: "" });
   };
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		let newErrors: Errors = {};
-		if (!formData.username) newErrors.username = "Ім'я обов'язкове";
-		if (!formData.birthdate) newErrors.birthdate = "Дата народження обов'язкова";
-		setErrors(newErrors);
-	
-		if (Object.keys(newErrors).length > 0) return;
-	
-		setLoading(true);
-	
-		const { data, error } = await supabase.auth.getUser();
-		if (error || !data?.user) {
-			navigate("/login");
-			return;
-		}
-		const user = data.user;
-	
-		const { data: existingProfile } = await supabase
-			.from("user_profiles")
-			.select("id")
-			.eq("id", user.id)
-			.single();
-	
-		let profileError;
-		if (existingProfile) {
-			({ error: profileError } = await supabase
-				.from("user_profiles")
-				.update(formData)
-				.eq("id", user.id));
-		} else {
-			({ error: profileError } = await supabase
-				.from("user_profiles")
-				.insert([{ id: user.id, ...formData }]));
-		}
-	
-		if (!profileError) {
-			dispatch(setProfileComplete(true));
-			navigate("/dashboard");
-			return;
-		}
-		setLoading(false);
-	};	
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let newErrors: Errors = {};
+    if (!formData.username) newErrors.username = "Ім'я обов'язкове";
+    if (!formData.birthdate) newErrors.birthdate = "Дата народження обов'язкова";
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
+    setLoading(true);
+
+    const { data, error } = await supabase.auth.getUser();
+    console.log("User before profile update:", data, error);
+
+    if (error || !data?.user) {
+      navigate("/login");
+      return;
+    }
+    const user = data.user;
+
+    const { error: profileError } = await supabase
+      .from("user_profiles")
+      .upsert([{ id: user.id, ...formData }]);
+
+    console.log("Profile upsert error:", profileError);
+
+    if (!profileError) {
+      dispatch(setProfileComplete(true));
+      navigate("/dashboard");
+      return;
+    }
+    setLoading(false);
+  };  
 
   if (loading) return <Spinner/>
 
   return (
     <div className="registration-page">
       <div className="registration-container">
-			{!errors && <h1 className="site-title">Pixogram</h1>}
+        {!errors && <h1 className="site-title">Pixogram</h1>}
         <div className="registration-box">
           <h2 className="title">Заповніть ваш профіль</h2>
           <form className="registration-form" onSubmit={handleSubmit}>
@@ -141,7 +135,7 @@ const CompleteProfile = () => {
                 placeholder="Біографія"
                 value={formData.bio}
                 onChange={handleChange}
-								className="bio-textarea"
+                className="bio-textarea"
               />
             </div>
 
